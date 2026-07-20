@@ -8,11 +8,11 @@ export const revalidate = 3600; // ISR 1 hour
 export default async function TransparansiPage() {
   const currentYear = new Date().getFullYear();
   
-  const [financialReports, impactMetrics, fundAllocations] = await Promise.all([
+  const [financialReports, impactMetrics, fundAllocations] = (await Promise.all([
     getWebFinancialReports(),
     getWebImpactMetrics(),
     getWebFundAllocations(currentYear)
-  ]);
+  ])) as [any[], any[], any[]];
 
   // Transform fund allocations to simple percentages for the chart if data exists
   // Otherwise fallback to PRD dummy data for visual representation if DB is empty for this year

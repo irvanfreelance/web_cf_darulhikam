@@ -58,7 +58,13 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_BASE_URL 
+        ? (process.env.NEXT_PUBLIC_BASE_URL.startsWith('http') 
+           ? process.env.NEXT_PUBLIC_BASE_URL 
+           : `https://${process.env.NEXT_PUBLIC_BASE_URL}`) 
+        : 'http://localhost:3000'
+    ),
     title: {
       default: title,
       template: `%s | ${siteName}`

@@ -15,13 +15,13 @@ import { getAllCampaigns } from '@/lib/campaigns';
 export const revalidate = 300; // ISR 5 minutes
 
 export default async function Beranda() {
-  const [impactMetrics, testimonials, partners, articles, allCampaigns] = await Promise.all([
+  const [impactMetrics, testimonials, partners, articles, allCampaigns] = (await Promise.all([
     getWebImpactMetrics(),
     getWebTestimonials(),
     getWebPartners(),
     getLatestArticles(3),
     getAllCampaigns()
-  ]);
+  ])) as [any[], any[], any[], any[], any[]];
 
   const featuredPrograms = allCampaigns.filter((p: any) => p.is_urgent).slice(0, 3);
   if (featuredPrograms.length === 0) {
