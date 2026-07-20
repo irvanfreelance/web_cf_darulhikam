@@ -1,171 +1,237 @@
-import Image from "next/image";
-import Link from "next/link";
-import { query } from '@/lib/db';
-import { redis } from '@/lib/redis';
-import { Heart, Clock, User, Globe, Mail, MessageCircle, ChevronLeft } from "lucide-react";
-import { formatIDR } from "@/lib/utils";
-import SearchInput from "@/components/SearchInput";
-import CampaignCard from "@/components/CampaignCard";
-import CategoryGrid from "@/components/CategoryGrid";
-import Header from "@/components/layout/Header";
-import AutoCarousel from "@/components/AutoCarousel";
-import { getAllCampaigns, getCarouselCampaigns } from "@/lib/campaigns";
+import React from 'react';
+import Link from 'next/link';
+import { ShieldCheck, Heart, ChevronRight, Target, Eye, TrendingUp } from 'lucide-react';
+import CountUp from '@/components/public/shared/CountUp';
+import ProgramCard from '@/components/public/programs/ProgramCard';
+import ArticleCard from '@/components/public/articles/ArticleCard';
+import { 
+  getWebImpactMetrics, 
+  getWebTestimonials, 
+  getWebPartners, 
+  getLatestArticles 
+} from '@/lib/web-queries';
+import { getAllCampaigns } from '@/lib/campaigns';
 
+export const revalidate = 300; // ISR 5 minutes
 
-async function getData(searchQ?: string) {
-  // 1. Fetch campaigns using optimized service with real-time Redis stats
-  const campaigns = await getAllCampaigns(searchQ);
-  
-  // 2. Fetch categories directly (could also be moved to a service later)
+export default async function Beranda() {
+  const [impactMetrics, testimonials, partners, articles, allCampaigns] = await Promise.all([
+    getWebImpactMetrics(),
+    getWebTestimonials(),
+    getWebPartners(),
+    getLatestArticles(3),
+    getAllCampaigns()
+  ]);
 
-  // 2. Fetch categories directly
-  const cacheKeyCat = `api:categories:all_v3`;
-  let categoriesData = await redis.get(cacheKeyCat);
-  if (!categoriesData) {
-    const cats = await query(`SELECT * FROM categories WHERE is_active = true ORDER BY id ASC`);
-    const payload = { data: cats };
-    await redis.set(cacheKeyCat, JSON.stringify(payload)); // Forever TTL
-    categoriesData = payload as any;
-  } else if (typeof categoriesData === 'string') {
-    categoriesData = JSON.parse(categoriesData) as any;
+  const featuredPrograms = allCampaigns.filter((p: any) => p.is_urgent).slice(0, 3);
+  if (featuredPrograms.length === 0) {
+    featuredPrograms.push(...allCampaigns.slice(0, 3));
   }
-
-  // 2.5 Fetch Carousel Campaigns (Cached Forever)
-  const cacheKeyCarousel = `api:campaigns:carousel_v1`;
-  let carouselCampaigns = await redis.get(cacheKeyCarousel);
-  if (!carouselCampaigns) {
-    carouselCampaigns = await getCarouselCampaigns();
-    await redis.set(cacheKeyCarousel, JSON.stringify(carouselCampaigns)); // Forever TTL
-  } else if (typeof carouselCampaigns === 'string') {
-    carouselCampaigns = JSON.parse(carouselCampaigns);
-  }
-
-  // 3. Fetch configs
-  const cacheKeyConf = `ngo:configs:global_v2`;
-  let configsData: any = await redis.get(cacheKeyConf);
-  if (!configsData) {
-    const confRes = await query('SELECT * FROM ngo_configs LIMIT 1');
-    if (confRes.length > 0) {
-      configsData = confRes[0];
-      await redis.set(cacheKeyConf, JSON.stringify(configsData), { ex: 3600 });
-    } else {
-      configsData = {};
-    }
-  } else if (typeof configsData === 'string') {
-    configsData = JSON.parse(configsData);
-  }
-
-  return { 
-    campaigns: campaigns || [], 
-    carouselCampaigns: (carouselCampaigns as any) || [],
-    categories: (categoriesData as any).data || [],
-    configs: configsData
-  };
-}
-
-export default async function Home(props: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
-  const searchParams = await props.searchParams;
-  const q = typeof searchParams?.q === 'string' ? searchParams.q : undefined;
-  const isSearching = !!q;
-  
-  const { campaigns: allCampaigns, carouselCampaigns, categories, configs } = await getData(q);
-  const urgentCampaigns = allCampaigns.filter((c: any) => c.is_urgent && !isSearching);
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-teal-50/60 to-slate-50 relative pb-24">
-      {/* Header */}
-      <Header isSearching={isSearching} logoUrl={configs?.logo_url} ngoName={configs?.ngo_name} />
-
-      <SearchInput />
-
-      {!isSearching && (
-        <>
-          {/* Banners Carousel */}
-          <AutoCarousel campaigns={carouselCampaigns} />
-
-          {/* Categories */}
-          <div className="px-5 mt-8 mb-8">
-            <h2 className="font-bold text-gray-800 text-base mb-4">Kategori Pilihan</h2>
-            <CategoryGrid categories={categories} />
-          </div>
-
-          {/* Urgent Highlight */}
-          {urgentCampaigns.length > 0 && (
-            <div className="mt-2 mb-8 bg-gradient-to-b from-rose-50/80 to-transparent py-5 border-t border-rose-100/50">
-              <div className="px-5 flex items-center gap-2 mb-4">
-                <div className="bg-rose-100 p-1.5 rounded-lg"><Clock size={18} className="text-rose-500" /></div>
-                <h2 className="font-bold text-gray-800 text-base">Bantuan Mendesak</h2>
-              </div>
-              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-5 pb-4 no-scrollbar">
-                {urgentCampaigns.map((camp: any) => (
-                  <CampaignCard key={camp.id} camp={camp} variant="urgent" />
-                ))}
-              </div>
+    <div className="animate-in fade-in duration-300">
+      {/* Hero */}
+      <section className="bg-[#1f4a9c] pt-[100px] pb-[56px] px-6">
+        <div className="max-w-[1060px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-3xl px-3.5 py-1.5 mb-5">
+              <ShieldCheck size={13} className="text-[#c9892a]" />
+              <span className="text-[12px] text-white/90 font-semibold">Resmi Kemenag RI - SK No. 792/2020</span>
             </div>
-          )}
-        </>
-      )}
-
-      {/* Campaign List */}
-      <div className="px-5 pb-6">
-        {isSearching ? (
-          <div className="mb-5 pt-4">
-            <h2 className="font-bold text-gray-800 text-xl tracking-tight">
-              Hasil Pencarian
+            <h2 className="font-cabin text-4xl lg:text-[40px] font-bold text-white leading-tight mb-3">
+              Zakat & Sedekah Lebih Berdampak
             </h2>
-            <p className="text-sm font-medium text-gray-500 mt-1">{allCampaigns.length} Program Ditemukan</p>
+            <p className="text-white/75 text-[16px] leading-relaxed mb-8">
+              LAZ Darul Hikam menyalurkan zakat, infaq, sedekah, dan wakaf Anda secara transparan, akuntabel, dan tepat sasaran ke seluruh Indonesia.
+            </p>
+            <div className="flex gap-4 flex-wrap">
+              <Link href="/donasi" className="px-7 py-3.5 bg-[#3268C3] text-white rounded-xl font-cabin font-bold text-[15px] inline-flex items-center gap-2 transition-opacity hover:opacity-85">
+                <Heart size={16} className="fill-white" /> Donasi Sekarang
+              </Link>
+              <Link href="/program" className="px-7 py-3.5 bg-white/10 border-2 border-white/40 text-white rounded-xl font-cabin font-bold text-[15px] inline-flex items-center transition-colors hover:bg-white/20">
+                Lihat Program
+              </Link>
+            </div>
           </div>
-        ) : (
-          <h2 className="font-bold text-gray-800 text-base mb-4 mt-2">
-            Rekomendasi Kebaikan
-          </h2>
-        )}
-
-        {allCampaigns.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-gray-500">Tidak ada kampanye yang sesuai dengan pencarian Anda.</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {allCampaigns.map((camp: any) => (
-              <CampaignCard key={camp.id} camp={camp} />
+          <div className="grid grid-cols-2 gap-4">
+            {impactMetrics.map((d: any, i: number) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-5 text-center">
+                <div className="font-cabin text-[28px] font-bold text-[#c9892a]">
+                  <CountUp target={Number(d.value)} />{d.suffix}
+                </div>
+                <div className="text-[12.5px] text-white/65 mt-1">{d.label}</div>
+              </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      </section>
 
-      {/* Footer Info Lembaga */}
-      {!isSearching && (
-        <div className="px-5 py-8 bg-slate-100 border-t border-gray-200 mt-4">
-          <div className="flex items-center gap-2 mb-4">
-            {configs?.logo_url ? (
-              <img src={configs.logo_url} alt="Logo" className="h-8 w-auto object-contain" />
-            ) : (
-              <>
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center shadow-sm">
-                  <Heart size={16} className="text-white fill-white" />
-                </div>
-                <span className="font-extrabold text-teal-700 text-base leading-none tracking-tight">Peduli<span className="text-teal-400">Sesama</span></span>
-              </>
-            )}
+      {/* Featured Programs */}
+      <section className="bg-[#f4f6fb] py-16 px-6">
+        <div className="max-w-[1060px] mx-auto">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Program Unggulan</span>
           </div>
-          <p className="text-xs text-gray-500 leading-relaxed mb-4 text-justify">
-            {configs?.short_description || "Lembaga filantropi independen yang berdedikasi untuk menyalurkan kebaikan donatur secara transparan, profesional, dan tepat sasaran."}
-          </p>
-          <div className="text-xs text-gray-500 mb-5">
-            <p className="font-bold text-gray-700 mb-1">Alamat Kantor Pusat</p>
-            <p>{configs?.address || "Jl. Kebaikan Bangsa No. 99, Gedung Amal Lt. 2, Jakarta Selatan"}</p>
+          <div className="flex justify-between items-end mb-7">
+            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Pilihan Program Penyaluran</h2>
+            <Link href="/program" className="flex items-center gap-1 text-[#3268C3] font-bold text-[13.5px] hover:underline">
+              Lihat Semua <ChevronRight size={15} />
+            </Link>
           </div>
-          <div className="flex gap-4">
-            <a href={configs?.facebook_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><Mail size={14} /></a>
-            <a href={configs?.instagram_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><Globe size={14} /></a>
-            <a href={configs?.whatsapp_number ? `https://wa.me/${configs.whatsapp_number}` : '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><MessageCircle size={14} /></a>
-          </div>
-          <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-            <p className="text-[10px] text-gray-400">© {new Date().getFullYear()} {configs?.ngo_name || 'Yayasan Peduli Sesama'}. All rights reserved.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {featuredPrograms.map((p: any) => <ProgramCard key={p.id} p={p} />)}
           </div>
         </div>
-      )}
+      </section>
+
+      {/* Core Values */}
+      <section className="bg-[#ffffff] py-16 px-6">
+        <div className="max-w-[1060px] mx-auto">
+          <div className="text-center mb-10 flex flex-col items-center">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Nilai Inti</span>
+            </div>
+            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Mengapa Pilih LAZ Darul Hikam?</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { icon: <ShieldCheck size={24} className="text-[#3268C3]" />, bg: "bg-[#e8f0fb]", t: "Legalitas Resmi", d: "Berizin Kemenag RI SK No. 792/2020 dan anggota BAZNAS pusat." },
+              { icon: <Eye size={24} className="text-[#1a6b3c]" />, bg: "bg-[#e8f5ee]", t: "Transparan 100%", d: "Laporan keuangan diaudit KAP independen dan dipublikasikan." },
+              { icon: <Target size={24} className="text-[#c9892a]" />, bg: "bg-[#fdf3e3]", t: "Tepat Sasaran", d: "Penyaluran berdasarkan 8 asnaf dengan verifikasi ketat." },
+              { icon: <TrendingUp size={24} className="text-[#5585d4]" />, bg: "bg-[#e8f0fb]", t: "Berdampak Nyata", d: "Ratusan ribu penerima manfaat di seluruh Indonesia." },
+            ].map(v => (
+              <div key={v.t} className="bg-[#f8fafc] rounded-xl p-6 border border-[#e2e8f0]">
+                <div className={`w-12 h-12 ${v.bg} rounded-xl flex items-center justify-center mb-4`}>{v.icon}</div>
+                <h4 className="font-cabin text-[15px] font-bold mb-1.5">{v.t}</h4>
+                <p className="text-[13.5px] text-[#475569] leading-relaxed">{v.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Dampak */}
+      <section className="bg-[#1f4a9c] py-16 px-6">
+        <div className="max-w-[1060px] mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Bukti Dampak</span>
+          </div>
+          <h2 className="font-cabin text-[30px] font-bold text-white mb-2">Angka yang Berbicara</h2>
+          <p className="text-white/65 text-[15px] mb-10">Data penyaluran terverifikasi kami</p>
+          
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {impactMetrics.map((d: any, i: number) => (
+              <div key={i} className="bg-white/10 border border-white/10 rounded-xl py-8 px-6 text-center">
+                <div className="font-cabin text-[36px] font-bold text-[#c9892a]">
+                  <CountUp target={Number(d.value)} />{d.suffix}
+                </div>
+                <div className="text-[14px] text-white/70 mt-2">{d.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="bg-[#ffffff] py-16 px-6">
+        <div className="max-w-[1060px] mx-auto">
+          <div className="text-center mb-10 flex flex-col items-center">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Kisah Inspiratif</span>
+            </div>
+            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Suara Mereka yang Merasakan Dampaknya</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {testimonials.map((t: any) => (
+              <div key={t.person_name} className="bg-[#f8fafc] rounded-2xl p-7 border border-[#e2e8f0] relative">
+                <div className="text-[48px] text-[#e8f0fb] font-cabin font-bold leading-none mb-2">"</div>
+                <p className="text-[14.5px] text-[#475569] leading-relaxed italic mb-6 line-clamp-4">{t.quote}</p>
+                <div className="flex items-center gap-3">
+                  {t.avatar_url ? (
+                    <img src={t.avatar_url} alt={t.person_name} className="w-11 h-11 rounded-full object-cover shrink-0" />
+                  ) : (
+                    <div className="w-11 h-11 rounded-full bg-[#3268C3] flex items-center justify-center font-cabin font-bold text-[15px] text-white shrink-0">
+                      {t.initials}
+                    </div>
+                  )}
+                  <div>
+                    <div className="font-cabin font-bold text-[14px]">{t.person_name}</div>
+                    <div className="text-[12.5px] text-[#94a3b8]">{t.person_role}</div>
+                    <div className={`text-[11px] px-2 py-0.5 rounded-full inline-block mt-1 font-bold ${t.person_type === 'muzakki' ? 'bg-[#e8f0fb] text-[#3268C3]' : 'bg-[#fdf3e3] text-[#c9892a]'}`}>
+                      {t.person_type === 'muzakki' ? 'Muzakki' : 'Mustahiq'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mitra */}
+      <section className="bg-[#f4f6fb] py-12 px-6">
+        <div className="max-w-[1060px] mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Jaringan & Kemitraan</span>
+          </div>
+          <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Dipercaya Lembaga Terkemuka</h2>
+          <div className="flex flex-wrap gap-4 justify-center">
+            {partners.map((m: any) => (
+              <div key={m.name} className="bg-[#ffffff] border border-[#e2e8f0] rounded-xl px-5 py-2.5 text-[13.5px] font-semibold text-[#475569] shadow-sm">
+                {m.name}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest News */}
+      <section className="bg-[#ffffff] py-16 px-6">
+        <div className="max-w-[1060px] mx-auto">
+          <div className="flex justify-between items-end mb-7">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+                <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Kabar Kebaikan</span>
+              </div>
+              <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Berita & Laporan Terbaru</h2>
+            </div>
+            <Link href="/kabar-kebaikan" className="flex items-center gap-1 text-[#3268C3] font-bold text-[13.5px] hover:underline">
+              Semua Berita <ChevronRight size={15} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {articles.map((a: any) => <ArticleCard key={a.slug} a={a} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* Kontak CTA */}
+      <section className="bg-[#1f4a9c] py-16 px-6">
+        <div className="max-w-[600px] mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Hubungi Kami</span>
+          </div>
+          <h2 className="font-cabin text-[30px] font-bold text-white mb-4">Siap Berzakat Bersama Kami?</h2>
+          <p className="text-white/70 mb-8 text-[15px] leading-relaxed">
+            Konsultasikan kebutuhan zakat dan donasi Anda dengan amil kami. Gratis, amanah, dan profesional.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link href="/donasi" className="px-7 py-3.5 bg-[#3268C3] text-white rounded-xl font-cabin font-bold text-[15px] inline-flex items-center gap-2 transition-opacity hover:opacity-85">
+              <Heart size={15} className="fill-white" /> Donasi Sekarang
+            </Link>
+            <Link href="/kontak" className="px-7 py-3.5 bg-white/10 border-2 border-white/40 text-white rounded-xl font-cabin font-bold text-[15px] inline-flex items-center transition-colors hover:bg-white/20">
+              Hubungi Kami
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

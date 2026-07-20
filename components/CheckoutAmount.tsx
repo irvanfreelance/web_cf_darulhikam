@@ -96,16 +96,16 @@ export default function CheckoutAmount({ campaign, variants }: any) {
       affiliateId,
     };
     localStorage.setItem(LS_KEY, JSON.stringify(data));
-    router.push(`/kampanye/${campaign.slug}/checkout/profile`);
+    router.push(`/donasi/${campaign.slug}/checkout/profile`);
   }, [campaign, variants, currentTotalAmount, donationMode, packageQty, router]);
 
   // Prefetch next steps in the background so navigation feels instant
   useEffect(() => {
-    router.prefetch(`/kampanye/${campaign.slug}/checkout/profile`);
-    router.prefetch(`/kampanye/${campaign.slug}/checkout/payment`);
+    router.prefetch(`/donasi/${campaign.slug}/checkout/profile`);
+    router.prefetch(`/donasi/${campaign.slug}/checkout/payment`);
   }, [campaign.slug, router]);
 
-  const goBackUrl = `/kampanye/${campaign.slug}`;
+  const goBackUrl = `/donasi/${campaign.slug}`;
 
   return (
     <div className="flex flex-col h-full bg-slate-50 relative">

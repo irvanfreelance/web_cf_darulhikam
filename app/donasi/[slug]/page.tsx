@@ -113,7 +113,7 @@ export default async function CampaignDetail(props: {
             <ChevronLeft size={24} />
           </Link>
           <ShareButton
-            url={`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/kampanye/${campaign.slug}`}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/donasi/${campaign.slug}`}
             title={campaign.title}
             className="w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-black/40 transition-all"
           />
@@ -153,7 +153,7 @@ export default async function CampaignDetail(props: {
       </div>
 
       <div className="sticky bottom-0 w-full bg-white/95 backdrop-blur-sm p-4 pb-6 border-t border-gray-100 z-30">
-        <CheckoutButton href={`/kampanye/${campaign.slug}/checkout`} label={btnLabel} />
+        <CheckoutButton href={`/donasi/${campaign.slug}/checkout`} label={btnLabel} />
       </div>
     </div>
   );

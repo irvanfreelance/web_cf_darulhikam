@@ -26,7 +26,7 @@ export default function Header({ isSearching, onBackSearch, title, subtitle, log
           <ChevronLeft size={24} />
         </button>
       ) : isSearching && !onBackSearch ? (
-        <Link href="/" className="mr-3 p-1.5 -ml-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+        <Link href="/donasi" className="mr-3 p-1.5 -ml-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
           <ChevronLeft size={24} />
         </Link>
       ) : null}

@@ -7,7 +7,7 @@ import { Clock } from 'lucide-react';
 export default function CampaignCard({ camp, variant = 'default' }: { camp: any, variant?: 'default' | 'urgent' }) {
   if (variant === 'urgent') {
     return (
-      <Link href={`/kampanye/${camp.slug}`} prefetch={true} className="min-w-[75%] bg-white rounded-xl shadow-sm border border-rose-50 overflow-hidden cursor-pointer snap-center block">
+      <Link href={`/donasi/${camp.slug}`} prefetch={true} className="min-w-[75%] bg-white rounded-xl shadow-sm border border-rose-50 overflow-hidden cursor-pointer snap-center block">
         <div className="h-32 w-full relative bg-gray-900 overflow-hidden">
           {/* Blurred Background */}
           <div className="absolute inset-0 scale-110 blur-xl opacity-30">
@@ -34,7 +34,7 @@ export default function CampaignCard({ camp, variant = 'default' }: { camp: any,
   }
 
   return (
-    <Link href={`/kampanye/${camp.slug}`} prefetch={true} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex gap-4 hover:border-teal-100 block">
+    <Link href={`/donasi/${camp.slug}`} prefetch={true} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex gap-4 hover:border-teal-100 block">
       <div className="w-28 h-28 rounded-lg overflow-hidden shrink-0 relative shadow-sm bg-gray-50 flex items-center justify-center">
         {/* Blurred Background */}
         <div className="absolute inset-0 scale-110 blur-md opacity-20">

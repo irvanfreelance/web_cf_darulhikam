@@ -1,138 +1,171 @@
-import React from 'react';
-import { Award } from 'lucide-react';
-import Header from '@/components/layout/Header';
+import Image from "next/image";
+import Link from "next/link";
 import { query } from '@/lib/db';
 import { redis } from '@/lib/redis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/route';
-import { redirect } from 'next/navigation';
-import HistoryList from './HistoryList';
+import { Heart, Clock, User, Globe, Mail, MessageCircle, ChevronLeft } from "lucide-react";
+import { formatIDR } from "@/lib/utils";
+import SearchInput from "@/components/SearchInput";
+import CampaignCard from "@/components/CampaignCard";
+import CategoryGrid from "@/components/CategoryGrid";
+import Header from "@/components/layout/Header";
+import AutoCarousel from "@/components/AutoCarousel";
+import { getAllCampaigns, getCarouselCampaigns } from "@/lib/campaigns";
 
-export const revalidate = 0; // Always dynamic (personal data)
 
-const LIMIT = 5;
+async function getData(searchQ?: string) {
+  // 1. Fetch campaigns using optimized service with real-time Redis stats
+  const campaigns = await getAllCampaigns(searchQ);
+  
+  // 2. Fetch categories directly (could also be moved to a service later)
 
-async function getNgoConfig() {
-  const cacheKey = `ngo:configs:global_v2`;
-  let configsData: any = await redis.get(cacheKey);
+  // 2. Fetch categories directly
+  const cacheKeyCat = `api:categories:all_v3`;
+  let categoriesData = await redis.get(cacheKeyCat);
+  if (!categoriesData) {
+    const cats = await query(`SELECT * FROM categories WHERE is_active = true ORDER BY id ASC`);
+    const payload = { data: cats };
+    await redis.set(cacheKeyCat, JSON.stringify(payload)); // Forever TTL
+    categoriesData = payload as any;
+  } else if (typeof categoriesData === 'string') {
+    categoriesData = JSON.parse(categoriesData) as any;
+  }
+
+  // 2.5 Fetch Carousel Campaigns (Cached Forever)
+  const cacheKeyCarousel = `api:campaigns:carousel_v1`;
+  let carouselCampaigns = await redis.get(cacheKeyCarousel);
+  if (!carouselCampaigns) {
+    carouselCampaigns = await getCarouselCampaigns();
+    await redis.set(cacheKeyCarousel, JSON.stringify(carouselCampaigns)); // Forever TTL
+  } else if (typeof carouselCampaigns === 'string') {
+    carouselCampaigns = JSON.parse(carouselCampaigns);
+  }
+
+  // 3. Fetch configs
+  const cacheKeyConf = `ngo:configs:global_v2`;
+  let configsData: any = await redis.get(cacheKeyConf);
   if (!configsData) {
-    const confRes = await query('SELECT * FROM ngo_configs LIMIT 1', []);
+    const confRes = await query('SELECT * FROM ngo_configs LIMIT 1');
     if (confRes.length > 0) {
       configsData = confRes[0];
-      await redis.set(cacheKey, JSON.stringify(configsData), { ex: 3600 });
+      await redis.set(cacheKeyConf, JSON.stringify(configsData), { ex: 3600 });
     } else {
       configsData = {};
     }
   } else if (typeof configsData === 'string') {
     configsData = JSON.parse(configsData);
   }
-  return configsData;
+
+  return { 
+    campaigns: campaigns || [], 
+    carouselCampaigns: (carouselCampaigns as any) || [],
+    categories: (categoriesData as any).data || [],
+    configs: configsData
+  };
 }
 
-async function getInitialHistory(donorId: string) {
-  try {
-    const [rows, countRes] = await Promise.all([
-      query(
-        `SELECT i.id, i.invoice_code, i.total_amount, i.status, i.created_at,
-                c.title as campaign_title
-         FROM invoices i
-         LEFT JOIN transactions t ON t.invoice_id = i.id
-         LEFT JOIN campaigns c ON c.id = t.campaign_id
-         WHERE i.donor_id = $1
-         ORDER BY i.created_at DESC
-         LIMIT $2 OFFSET 0`,
-        [donorId, LIMIT]
-      ),
-      query(
-        `SELECT COUNT(*) as total FROM invoices WHERE donor_id = $1`,
-        [donorId]
-      ),
-    ]);
-    const total = parseInt(countRes[0]?.total ?? '0', 10);
-    return { rows, hasMore: total > LIMIT, total };
-  } catch (error) {
-    console.error('Error fetching initial history:', error);
-    return { rows: [], hasMore: false, total: 0 };
-  }
-}
-
-async function getDonorStats(donorId: string) {
-  try {
-    const res = await query(
-      `SELECT COALESCE(SUM(i.total_amount) FILTER (WHERE i.status = 'PAID'), 0) as total_amount,
-              COUNT(*) FILTER (WHERE i.status = 'PAID') as paid_count
-       FROM invoices i
-       WHERE i.donor_id = $1`,
-      [donorId]
-    );
-    return {
-      totalAmount: Number(res[0]?.total_amount ?? 0),
-      paidCount: Number(res[0]?.paid_count ?? 0),
-    };
-  } catch {
-    return { totalAmount: 0, paidCount: 0 };
-  }
-}
-
-export default async function DonasiSayaPage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user || !(session.user as any).id) {
-    redirect('/login');
-  }
-
-  const donorId = (session.user as any).id;
-
-  const [{ rows: initialHistory, hasMore }, stats, configs] = await Promise.all([
-    getInitialHistory(donorId),
-    getDonorStats(donorId),
-    getNgoConfig(),
-  ]);
-
-  const { totalAmount, paidCount } = stats;
-
-  let level = 'Orang Baik';
-  if (paidCount > 10 || totalAmount > 1_000_000) level = 'Pahlawan Kebaikan';
-  if (paidCount > 50 || totalAmount > 10_000_000) level = 'Legenda Kebaikan';
+export default async function Home(props: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
+  const q = typeof searchParams?.q === 'string' ? searchParams.q : undefined;
+  const isSearching = !!q;
+  
+  const { campaigns: allCampaigns, carouselCampaigns, categories, configs } = await getData(q);
+  const urgentCampaigns = allCampaigns.filter((c: any) => c.is_urgent && !isSearching);
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 relative pb-24">
-      <Header
-        subtitle="Riwayat Donasi Kebaikan"
-        logoUrl={configs?.logo_url}
-        ngoName={configs?.ngo_name}
-      />
+    <div className="flex flex-col h-full bg-gradient-to-b from-teal-50/60 to-slate-50 relative pb-24">
+      {/* Header */}
+      <Header isSearching={isSearching} logoUrl={configs?.logo_url} ngoName={configs?.ngo_name} />
 
-      <div className="flex-1 overflow-y-auto px-5 pt-6 no-scrollbar">
-        {/* Stats Card */}
-        <div className="bg-gradient-to-br from-teal-500 to-emerald-400 rounded-3xl p-6 text-white shadow-lg shadow-teal-500/30 mb-8 relative overflow-hidden">
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl" />
-          <div className="relative z-10">
-            <p className="text-teal-50 text-sm font-semibold mb-1">Total Kebaikanmu</p>
-            <h2 className="text-3xl font-bold mb-4 tracking-tight">Level: {level}</h2>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <div className="flex items-center text-xs bg-white/20 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm">
-                <span className="font-medium mr-1.5">Total:</span>
-                <span className="font-bold">Rp {totalAmount.toLocaleString('id-ID')}</span>
+      <SearchInput />
+
+      {!isSearching && (
+        <>
+          {/* Banners Carousel */}
+          <AutoCarousel campaigns={carouselCampaigns} />
+
+          {/* Categories */}
+          <div className="px-5 mt-8 mb-8">
+            <h2 className="font-bold text-gray-800 text-base mb-4">Kategori Pilihan</h2>
+            <CategoryGrid categories={categories} />
+          </div>
+
+          {/* Urgent Highlight */}
+          {urgentCampaigns.length > 0 && (
+            <div className="mt-2 mb-8 bg-gradient-to-b from-rose-50/80 to-transparent py-5 border-t border-rose-100/50">
+              <div className="px-5 flex items-center gap-2 mb-4">
+                <div className="bg-rose-100 p-1.5 rounded-lg"><Clock size={18} className="text-rose-500" /></div>
+                <h2 className="font-bold text-gray-800 text-base">Bantuan Mendesak</h2>
               </div>
-              <div className="flex items-center text-xs bg-white/20 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm">
-                <span className="font-medium mr-1.5">Donasi Berhasil:</span>
-                <span className="font-bold">{paidCount}x</span>
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-5 pb-4 no-scrollbar">
+                {urgentCampaigns.map((camp: any) => (
+                  <CampaignCard key={camp.id} camp={camp} variant="urgent" />
+                ))}
               </div>
             </div>
-            <div className="flex items-center text-[10px] text-teal-100 mt-2">
-              <Award size={12} className="mr-1 text-yellow-300 fill-yellow-300" />
-              <span>Teruslah menebar manfaat untuk sesama</span>
-            </div>
+          )}
+        </>
+      )}
+
+      {/* Campaign List */}
+      <div className="px-5 pb-6">
+        {isSearching ? (
+          <div className="mb-5 pt-4">
+            <h2 className="font-bold text-gray-800 text-xl tracking-tight">
+              Hasil Pencarian
+            </h2>
+            <p className="text-sm font-medium text-gray-500 mt-1">{allCampaigns.length} Program Ditemukan</p>
+          </div>
+        ) : (
+          <h2 className="font-bold text-gray-800 text-base mb-4 mt-2">
+            Rekomendasi Kebaikan
+          </h2>
+        )}
+
+        {allCampaigns.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-gray-500">Tidak ada kampanye yang sesuai dengan pencarian Anda.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {allCampaigns.map((camp: any) => (
+              <CampaignCard key={camp.id} camp={camp} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer Info Lembaga */}
+      {!isSearching && (
+        <div className="px-5 py-8 bg-slate-100 border-t border-gray-200 mt-4">
+          <div className="flex items-center gap-2 mb-4">
+            {configs?.logo_url ? (
+              <img src={configs.logo_url} alt="Logo" className="h-8 w-auto object-contain" />
+            ) : (
+              <>
+                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center shadow-sm">
+                  <Heart size={16} className="text-white fill-white" />
+                </div>
+                <span className="font-extrabold text-teal-700 text-base leading-none tracking-tight">Peduli<span className="text-teal-400">Sesama</span></span>
+              </>
+            )}
+          </div>
+          <p className="text-xs text-gray-500 leading-relaxed mb-4 text-justify">
+            {configs?.short_description || "Lembaga filantropi independen yang berdedikasi untuk menyalurkan kebaikan donatur secara transparan, profesional, dan tepat sasaran."}
+          </p>
+          <div className="text-xs text-gray-500 mb-5">
+            <p className="font-bold text-gray-700 mb-1">Alamat Kantor Pusat</p>
+            <p>{configs?.address || "Jl. Kebaikan Bangsa No. 99, Gedung Amal Lt. 2, Jakarta Selatan"}</p>
+          </div>
+          <div className="flex gap-4">
+            <a href={configs?.facebook_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><Mail size={14} /></a>
+            <a href={configs?.instagram_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><Globe size={14} /></a>
+            <a href={configs?.whatsapp_number ? `https://wa.me/${configs.whatsapp_number}` : '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><MessageCircle size={14} /></a>
+          </div>
+          <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+            <p className="text-[10px] text-gray-400">© {new Date().getFullYear()} {configs?.ngo_name || 'Yayasan Peduli Sesama'}. All rights reserved.</p>
           </div>
         </div>
-
-        {/* History Section */}
-        <h3 className="font-bold text-gray-800 text-base mb-4">Riwayat Terbaru</h3>
-
-        {/* Client component handles infinite scroll */}
-        <HistoryList initialData={initialHistory} hasMoreInitial={hasMore} />
-      </div>
+      )}
     </div>
   );
 }

@@ -76,7 +76,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
     localStorage.setItem('lenteradonasi_donor_data', JSON.stringify(dataToSave));
   }, [donationData.name, donationData.email, donationData.phone, donationData.isAnonymous, donationData.paymentMethod]);
 
-  const goBackUrl = `/kampanye/${campaign.slug}`;
+  const goBackUrl = `/donasi/${campaign.slug}`;
 
 
   // Validasi Profile

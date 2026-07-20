@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Sans_3 } from "next/font/google";
+import { Source_Sans_3, Cabin, Albert_Sans } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/layout/BottomNav";
 import { query } from "@/lib/db";
@@ -8,11 +8,24 @@ import TrackingScripts from "@/components/TrackingScripts";
 import { Providers } from "@/components/Providers";
 
 import Script from "next/script";
+import LayoutWrapper from "@/components/LayoutWrapper";
 
 const sourceSansPro = Source_Sans_3({
   variable: "--font-source-sans-pro",
   subsets: ["latin"],
   weight: ['300', '400', '600', '700'],
+});
+
+const fontCabin = Cabin({
+  variable: "--font-cabin",
+  subsets: ["latin"],
+  weight: ['400', '500', '600', '700'],
+});
+
+const fontAlbert = Albert_Sans({
+  variable: "--font-albert",
+  subsets: ["latin"],
+  weight: ['400', '500', '600', '700'],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -113,7 +126,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="id" className={`${sourceSansPro.variable} h-full antialiased`}>
+    <html lang="id" className={`${sourceSansPro.variable} ${fontCabin.variable} ${fontAlbert.variable} h-full antialiased`}>
       <head>
         {/* Preconnect to Vercel Blob & Neon for faster cold starts */}
         <link rel="preconnect" href="https://public.blob.vercel-storage.com" />
@@ -154,12 +167,9 @@ export default async function RootLayout({
           />
         )}
         <Providers>
-          <main className="flex-1 w-full max-w-md mx-auto relative overflow-hidden bg-white shadow-xl flex flex-col">
-            <div className="flex-1 overflow-y-auto no-scrollbar relative flex flex-col">
-              {children}
-            </div>
-            <BottomNav />
-          </main>
+          <LayoutWrapper configs={configs}>
+            {children}
+          </LayoutWrapper>
         </Providers>
       </body>
     </html>

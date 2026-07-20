@@ -1,0 +1,130 @@
+import { query } from './db';
+import { redis } from './redis';
+
+// --- Home Page ---
+
+export async function getWebImpactMetrics() {
+  const cacheKey = `web:impact_metrics`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT metric_key, label, value, suffix
+      FROM web_impact_metrics
+      WHERE is_active = true
+      ORDER BY display_order ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 300 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getWebTestimonials() {
+  const cacheKey = `web:testimonials`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT person_name, person_role, person_type, initials, quote, avatar_url
+      FROM web_testimonials
+      WHERE is_active = true
+      ORDER BY display_order ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 300 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getWebPartners() {
+  const cacheKey = `web:partners`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT name, logo_url, website_url, partner_type
+      FROM web_partners
+      WHERE is_active = true
+      ORDER BY display_order ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getLatestArticles(limit = 3) {
+  const data = await query(`
+    SELECT slug, title, excerpt, featured_image_url, published_at, category_id
+    FROM web_articles
+    WHERE status = 'published' AND deleted_at IS NULL
+    ORDER BY published_at DESC
+    LIMIT $1
+  `, [limit]);
+  return data;
+}
+
+// --- Tentang Kami ---
+
+export async function getWebTeamMembers() {
+  const data = await query(`
+    SELECT name, title, department, initials, avatar_url, bio, accent_color
+    FROM web_team_members
+    WHERE is_active = true
+    ORDER BY display_order ASC
+  `);
+  return data;
+}
+
+export async function getWebLegality() {
+  // Can be hardcoded or retrieved from ngo_configs if applicable
+  const data = await query(`SELECT * FROM ngo_configs LIMIT 1`);
+  return data[0];
+}
+
+// --- Transparansi ---
+
+export async function getWebFinancialReports() {
+  const data = await query(`
+    SELECT id, title, report_type, period_label, period_year, audit_status, file_url, file_size_kb
+    FROM web_financial_reports
+    WHERE is_published = true
+    ORDER BY period_year DESC, period_quarter DESC NULLS LAST, created_at DESC
+  `);
+  return data;
+}
+
+export async function getWebFundAllocations(year: number) {
+  const data = await query(`
+    SELECT wfa.period_month, wfa.allocated_amount, wfa.disbursed_amount, c.title as program_name, cat.color_theme
+    FROM web_fund_allocations wfa
+    JOIN campaigns c ON wfa.program_id = c.id
+    LEFT JOIN categories cat ON c.category_id = cat.id
+    WHERE wfa.period_year = $1
+    ORDER BY wfa.period_month ASC
+  `, [year]);
+  return data;
+}
+
+// --- Kontak & FAQs ---
+
+export async function getWebFaqs() {
+  const data = await query(`
+    SELECT question, answer, category
+    FROM web_faqs
+    WHERE is_active = true
+    ORDER BY display_order ASC
+  `);
+  return data;
+}
+
+export async function getArticleBySlug(slug: string) {
+  const data = await query(`
+    SELECT slug, title, content, excerpt, featured_image_url, published_at, category_id, meta_title, meta_description
+    FROM web_articles
+    WHERE slug = $1 AND status = 'published' AND deleted_at IS NULL
+    LIMIT 1
+  `, [slug]);
+  return data[0];
+}

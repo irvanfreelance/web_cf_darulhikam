@@ -1,24 +1,31 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
 
 export default function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [query, setQuery] = useState(searchParams.get('q') || '');
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     const timeout = setTimeout(() => {
       if (query) {
-        router.push(`/?q=${encodeURIComponent(query)}`);
+        router.push(`${pathname}?q=${encodeURIComponent(query)}`);
       } else {
-        router.push(`/`);
+        router.push(pathname);
       }
     }, 500);
     return () => clearTimeout(timeout);
-  }, [query, router]);
+  }, [query, pathname, router]);
 
   return (
     <div className="px-5 mt-5 mb-6">

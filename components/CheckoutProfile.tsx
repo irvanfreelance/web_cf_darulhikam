@@ -113,7 +113,7 @@ export default function CheckoutProfile() {
       qurbanNames,
     };
     localStorage.setItem(LS_KEY, JSON.stringify(updated));
-    router.push(`/kampanye/${checkoutData.campaignSlug}/checkout/payment`);
+    router.push(`/donasi/${checkoutData.campaignSlug}/checkout/payment`);
   }, [name, email, phone, doa, isAnonymous, qurbanNames, checkoutData, router]);
 
   if (!checkoutData) return <Skeleton />;

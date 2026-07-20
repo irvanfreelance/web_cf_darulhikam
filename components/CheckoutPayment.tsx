@@ -64,7 +64,7 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
     if (!parsed.donorName) {
       // Profile step not completed — redirect back
       const slug = parsed.campaignSlug;
-      router.replace(slug ? `/kampanye/${slug}/checkout/profile` : '/');
+      router.replace(slug ? `/donasi/${slug}/checkout/profile` : '/');
       return;
     }
     setCheckoutData(parsed);

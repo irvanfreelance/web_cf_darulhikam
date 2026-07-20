@@ -1,9 +1,29 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   --font-sans: var(--font-source-sans-pro);
+  --font-cabin: var(--font-cabin);
+  --font-albert: var(--font-albert);
   --color-background: #ffffff;
   --color-foreground: #171717;
+
+  --color-laz-biru: #3268C3;
+  --color-laz-birudk: #1f4a9c;
+  --color-laz-birult: #e8f0fb;
+  --color-laz-birumd: #5585d4;
+  --color-laz-hijau: #1a6b3c;
+  --color-laz-hijault: #e8f5ee;
+  --color-laz-emas: #c9892a;
+  --color-laz-emaslt: #fdf3e3;
+  --color-laz-bg: #f4f6fb;
+  --color-laz-cream: #f8fafc;
+  --color-laz-white: #ffffff;
+  --color-laz-border: #e2e8f0;
+  --color-laz-teks: #0f1b35;
+  --color-laz-teksmd: #475569;
+  --color-laz-teksmt: #94a3b8;
+  --color-laz-red: #dc2626;
+  --color-laz-redlt: #fef2f2;
 }
 
 @layer utilities {

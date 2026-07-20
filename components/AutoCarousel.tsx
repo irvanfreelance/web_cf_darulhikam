@@ -152,7 +152,7 @@ export default function AutoCarousel({ campaigns }: { campaigns: any[] }) {
         {items.map((camp: any, idx: number) => (
           <Link
             key={`carousel-item-${camp.id}-${idx}`}
-            href={`/kampanye/${camp.slug}`}
+            href={`/donasi/${camp.slug}`}
             className={`snap-center shrink-0 cursor-pointer active:scale-[0.98] transition-all duration-300 block rounded-2xl overflow-hidden shadow-xl relative ${!isInitialized ? 'opacity-0' : 'opacity-100'}`}
             style={{ width: '82%', minWidth: '82%', height: '180px' }}
             onClick={(e) => isDragging && e.preventDefault()}
