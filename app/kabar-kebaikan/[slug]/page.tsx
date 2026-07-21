@@ -1,6 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { getArticleBySlug } from '@/lib/web-queries';
+import { getArticleBySlug, getRelatedArticles } from '@/lib/web-queries';
+import ArticleCard from '@/components/public/articles/ArticleCard';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 
@@ -12,11 +13,11 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   if (!article) return { title: 'Artikel Tidak Ditemukan' };
 
   return {
-    title: article.meta_title || article.title,
-    description: article.meta_description || article.excerpt,
+    title: article.seo_title || article.title,
+    description: article.seo_description || article.excerpt,
     openGraph: {
-      title: article.meta_title || article.title,
-      description: article.meta_description || article.excerpt,
+      title: article.seo_title || article.title,
+      description: article.seo_description || article.excerpt,
       images: [{ url: article.featured_image_url || '/placeholder.jpg' }],
     }
   };
@@ -29,6 +30,8 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
   if (!article) {
     notFound();
   }
+
+  const relatedArticles = await getRelatedArticles(article.category_id, article.slug, 3);
 
   const dateStr = article.published_at ? new Date(article.published_at).toLocaleDateString('id-ID', {
     day: 'numeric', month: 'long', year: 'numeric'
@@ -60,11 +63,26 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
         )}
 
         {/* Using news-content utility class from globals.css for proper styling */}
-        <div 
+        <div
           className="news-content text-[15.5px] leading-[1.8] text-[#475569]"
-          dangerouslySetInnerHTML={{ __html: article.content || '' }}
+          dangerouslySetInnerHTML={{ __html: article.body || '' }}
         />
       </div>
+
+      {relatedArticles.length > 0 && (
+        <div className="bg-[#f4f6fb] mt-16 py-16 px-6">
+          <div className="max-w-[1060px] mx-auto">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Baca Juga</span>
+            </div>
+            <h2 className="font-cabin text-[24px] font-bold text-[#0f1b35] leading-tight mb-7">Artikel Terkait</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {relatedArticles.map((a: any) => <ArticleCard key={a.slug} a={a} />)}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

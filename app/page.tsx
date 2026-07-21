@@ -4,34 +4,78 @@ import { ShieldCheck, Heart, ChevronRight, Target, Eye, TrendingUp } from 'lucid
 import CountUp from '@/components/public/shared/CountUp';
 import ProgramCard from '@/components/public/programs/ProgramCard';
 import ArticleCard from '@/components/public/articles/ArticleCard';
-import { 
-  getWebImpactMetrics, 
-  getWebTestimonials, 
-  getWebPartners, 
-  getLatestArticles 
+import {
+  getWebHeroConfig,
+  getWebImpactMetrics,
+  getWebTestimonials,
+  getWebPartners,
+  getLatestArticles
 } from '@/lib/web-queries';
 import { getAllCampaigns } from '@/lib/campaigns';
 
 export const revalidate = 300; // ISR 5 minutes
 
 export default async function Beranda() {
-  const [impactMetrics, testimonials, partners, articles, allCampaigns] = (await Promise.all([
+  const [heroConfig, impactMetrics, testimonials, partners, articles, allCampaigns] = (await Promise.all([
+    getWebHeroConfig(),
     getWebImpactMetrics(),
     getWebTestimonials(),
     getWebPartners(),
     getLatestArticles(3),
     getAllCampaigns()
-  ])) as [any[], any[], any[], any[], any[]];
+  ])) as [any, any[], any[], any[], any[], any[]];
 
   const featuredPrograms = allCampaigns.filter((p: any) => p.is_urgent).slice(0, 3);
-  if (featuredPrograms.length === 0) {
-    featuredPrograms.push(...allCampaigns.slice(0, 3));
+  if (featuredPrograms.length < 3) {
+    const featuredIds = new Set(featuredPrograms.map((p: any) => p.id));
+    const fillers = allCampaigns.filter((p: any) => !featuredIds.has(p.id));
+    featuredPrograms.push(...fillers.slice(0, 3 - featuredPrograms.length));
   }
 
   return (
     <div className="animate-in fade-in duration-300">
+      {/* Video Profile (Hero) */}
+      {heroConfig?.video_url && (
+        <section className="relative -mt-16 w-full min-h-[640px] md:min-h-[760px] flex items-center justify-center overflow-hidden">
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src={heroConfig.video_url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            aria-hidden="true"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: heroConfig?.primary_color
+                ? `linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6)), linear-gradient(135deg, ${heroConfig.primary_color}55, transparent)`
+                : 'linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6))',
+            }}
+          />
+          <div className="relative z-10 max-w-[720px] mx-auto text-center px-6">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
+              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Saksikan Langsung</span>
+            </div>
+            <h2 className="font-cabin text-3xl md:text-[40px] font-bold text-white leading-tight mb-4">
+              Menyaksikan Perubahan yang Nyata di Lapangan
+            </h2>
+            <p className="text-white/80 text-[15px] md:text-[16px] leading-relaxed mb-8">
+              Setiap donasi yang Anda salurkan menjadi kisah nyata di tengah masyarakat. Simak bagaimana {heroConfig?.ngo_name || 'kami'} menghadirkan harapan melalui program zakat, infaq, dan sedekah di seluruh Indonesia.
+            </p>
+            <Link href="/program" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#3268C3] text-white rounded-xl font-cabin font-bold text-[15px] transition-opacity hover:opacity-85">
+              <Heart size={16} className="fill-white" /> Lihat Program Kami
+            </Link>
+          </div>
+        </section>
+      )}
+
       {/* Hero */}
-      <section className="bg-[#1f4a9c] pt-[100px] pb-[56px] px-6">
+      <section className="bg-[#1f4a9c] py-16 px-6">
         <div className="max-w-[1060px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-3xl px-3.5 py-1.5 mb-5">
@@ -74,7 +118,7 @@ export default async function Beranda() {
             <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Program Unggulan</span>
           </div>
           <div className="flex justify-between items-end mb-7">
-            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Pilihan Program Penyaluran</h2>
+            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Program Kami</h2>
             <Link href="/program" className="flex items-center gap-1 text-[#3268C3] font-bold text-[13.5px] hover:underline">
               Lihat Semua <ChevronRight size={15} />
             </Link>
@@ -121,7 +165,7 @@ export default async function Beranda() {
           </div>
           <h2 className="font-cabin text-[30px] font-bold text-white mb-2">Angka yang Berbicara</h2>
           <p className="text-white/65 text-[15px] mb-10">Data penyaluran terverifikasi kami</p>
-          
+
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {impactMetrics.map((d: any, i: number) => (
               <div key={i} className="bg-white/10 border border-white/10 rounded-xl py-8 px-6 text-center">
@@ -146,7 +190,7 @@ export default async function Beranda() {
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Suara Mereka yang Merasakan Dampaknya</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {testimonials.map((t: any) => (
+            {testimonials.slice(0, 3).map((t: any) => (
               <div key={t.person_name} className="bg-[#f8fafc] rounded-2xl p-7 border border-[#e2e8f0] relative">
                 <div className="text-[48px] text-[#e8f0fb] font-cabin font-bold leading-none mb-2">"</div>
                 <p className="text-[14.5px] text-[#475569] leading-relaxed italic mb-6 line-clamp-4">{t.quote}</p>

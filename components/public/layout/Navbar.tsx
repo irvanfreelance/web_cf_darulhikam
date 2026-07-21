@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Star, Heart, Menu, X } from 'lucide-react';
@@ -18,20 +18,43 @@ const NAV_LINKS = [
 export default function Navbar({ config }: { config?: any }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const isHome = pathname === '/' && !!config?.video_url;
+
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isHome]);
+
+  const transparent = isHome && !scrolled && !open;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[100] bg-[#ffffff] border-b border-[#e2e8f0] px-6 h-16 flex items-center justify-between">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-[100] px-6 h-16 flex items-center justify-between transition-colors duration-300 ${
+        transparent
+          ? 'bg-transparent border-b border-transparent'
+          : 'bg-[#ffffff] border-b border-[#e2e8f0] shadow-sm'
+      }`}
+    >
       <Link href="/" className="flex items-center gap-2.5 cursor-pointer">
         {config?.logo_url ? (
-          <img src={config.logo_url} alt="Logo" className="h-[42px] w-auto object-contain" />
+          <img
+            src={config.logo_url}
+            alt="Logo"
+            className={`h-[42px] w-auto object-contain transition-all duration-300 ${transparent ? 'brightness-0 invert' : ''}`}
+          />
         ) : (
           <>
-            <div className="w-[34px] h-[34px] bg-[#3268C3] rounded-lg flex items-center justify-center">
+            <div className={`w-[34px] h-[34px] rounded-lg flex items-center justify-center transition-colors duration-300 ${transparent ? 'bg-white/15' : 'bg-[#3268C3]'}`}>
               <Star size={17} className="text-white fill-white" />
             </div>
             <div>
-              <div className="font-cabin font-bold text-sm text-[#1f4a9c]">LAZ Darul Hikam</div>
-              <div className="text-[10px] text-[#94a3b8]">SK Kemenag No. 792/2020</div>
+              <div className={`font-cabin font-bold text-sm transition-colors duration-300 ${transparent ? 'text-white' : 'text-[#1f4a9c]'}`}>LAZ Darul Hikam</div>
+              <div className={`text-[10px] transition-colors duration-300 ${transparent ? 'text-white/70' : 'text-[#94a3b8]'}`}>SK Kemenag No. 792/2020</div>
             </div>
           </>
         )}
@@ -44,7 +67,10 @@ export default function Navbar({ config }: { config?: any }) {
           return (
             <Link key={l.id} href={l.id} className={`
               px-3 py-1.5 border-none font-cabin text-[13px] rounded-lg transition-all duration-150
-              ${isActive ? 'bg-[#e8f0fb] text-[#3268C3] font-bold' : 'bg-transparent text-[#475569] font-medium hover:bg-slate-50'}
+              ${transparent
+                ? (isActive ? 'bg-white/15 text-white font-bold' : 'bg-transparent text-white/90 font-medium hover:bg-white/10')
+                : (isActive ? 'bg-[#e8f0fb] text-[#3268C3] font-bold' : 'bg-transparent text-[#475569] font-medium hover:bg-slate-50')
+              }
             `}>
               {l.label}
             </Link>
@@ -57,7 +83,7 @@ export default function Navbar({ config }: { config?: any }) {
 
       {/* Mobile nav toggle */}
       <div className="md:hidden">
-        <button onClick={() => setOpen(!open)} className="p-2 text-[#475569]">
+        <button onClick={() => setOpen(!open)} className={`p-2 transition-colors duration-300 ${transparent ? 'text-white' : 'text-[#475569]'}`}>
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>

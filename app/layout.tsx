@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
   let favicon = "/favicon.ico";
   let siteName = "PeduliSesama";
   try {
-    const cached = await redis.get('ngo:configs:global_v3');
+    const cached = await redis.get('ngo:configs:global_v4');
     let configs: any = null;
     
     if (cached) {
@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
       const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id FROM ngo_configs LIMIT 1');
       if (res.length > 0) {
         configs = res[0];
-        redis.set('ngo:configs:global_v3', JSON.stringify(configs), { ex: 3600 }).catch(() => {});
+        redis.set('ngo:configs:global_v4', JSON.stringify(configs), { ex: 3600 }).catch(() => {});
       }
     }
 
@@ -98,7 +98,7 @@ export default async function RootLayout({
   let pixelEvents = null;
   try {
     // Cache ngo_configs in Redis – avoid DB hit on every render
-    const configCacheKey = 'ngo:configs:global_v3';
+    const configCacheKey = 'ngo:configs:global_v4';
     const pixelCacheKey = 'ngo:pixel_events:global_v1';
     
     const [cachedConfig, cachedPixels] = await Promise.all([
@@ -109,7 +109,7 @@ export default async function RootLayout({
     if (cachedConfig) {
       configs = typeof cachedConfig === 'string' ? JSON.parse(cachedConfig) : cachedConfig;
     } else {
-      const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id FROM ngo_configs LIMIT 1');
+      const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id, video_url FROM ngo_configs LIMIT 1');
       if (res.length > 0) {
         configs = res[0];
         // Cache for 1 hour

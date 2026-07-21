@@ -3,6 +3,19 @@ import { redis } from './redis';
 
 // --- Home Page ---
 
+export async function getWebHeroConfig() {
+  const cacheKey = `web:hero_config`;
+  let data: any = await redis.get(cacheKey);
+  if (!data) {
+    const rows = await query(`SELECT ngo_name, video_url, primary_color FROM ngo_configs LIMIT 1`);
+    data = rows[0] || null;
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
 export async function getWebImpactMetrics() {
   const cacheKey = `web:impact_metrics`;
   let data = await redis.get(cacheKey);
@@ -121,10 +134,21 @@ export async function getWebFaqs() {
 
 export async function getArticleBySlug(slug: string) {
   const data = await query(`
-    SELECT slug, title, content, excerpt, featured_image_url, published_at, category_id, meta_title, meta_description
+    SELECT slug, title, body, excerpt, featured_image_url, published_at, category_id, seo_title, seo_description
     FROM web_articles
     WHERE slug = $1 AND status = 'published' AND deleted_at IS NULL
     LIMIT 1
   `, [slug]);
   return data[0];
+}
+
+export async function getRelatedArticles(categoryId: number | null, excludeSlug: string, limit = 3) {
+  const data = await query(`
+    SELECT slug, title, excerpt, featured_image_url, published_at, category_id
+    FROM web_articles
+    WHERE status = 'published' AND deleted_at IS NULL AND slug != $1
+    ORDER BY (category_id = $2) DESC, published_at DESC
+    LIMIT $3
+  `, [excludeSlug, categoryId, limit]);
+  return data;
 }
