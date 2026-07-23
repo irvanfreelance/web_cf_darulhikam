@@ -57,14 +57,13 @@ export async function generateMetadata(): Promise<Metadata> {
     console.error("Failed to generate metadata", e);
   }
 
+  const rawBaseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL;
+  const baseUrl = rawBaseUrl && rawBaseUrl.trim() !== ''
+    ? (rawBaseUrl.startsWith('http') ? rawBaseUrl : `https://${rawBaseUrl}`)
+    : 'http://localhost:3000';
+
   return {
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_BASE_URL 
-        ? (process.env.NEXT_PUBLIC_BASE_URL.startsWith('http') 
-           ? process.env.NEXT_PUBLIC_BASE_URL 
-           : `https://${process.env.NEXT_PUBLIC_BASE_URL}`) 
-        : 'http://localhost:3000'
-    ),
+    metadataBase: new URL(baseUrl),
     title: {
       default: title,
       template: `%s | ${siteName}`

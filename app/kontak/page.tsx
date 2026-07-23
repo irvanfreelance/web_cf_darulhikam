@@ -1,5 +1,6 @@
 import React from 'react';
-import { MapPin, Phone, Mail, Clock, ChevronDown } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import FaqAccordion from '@/components/public/shared/FaqAccordion';
 import { getWebFaqs, getWebLegality } from '@/lib/web-queries';
 
 export const revalidate = 86400; // SSG/ISR Daily
@@ -77,24 +78,7 @@ export default async function KontakPage() {
               <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">FAQ</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-6">Pertanyaan Umum</h2>
-            <div className="grid gap-3">
-              {faqs.length === 0 ? (
-                <div className="text-[#475569] p-4 bg-white rounded-xl border border-[#e2e8f0]">Belum ada FAQ.</div>
-              ) : (
-                faqs.map((faq: any, i: number) => (
-                  <div key={i} className="bg-white rounded-xl border border-[#e2e8f0] overflow-hidden">
-                    <div className="p-4 flex justify-between items-center cursor-pointer">
-                      <div className="font-cabin font-bold text-[14.5px] pr-4">{faq.question}</div>
-                      <ChevronDown size={16} className="text-[#475569] shrink-0" />
-                    </div>
-                    {/* For MVP SSR, keep answers visible or handled simply. In a real app we'd use a Client Component for toggle */}
-                    <div className="px-4 pb-4 text-[13.5px] text-[#475569] leading-relaxed border-t border-[#e2e8f0]/50 pt-3">
-                      {faq.answer}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+            <FaqAccordion faqs={faqs} />
           </div>
         </div>
       </section>

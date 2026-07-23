@@ -67,15 +67,30 @@ export async function getWebPartners() {
   return data;
 }
 
-export async function getLatestArticles(limit = 3) {
+export async function getLatestArticles(limit = 24) {
   const data = await query(`
-    SELECT slug, title, excerpt, featured_image_url, published_at, category_id
-    FROM web_articles
-    WHERE status = 'published' AND deleted_at IS NULL
-    ORDER BY published_at DESC
+    SELECT a.slug, a.title, a.excerpt, a.featured_image_url, a.published_at, a.category_id,
+           c.name as category_name, c.slug as category_slug
+    FROM web_articles a
+    LEFT JOIN web_article_categories c ON a.category_id = c.id
+    WHERE a.status = 'published' AND a.deleted_at IS NULL
+    ORDER BY a.published_at DESC
     LIMIT $1
   `, [limit]);
   return data;
+}
+
+export async function getWebArticleCategories() {
+  try {
+    const data = await query(`
+      SELECT id, name, slug
+      FROM web_article_categories
+      ORDER BY id ASC
+    `);
+    return data;
+  } catch (e) {
+    return [];
+  }
 }
 
 // --- Tentang Kami ---

@@ -1,21 +1,14 @@
 import React from 'react';
-import ArticleCard from '@/components/public/articles/ArticleCard';
-import { getLatestArticles } from '@/lib/web-queries';
+import ArticleCategoryFilter from '@/components/public/articles/ArticleCategoryFilter';
+import { getLatestArticles, getWebArticleCategories } from '@/lib/web-queries';
 
 export const revalidate = 120; // ISR 2 minutes
 
 export default async function KabarKebaikanPage() {
-  // Fetch up to 12 articles for the initial view
-  const articles = await getLatestArticles(12);
-
-  // Ideally, CategoryFilter component would be used here as a Client Component,
-  // but keeping it simple for SSR first.
-  const CATS = [
-    { id:"all", label:"Semua" },
-    { id:"field_report", label:"Laporan" },
-    { id:"program_update", label:"Update Program" },
-    { id:"beneficiary_story", label:"Kisah" },
-  ];
+  const [articles, categories] = await Promise.all([
+    getLatestArticles(24),
+    getWebArticleCategories()
+  ]);
 
   return (
     <div className="animate-in fade-in duration-300">
@@ -31,25 +24,7 @@ export default async function KabarKebaikanPage() {
 
       <section className="bg-[#f4f6fb] py-16 px-6">
         <div className="max-w-[1060px] mx-auto">
-          
-          <div className="flex flex-wrap gap-2 mb-7">
-            {CATS.map((c, i) => (
-              <div key={c.id} className={`
-                px-4 py-1.5 rounded-full text-[13.5px] font-semibold
-                ${i === 0 ? 'bg-[#3268C3] text-white border-1.5 border-[#3268C3]' : 'bg-white text-[#475569] border-1.5 border-[#e2e8f0]'}
-              `}>
-                {c.label}
-              </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {articles.length === 0 ? (
-              <div className="col-span-full text-center text-[#475569] py-10">Belum ada artikel dipublikasikan.</div>
-            ) : (
-              articles.map((a: any) => <ArticleCard key={a.slug} a={a} />)
-            )}
-          </div>
+          <ArticleCategoryFilter initialArticles={articles} categories={categories} />
         </div>
       </section>
     </div>

@@ -10,6 +10,7 @@ import CampaignTabs from "@/components/CampaignTabs";
 import type { Metadata } from "next";
 import { getCampaignBySlug, getAllCampaigns } from "@/lib/campaigns";
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 export async function generateMetadata(
