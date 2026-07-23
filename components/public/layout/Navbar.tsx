@@ -20,21 +20,35 @@ export default function Navbar({ config }: { config?: any }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const isHome = pathname === '/' && !!config?.video_url;
+  // Corporate public pages with dark hero header at the top
+  const isDarkHeroPage = [
+    '/',
+    '/tentang-kami',
+    '/program',
+    '/layanan-ziswaf',
+    '/transparansi',
+    '/kabar-kebaikan',
+    '/kontak',
+  ].some(path => pathname === path || (path !== '/' && pathname.startsWith(path)));
 
   useEffect(() => {
-    if (!isHome) return;
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    if (!isDarkHeroPage) {
+      setScrolled(true);
+      return;
+    }
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isHome]);
+  }, [isDarkHeroPage, pathname]);
 
-  const transparent = isHome && !scrolled && !open;
+  const transparent = isDarkHeroPage && !scrolled && !open;
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-[100] px-6 h-16 flex items-center justify-between transition-colors duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-[100] px-6 h-16 flex items-center justify-between transition-all duration-300 ${
         transparent
           ? 'bg-transparent border-b border-transparent'
           : 'bg-[#ffffff] border-b border-[#e2e8f0] shadow-sm'
@@ -45,7 +59,9 @@ export default function Navbar({ config }: { config?: any }) {
           <img
             src={config.logo_url}
             alt="Logo"
-            className={`h-[42px] w-auto object-contain transition-all duration-300 ${transparent ? 'brightness-0 invert' : ''}`}
+            className={`h-[42px] w-auto object-contain transition-all duration-300 ${
+              transparent ? 'brightness-0 invert' : ''
+            }`}
           />
         ) : (
           <>
@@ -68,15 +84,19 @@ export default function Navbar({ config }: { config?: any }) {
             <Link key={l.id} href={l.id} className={`
               px-3 py-1.5 border-none font-cabin text-[13px] rounded-lg transition-all duration-150
               ${transparent
-                ? (isActive ? 'bg-white/15 text-white font-bold' : 'bg-transparent text-white/90 font-medium hover:bg-white/10')
-                : (isActive ? 'bg-[#e8f0fb] text-[#3268C3] font-bold' : 'bg-transparent text-[#475569] font-medium hover:bg-slate-50')
+                ? (isActive ? 'bg-white/20 text-white font-bold' : 'bg-transparent text-white/90 font-medium hover:bg-white/10 hover:text-white')
+                : (isActive ? 'bg-[#e8f0fb] text-[#3268C3] font-bold' : 'bg-transparent text-[#475569] font-medium hover:bg-slate-50 hover:text-[#3268C3]')
               }
             `}>
               {l.label}
             </Link>
           );
         })}
-        <Link href="/donasi" className="ml-2 px-4 py-2 text-[13px] rounded-lg inline-flex items-center gap-2 bg-[#3268C3] text-white font-cabin font-bold transition-opacity hover:opacity-85">
+        <Link href="/donasi" className={`ml-2 px-4 py-2 text-[13px] rounded-lg inline-flex items-center gap-2 font-cabin font-bold transition-all ${
+          transparent
+            ? 'bg-white/20 text-white hover:bg-white/30 border border-white/30'
+            : 'bg-[#3268C3] text-white hover:opacity-85'
+        }`}>
           <Heart size={14} className="fill-white" /> Donasi
         </Link>
       </div>

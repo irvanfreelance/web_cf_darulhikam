@@ -36,7 +36,7 @@ export default async function Beranda() {
     <div className="animate-in fade-in duration-300">
       {/* Video Profile (Hero) */}
       {heroConfig?.video_url && (
-        <section className="relative -mt-16 w-full min-h-[640px] md:min-h-[760px] flex items-center justify-center overflow-hidden">
+        <section className="relative w-full min-h-[640px] md:min-h-[760px] flex items-center justify-center overflow-hidden">
           <video
             className="absolute inset-0 w-full h-full object-cover"
             src={heroConfig.video_url}
@@ -56,7 +56,7 @@ export default async function Beranda() {
                 : 'linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6))',
             }}
           />
-          <div className="relative z-10 max-w-[720px] mx-auto text-center px-6">
+          <div className="relative z-10 max-w-[720px] mx-auto text-center px-6 pt-16">
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
               <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Saksikan Langsung</span>
@@ -75,7 +75,7 @@ export default async function Beranda() {
       )}
 
       {/* Hero */}
-      <section className="bg-[#1f4a9c] py-16 px-6">
+      <section className={`bg-[#1f4a9c] px-6 ${heroConfig?.video_url ? 'py-16' : 'pt-24 pb-16'}`}>
         <div className="max-w-[1060px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-3xl px-3.5 py-1.5 mb-5">

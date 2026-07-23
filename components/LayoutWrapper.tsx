@@ -23,7 +23,7 @@ export default function LayoutWrapper({ children, configs }: { children: React.R
     return (
       <div className="flex flex-col min-h-screen bg-[#f4f6fb]">
         <Navbar config={configs} />
-        <main className="flex-1 w-full pt-16">
+        <main className="flex-1 w-full">
           {children}
         </main>
         <Footer config={configs} />
