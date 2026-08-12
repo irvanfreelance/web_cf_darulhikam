@@ -27,11 +27,11 @@ export default async function TentangKami() {
 
   return (
     <div className="animate-in fade-in duration-300">
-      <div className="bg-[#1f4a9c] pt-24 pb-14 px-6 text-center">
+      <div className="bg-[#83b64e] pt-24 pb-14 px-6 text-center">
         <div className="max-w-[640px] mx-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Tentang Kami</span>
+            <div className="w-[18px] h-0.5 bg-[#ffffff] rounded-full" />
+            <span className="text-[12px] font-bold text-[#ffffff] tracking-[1.5px] uppercase">Tentang Kami</span>
           </div>
           <h1 className="font-cabin text-[34px] font-bold text-white mb-3">Lembaga Zakat Terpercaya Sejak 2012</h1>
           <p className="text-white/70 text-[16px] leading-relaxed">Menyalurkan kebaikan Anda dengan amanah, transparan, dan terukur.</p>
@@ -42,8 +42,8 @@ export default async function TentangKami() {
         <div className="max-w-[1060px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Sejarah Kami</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Sejarah Kami</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-4">Dari Pesantren, Untuk Umat</h2>
             <p className="text-[#475569] leading-relaxed mb-4 text-[15px]">
@@ -56,7 +56,7 @@ export default async function TentangKami() {
           <div className="grid gap-4">
             {TIMELINE.map(t => (
               <div key={t.year} className="flex gap-4 items-start">
-                <div className="w-12 h-12 bg-[#e8f0fb] rounded-xl flex items-center justify-center font-cabin font-bold text-[13px] text-[#3268C3] shrink-0">
+                <div className="w-12 h-12 bg-[#e8f0fb] rounded-xl flex items-center justify-center font-cabin font-bold text-[13px] text-[#83b64e] shrink-0">
                   {t.year}
                 </div>
                 <div className="text-[14px] text-[#475569] leading-relaxed pt-1">{t.ev}</div>
@@ -70,20 +70,20 @@ export default async function TentangKami() {
         <div className="max-w-[1060px] mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Visi & Misi</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Visi & Misi</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Fondasi Kerja Kami</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-[#1f4a9c] rounded-2xl p-8">
-              <div className="font-cabin text-[13px] font-bold text-[#c9892a] tracking-widest uppercase mb-3">Visi</div>
+            <div className="bg-[#83b64e] rounded-2xl p-8">
+              <div className="font-cabin text-[13px] font-bold text-[#ffffff] tracking-widest uppercase mb-3">Visi</div>
               <p className="text-white/85 text-[15.5px] leading-relaxed italic">
                 "Menjadi lembaga amil zakat nasional terdepan dalam mewujudkan kemandirian umat melalui pengelolaan ZISWAF yang profesional dan berdampak nyata."
               </p>
             </div>
             <div className="bg-white rounded-2xl p-8 border border-[#e2e8f0]">
-              <div className="font-cabin text-[13px] font-bold text-[#3268C3] tracking-widest uppercase mb-3">Misi</div>
+              <div className="font-cabin text-[13px] font-bold text-[#83b64e] tracking-widest uppercase mb-3">Misi</div>
               <ul className="list-disc pl-5 text-[#475569] text-[14.5px] leading-relaxed space-y-1">
                 <li>Menghimpun ZISWAF secara transparan dan akuntabel</li>
                 <li>Menyalurkan dana tepat sasaran kepada 8 asnaf</li>
@@ -99,8 +99,8 @@ export default async function TentangKami() {
         <div className="max-w-[1060px] mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Pengurus</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Pengurus</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Tim Kepemimpinan</h2>
           </div>
@@ -112,7 +112,7 @@ export default async function TentangKami() {
                 ) : (
                   <div 
                     className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center font-cabin font-bold text-[18px] text-white" 
-                    style={{ backgroundColor: t.accent_color || '#3268C3' }}
+                    style={{ backgroundColor: t.accent_color || '#83b64e' }}
                   >
                     {t.initials}
                   </div>
@@ -129,16 +129,16 @@ export default async function TentangKami() {
         <div className="max-w-[1060px] mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Legalitas</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Legalitas</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Dokumen Resmi</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {LEGAL_DOCS.map(l => (
-              <div key={l.label} className="bg-white rounded-xl p-5 border border-[#e2e8f0] border-l-4 border-l-[#3268C3]">
+              <div key={l.label} className="bg-white rounded-xl p-5 border border-[#e2e8f0] border-l-4 border-l-[#83b64e]">
                 <div className="text-[11.5px] font-bold text-[#94a3b8] uppercase tracking-wide mb-1.5">{l.label}</div>
-                <div className="font-cabin text-[15px] font-bold text-[#1f4a9c]">{l.value}</div>
+                <div className="font-cabin text-[15px] font-bold text-[#83b64e]">{l.value}</div>
               </div>
             ))}
           </div>

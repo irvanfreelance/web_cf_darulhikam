@@ -14,21 +14,21 @@ export default async function LayananZiswafPage() {
   ];
 
   const TYPES = [
-    { t:"Zakat Penghasilan", d:"2,5% dari penghasilan bersih per bulan jika telah mencapai nisab setara 85gr emas.", c:"text-[#3268C3]" },
-    { t:"Zakat Maal", d:"2,5% dari total harta yang telah tersimpan selama setahun dan mencapai nisab.", c:"text-[#3268C3]" },
-    { t:"Zakat Fitrah", d:"Wajib ditunaikan di bulan Ramadan sebelum shalat Idul Fitri untuk setiap jiwa.", c:"text-[#3268C3]" },
+    { t:"Zakat Penghasilan", d:"2,5% dari penghasilan bersih per bulan jika telah mencapai nisab setara 85gr emas.", c:"text-[#83b64e]" },
+    { t:"Zakat Maal", d:"2,5% dari total harta yang telah tersimpan selama setahun dan mencapai nisab.", c:"text-[#83b64e]" },
+    { t:"Zakat Fitrah", d:"Wajib ditunaikan di bulan Ramadan sebelum shalat Idul Fitri untuk setiap jiwa.", c:"text-[#83b64e]" },
     { t:"Infaq & Sedekah", d:"Pemberian sukarela di luar kewajiban zakat. Tidak ada batas minimal.", c:"text-[#1a6b3c]" },
-    { t:"Wakaf Tunai", d:"Aset wakaf berupa uang tunai yang dikelola produktif untuk umat secara permanen.", c:"text-[#c9892a]" },
+    { t:"Wakaf Tunai", d:"Aset wakaf berupa uang tunai yang dikelola produktif untuk umat secara permanen.", c:"text-[#83b64e]" },
     { t:"Fidyah", d:"Penggantian puasa yang tidak dapat dilakukan dengan memberi makan fakir miskin.", c:"text-[#1a6b3c]" },
   ];
 
   return (
     <div className="animate-in fade-in duration-300">
-      <div className="bg-[#1f4a9c] pt-24 pb-14 px-6 text-center">
+      <div className="bg-[#83b64e] pt-24 pb-14 px-6 text-center">
         <div className="max-w-[640px] mx-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Layanan ZISWAF</span>
+            <div className="w-[18px] h-0.5 bg-[#ffffff] rounded-full" />
+            <span className="text-[12px] font-bold text-[#ffffff] tracking-[1.5px] uppercase">Layanan ZISWAF</span>
           </div>
           <h1 className="font-cabin text-[34px] font-bold text-white mb-3">Salurkan Zakat, Infaq, Sedekah & Wakaf</h1>
           <p className="text-white/70 text-[16px] leading-relaxed">Tunaikan kewajiban dan raih keberkahan melalui kanal resmi LAZ Darul Hikam.</p>
@@ -40,8 +40,8 @@ export default async function LayananZiswafPage() {
           {/* Guide */}
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Panduan Donasi</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Panduan Donasi</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-4">Cara Mudah Berzakat</h2>
             <p className="text-[#475569] leading-relaxed text-[15px] mb-6">
@@ -49,14 +49,14 @@ export default async function LayananZiswafPage() {
             </p>
             <div className="grid gap-4 mb-7">
               {[
-                { n:"01", icon:<DollarSign size={20} className="text-[#3268C3]" />, t:"Transfer Bank", d:"Transfer ke rekening resmi LAZ Darul Hikam, lalu konfirmasi via WhatsApp ke 0800-1-ZAKAT." },
+                { n:"01", icon:<DollarSign size={20} className="text-[#83b64e]" />, t:"Transfer Bank", d:"Transfer ke rekening resmi LAZ Darul Hikam, lalu konfirmasi via WhatsApp ke 0800-1-ZAKAT." },
                 { n:"02", icon:<Globe size={20} className="text-[#1a6b3c]" />, t:"Portal Donasi Online", d:"Gunakan platform crowdfunding LAZ untuk donasi online dengan berbagai metode pembayaran digital." },
-                { n:"03", icon:<MapPin size={20} className="text-[#c9892a]" />, t:"Datang Langsung", d:"Kunjungi kantor kami di Jl. Darul Hikam No.1, Bandung pada hari kerja pukul 08.00-17.00 WIB." },
+                { n:"03", icon:<MapPin size={20} className="text-[#83b64e]" />, t:"Datang Langsung", d:"Kunjungi kantor kami di Jl. Darul Hikam No.1, Bandung pada hari kerja pukul 08.00-17.00 WIB." },
               ].map(s => (
                 <div key={s.n} className="flex gap-4 items-start p-4 bg-white rounded-xl border border-[#e2e8f0]">
                   <div className="w-10 h-10 bg-[#e8f0fb] rounded-xl flex items-center justify-center shrink-0">{s.icon}</div>
                   <div>
-                    <div className="text-[11px] font-bold text-[#3268C3] tracking-[1px] mb-0.5">LANGKAH {s.n}</div>
+                    <div className="text-[11px] font-bold text-[#83b64e] tracking-[1px] mb-0.5">LANGKAH {s.n}</div>
                     <div className="font-cabin text-[14.5px] font-bold text-[#0f1b35] mb-1">{s.t}</div>
                     <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">{s.d}</div>
                   </div>
@@ -64,13 +64,13 @@ export default async function LayananZiswafPage() {
               ))}
             </div>
             {/* CTA */}
-            <div className="bg-[#1f4a9c] rounded-xl p-6 text-center">
+            <div className="bg-[#83b64e] rounded-xl p-6 text-center">
               <div className="font-cabin font-bold text-[15px] text-white mb-2">Donasi Online Lebih Mudah</div>
               <p className="text-[13.5px] text-white/70 mb-4 leading-relaxed">
                 Akses portal donasi untuk memilih program, nominal, dan metode pembayaran favorit Anda.
               </p>
-              <Link href="/donasi" className="bg-[#c9892a] text-white border-none py-3 px-6 rounded-xl font-cabin font-bold text-[14px] inline-flex items-center gap-2 transition-opacity hover:opacity-90">
-                <Heart size={15} className="fill-white" /> Buka Portal Donasi
+              <Link href="/donasi" className="bg-white text-[#83b64e] border-none py-3 px-6 rounded-xl font-cabin font-bold text-[14px] inline-flex items-center gap-2 transition-opacity hover:opacity-90">
+                <Heart size={15} className="fill-[#83b64e]" /> Buka Portal Donasi
               </Link>
             </div>
           </div>
@@ -78,8 +78,8 @@ export default async function LayananZiswafPage() {
           {/* Jenis ZISWAF */}
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Jenis Layanan</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Jenis Layanan</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-4">Pilih Jenis Ibadah Anda</h2>
             <div className="grid gap-3">
@@ -101,24 +101,24 @@ export default async function LayananZiswafPage() {
       <section className="bg-[#ffffff] py-16 px-6">
         <div className="max-w-[1060px] mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Rekening Resmi</span>
+            <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+            <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Rekening Resmi</span>
           </div>
           <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Rekening Donasi Terpercaya</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-[760px] mx-auto">
             {BANKS.map(r => (
               <div key={r.bank} className="bg-[#f8fafc] border border-[#e2e8f0] rounded-xl p-5">
-                <div className="inline-block bg-[#3268C3] text-white font-cabin font-bold text-[11px] py-1 px-2.5 rounded-md mb-3">{r.logo}</div>
+                <div className="inline-block bg-[#83b64e] text-white font-cabin font-bold text-[11px] py-1 px-2.5 rounded-md mb-3">{r.logo}</div>
                 <div className="text-[12px] font-semibold text-[#94a3b8] uppercase tracking-[0.5px]">{r.bank}</div>
-                <div className="font-cabin text-[18px] font-bold text-[#3268C3] tracking-[1px] my-1">{r.no}</div>
+                <div className="font-cabin text-[18px] font-bold text-[#83b64e] tracking-[1px] my-1">{r.no}</div>
                 <div className="text-[12px] text-[#94a3b8]">a.n. LAZ Darul Hikam</div>
               </div>
             ))}
           </div>
-          <div className="max-w-[760px] mx-auto mt-5 bg-[#e8f0fb] rounded-xl p-3.5 flex items-center justify-center gap-2.5">
-            <AlertTriangle size={15} className="text-[#3268C3] shrink-0" />
-            <span className="text-[13.5px] text-[#1f4a9c] text-left leading-snug">LAZ Darul Hikam <strong>tidak memiliki rekening selain di atas</strong>. Harap waspada terhadap penipuan yang mengatasnamakan LAZ.</span>
+          <div className="max-w-[760px] mx-auto mt-5 bg-[#eef5e4] rounded-xl p-3.5 flex items-center justify-center gap-2.5">
+            <AlertTriangle size={15} className="text-[#83b64e] shrink-0" />
+            <span className="text-[13.5px] text-[#83b64e] text-left leading-snug">LAZ Darul Hikam <strong>tidak memiliki rekening selain di atas</strong>. Harap waspada terhadap penipuan yang mengatasnamakan LAZ.</span>
           </div>
         </div>
       </section>

@@ -40,12 +40,12 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
   return (
     <div className="animate-in fade-in duration-300 bg-[#ffffff] min-h-screen pb-16">
       <div className="max-w-[800px] mx-auto px-6 pt-10">
-        <Link href="/kabar-kebaikan" className="inline-flex items-center gap-1 text-[#3268C3] font-bold text-[13.5px] hover:underline mb-8">
+        <Link href="/kabar-kebaikan" className="inline-flex items-center gap-1 text-[#83b64e] font-bold text-[13.5px] hover:underline mb-8">
           <ChevronLeft size={16} /> Kembali ke Kabar Kebaikan
         </Link>
         
         <div className="mb-8">
-          <div className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase mb-3">
+          <div className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase mb-3">
             {article.category_id ? `Kategori ${article.category_id}` : 'Berita'}
           </div>
           <h1 className="font-cabin text-[32px] md:text-[40px] font-bold text-[#0f1b35] leading-tight mb-4">
@@ -73,8 +73,8 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
         <div className="bg-[#f4f6fb] mt-16 py-16 px-6">
           <div className="max-w-[1060px] mx-auto">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Baca Juga</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Baca Juga</span>
             </div>
             <h2 className="font-cabin text-[24px] font-bold text-[#0f1b35] leading-tight mb-7">Artikel Terkait</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

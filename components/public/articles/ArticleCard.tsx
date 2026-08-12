@@ -12,7 +12,7 @@ export default function ArticleCard({ a }: { a: any }) {
         <img src={a.featured_image_url || '/placeholder.jpg'} alt={a.title} className="w-full h-full object-cover transition-transform hover:scale-105" />
       </div>
       <div className="p-4">
-        <div className="text-[11px] font-bold text-[#3268C3] uppercase tracking-widest mb-1.5">
+        <div className="text-[11px] font-bold text-[#83b64e] uppercase tracking-widest mb-1.5">
           {a.category_name || 'Kabar Kebaikan'}
         </div>
         <h4 className="font-cabin text-[14.5px] font-bold text-[#0f1b35] leading-snug mb-2 line-clamp-2">

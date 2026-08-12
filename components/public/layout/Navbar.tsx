@@ -65,12 +65,12 @@ export default function Navbar({ config }: { config?: any }) {
           />
         ) : (
           <>
-            <div className={`w-[34px] h-[34px] rounded-lg flex items-center justify-center transition-colors duration-300 ${transparent ? 'bg-white/15' : 'bg-[#3268C3]'}`}>
+            <div className={`w-[34px] h-[34px] rounded-lg flex items-center justify-center transition-colors duration-300 ${transparent ? 'bg-white/15' : 'bg-[#83b64e]'}`}>
               <Star size={17} className="text-white fill-white" />
             </div>
             <div>
-              <div className={`font-cabin font-bold text-sm transition-colors duration-300 ${transparent ? 'text-white' : 'text-[#1f4a9c]'}`}>LAZ Darul Hikam</div>
-              <div className={`text-[10px] transition-colors duration-300 ${transparent ? 'text-white/70' : 'text-[#94a3b8]'}`}>SK Kemenag No. 792/2020</div>
+              <div className={`font-cabin font-bold text-sm transition-colors duration-300 ${transparent ? 'text-white' : 'text-[#83b64e]'}`}>LAZ Darul Hikam</div>
+              <div className={`text-[10px] transition-colors duration-300 ${transparent ? 'text-white/70' : 'text-[#94a3b8]'}`}>SK Kemenag No. 52/2024</div>
             </div>
           </>
         )}
@@ -85,7 +85,7 @@ export default function Navbar({ config }: { config?: any }) {
               px-3 py-1.5 border-none font-cabin text-[13px] rounded-lg transition-all duration-150
               ${transparent
                 ? (isActive ? 'bg-white/20 text-white font-bold' : 'bg-transparent text-white/90 font-medium hover:bg-white/10 hover:text-white')
-                : (isActive ? 'bg-[#e8f0fb] text-[#3268C3] font-bold' : 'bg-transparent text-[#475569] font-medium hover:bg-slate-50 hover:text-[#3268C3]')
+                : (isActive ? 'bg-[#e8f0fb] text-[#83b64e] font-bold' : 'bg-transparent text-[#475569] font-medium hover:bg-slate-50 hover:text-[#83b64e]')
               }
             `}>
               {l.label}
@@ -95,7 +95,7 @@ export default function Navbar({ config }: { config?: any }) {
         <Link href="/donasi" className={`ml-2 px-4 py-2 text-[13px] rounded-lg inline-flex items-center gap-2 font-cabin font-bold transition-all ${
           transparent
             ? 'bg-white/20 text-white hover:bg-white/30 border border-white/30'
-            : 'bg-[#3268C3] text-white hover:opacity-85'
+            : 'bg-[#83b64e] text-white hover:opacity-85'
         }`}>
           <Heart size={14} className="fill-white" /> Donasi
         </Link>
@@ -116,13 +116,13 @@ export default function Navbar({ config }: { config?: any }) {
             return (
               <Link key={l.id} href={l.id} onClick={() => setOpen(false)} className={`
                 block px-4 py-3 rounded-lg font-cabin
-                ${isActive ? 'bg-[#e8f0fb] text-[#3268C3] font-bold' : 'text-[#475569]'}
+                ${isActive ? 'bg-[#e8f0fb] text-[#83b64e] font-bold' : 'text-[#475569]'}
               `}>
                 {l.label}
               </Link>
             );
           })}
-          <Link href="/donasi" onClick={() => setOpen(false)} className="mt-2 w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 bg-[#3268C3] text-white font-cabin font-bold">
+          <Link href="/donasi" onClick={() => setOpen(false)} className="mt-2 w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 bg-[#83b64e] text-white font-cabin font-bold">
             <Heart size={16} className="fill-white" /> Donasi
           </Link>
         </div>

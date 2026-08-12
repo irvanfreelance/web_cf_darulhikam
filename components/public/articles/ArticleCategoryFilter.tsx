@@ -60,7 +60,7 @@ export default function ArticleCategoryFilter({
               className={`
                 px-4 py-2 rounded-full text-[13.5px] font-semibold transition-all duration-200 cursor-pointer border
                 ${isActive
-                  ? 'bg-[#3268C3] text-white border-[#3268C3] shadow-sm scale-[1.02]'
+                  ? 'bg-[#83b64e] text-white border-[#83b64e] shadow-sm scale-[1.02]'
                   : 'bg-white text-[#475569] border-[#e2e8f0] hover:bg-slate-50 hover:border-slate-300'
                 }
               `}

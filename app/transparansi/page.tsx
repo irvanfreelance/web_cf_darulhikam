@@ -49,11 +49,11 @@ export default async function TransparansiPage() {
 
   return (
     <div className="animate-in fade-in duration-300">
-      <div className="bg-[#1f4a9c] pt-24 pb-14 px-6 text-center">
+      <div className="bg-[#83b64e] pt-24 pb-14 px-6 text-center">
         <div className="max-w-[640px] mx-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Transparansi</span>
+            <div className="w-[18px] h-0.5 bg-[#ffffff] rounded-full" />
+            <span className="text-[12px] font-bold text-[#ffffff] tracking-[1.5px] uppercase">Transparansi</span>
           </div>
           <h1 className="font-cabin text-[34px] font-bold text-white mb-3">Keterbukaan adalah Kewajiban Kami</h1>
           <p className="text-white/70 text-[16px] leading-relaxed">Laporan keuangan dipublikasikan secara berkala dan diaudit oleh KAP independen.</p>
@@ -64,8 +64,8 @@ export default async function TransparansiPage() {
         <div className="max-w-[1060px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Alokasi Dana</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Alokasi Dana</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-6">Distribusi Penyaluran {currentYear}</h2>
             <div className="grid gap-3.5">
@@ -84,14 +84,14 @@ export default async function TransparansiPage() {
           </div>
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Dampak Terukur</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Dampak Terukur</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-6">Angka Kumulatif {currentYear}</h2>
             <div className="grid grid-cols-2 gap-4">
               {impactMetrics.map((d: any, i: number) => (
                 <div key={i} className="bg-white rounded-xl p-5 border border-[#e2e8f0] text-center">
-                  <div className="font-cabin text-[28px] font-bold text-[#3268C3]">
+                  <div className="font-cabin text-[28px] font-bold text-[#83b64e]">
                     <CountUp target={Number(d.value)} />{d.suffix}
                   </div>
                   <div className="text-[12.5px] text-[#475569] mt-1">{d.label}</div>
@@ -107,8 +107,8 @@ export default async function TransparansiPage() {
         <div className="max-w-[1060px] mx-auto">
           <div className="text-center mb-10 flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-              <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Laporan Keuangan</span>
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Laporan Keuangan</span>
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Unduh Laporan Audit</h2>
           </div>
@@ -118,8 +118,8 @@ export default async function TransparansiPage() {
             ) : (
               financialReports.map((r: any) => (
                 <div key={r.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-[#f8fafc] rounded-xl p-4 sm:p-5 border border-[#e2e8f0]">
-                  <div className="w-11 h-11 bg-[#e8f0fb] rounded-xl flex items-center justify-center shrink-0">
-                    <FileText size={20} className="text-[#3268C3]" />
+                  <div className="w-11 h-11 bg-[#eef5e4] rounded-xl flex items-center justify-center shrink-0">
+                    <FileText size={20} className="text-[#83b64e]" />
                   </div>
                   <div className="flex-1">
                     <div className="font-cabin font-bold text-[14.5px] text-[#0f1b35]">{r.title}</div>
@@ -127,7 +127,7 @@ export default async function TransparansiPage() {
                       {r.report_type} | {r.audit_status.replace('_', ' ')} | {r.file_size_kb ? `${(r.file_size_kb / 1024).toFixed(2)} MB` : '-'}
                     </div>
                   </div>
-                  <a href={r.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3.5 py-2 bg-[#e8f0fb] text-[#3268C3] border-none rounded-lg font-bold text-[13px] shrink-0 hover:bg-[#3268C3] hover:text-white transition-colors">
+                  <a href={r.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3.5 py-2 bg-[#eef5e4] text-[#83b64e] border-none rounded-lg font-bold text-[13px] shrink-0 hover:bg-[#83b64e] hover:text-white transition-colors">
                     <Download size={14} /> Unduh
                   </a>
                 </div>

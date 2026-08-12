@@ -12,11 +12,11 @@ export default async function KabarKebaikanPage() {
 
   return (
     <div className="animate-in fade-in duration-300">
-      <div className="bg-[#1f4a9c] pt-24 pb-14 px-6 text-center">
+      <div className="bg-[#83b64e] pt-24 pb-14 px-6 text-center">
         <div className="max-w-[640px] mx-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-[18px] h-0.5 bg-[#c9892a] rounded-full" />
-            <span className="text-[12px] font-bold text-[#c9892a] tracking-[1.5px] uppercase">Kabar Kebaikan</span>
+            <div className="w-[18px] h-0.5 bg-[#ffffff] rounded-full" />
+            <span className="text-[12px] font-bold text-[#ffffff] tracking-[1.5px] uppercase">Kabar Kebaikan</span>
           </div>
           <h1 className="font-cabin text-[34px] font-bold text-white mb-3">Berita, Laporan & Kisah Penerima Manfaat</h1>
         </div>
