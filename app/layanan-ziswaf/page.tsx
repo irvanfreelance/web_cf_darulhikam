@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { DollarSign, Globe, MapPin, Heart, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { getWebLegality, getWebBankAccounts } from '@/lib/web-queries';
+import Reveal from '@/components/public/shared/Reveal';
 
 export default async function LayananZiswafPage() {
   const [legality, banks] = (await Promise.all([
@@ -48,15 +49,17 @@ export default async function LayananZiswafPage() {
                 { n:"01", icon:<DollarSign size={20} className="text-[#83b64e]" />, t:"Transfer Bank", d:"Transfer ke rekening resmi LAZ Darul Hikam, lalu konfirmasi via WhatsApp ke 0800-1-ZAKAT." },
                 { n:"02", icon:<Globe size={20} className="text-[#1a6b3c]" />, t:"Portal Donasi Online", d:"Gunakan platform crowdfunding LAZ untuk donasi online dengan berbagai metode pembayaran digital." },
                 { n:"03", icon:<MapPin size={20} className="text-[#83b64e]" />, t:"Datang Langsung", d:"Kunjungi kantor kami di Jl. Darul Hikam No.1, Bandung pada hari kerja pukul 08.00-17.00 WIB." },
-              ].map(s => (
-                <div key={s.n} className="flex gap-4 items-start p-4 bg-white rounded-xl border border-[#e2e8f0]">
-                  <div className="w-10 h-10 bg-[#e8f0fb] rounded-xl flex items-center justify-center shrink-0">{s.icon}</div>
-                  <div>
-                    <div className="text-[11px] font-bold text-[#83b64e] tracking-[1px] mb-0.5">LANGKAH {s.n}</div>
-                    <div className="font-cabin text-[14.5px] font-bold text-[#0f1b35] mb-1">{s.t}</div>
-                    <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">{s.d}</div>
+              ].map((s, i) => (
+                <Reveal key={s.n} delay={i * 90}>
+                  <div className="hover-lift flex gap-4 items-start p-4 bg-white rounded-xl border border-[#e2e8f0]">
+                    <div className="w-10 h-10 bg-[#e8f0fb] rounded-xl flex items-center justify-center shrink-0">{s.icon}</div>
+                    <div>
+                      <div className="text-[11px] font-bold text-[#83b64e] tracking-[1px] mb-0.5">LANGKAH {s.n}</div>
+                      <div className="font-cabin text-[14.5px] font-bold text-[#0f1b35] mb-1">{s.t}</div>
+                      <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">{s.d}</div>
+                    </div>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
             {/* CTA */}
@@ -65,7 +68,7 @@ export default async function LayananZiswafPage() {
               <p className="text-[13.5px] text-white/70 mb-4 leading-relaxed">
                 Akses portal donasi untuk memilih program, nominal, dan metode pembayaran favorit Anda.
               </p>
-              <Link href="/donasi" className="bg-white text-[#83b64e] border-none py-3 px-6 rounded-xl font-cabin font-bold text-[14px] inline-flex items-center gap-2 transition-opacity hover:opacity-90">
+              <Link href="/donasi" className="cta-pulse bg-white text-[#83b64e] border-none py-3 px-6 rounded-xl font-cabin font-bold text-[14px] inline-flex items-center gap-2 transition-all hover:opacity-90 hover:scale-105 active:scale-95">
                 <Heart size={15} className="fill-[#83b64e]" /> Buka Portal Donasi
               </Link>
             </div>
@@ -79,14 +82,16 @@ export default async function LayananZiswafPage() {
             </div>
             <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-4">Pilih Jenis Ibadah Anda</h2>
             <div className="grid gap-3">
-              {TYPES.map(x => (
-                <div key={x.t} className="flex gap-3 items-start p-3.5 bg-white rounded-xl border border-[#e2e8f0]">
-                  <CheckCircle2 size={16} className={`${x.c} shrink-0 mt-0.5`} />
-                  <div>
-                    <div className="font-cabin text-[14px] font-bold text-[#0f1b35] mb-0.5" dangerouslySetInnerHTML={{__html: x.t}} />
-                    <div className="text-[13px] text-[#94a3b8] leading-relaxed">{x.d}</div>
+              {TYPES.map((x, i) => (
+                <Reveal key={x.t} delay={i * 70}>
+                  <div className="hover-lift flex gap-3 items-start p-3.5 bg-white rounded-xl border border-[#e2e8f0]">
+                    <CheckCircle2 size={16} className={`${x.c} shrink-0 mt-0.5`} />
+                    <div>
+                      <div className="font-cabin text-[14px] font-bold text-[#0f1b35] mb-0.5" dangerouslySetInnerHTML={{__html: x.t}} />
+                      <div className="text-[13px] text-[#94a3b8] leading-relaxed">{x.d}</div>
+                    </div>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -97,24 +102,28 @@ export default async function LayananZiswafPage() {
       {banks?.length > 0 && (
         <section className="bg-[#ffffff] py-16 px-6">
           <div className="max-w-[1060px] mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
-              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Rekening Resmi</span>
-            </div>
-            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Rekening Donasi Terpercaya</h2>
+            <Reveal>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+                <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Rekening Resmi</span>
+              </div>
+              <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Rekening Donasi Terpercaya</h2>
+            </Reveal>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-[900px] mx-auto">
-              {banks.map((r: any) => (
-                <div key={r.account_number} className="bg-[#f8fafc] border border-[#e2e8f0] rounded-xl p-5">
-                  {r.logo_url ? (
-                    <img src={r.logo_url} alt={r.bank_name} className="h-6 mx-auto mb-3 object-contain" />
-                  ) : (
-                    <div className="inline-block bg-[#83b64e] text-white font-cabin font-bold text-[11px] py-1 px-2.5 rounded-md mb-3">{r.bank_code || r.bank_name}</div>
-                  )}
-                  <div className="text-[12px] font-semibold text-[#94a3b8] uppercase tracking-[0.5px]">{r.bank_name}</div>
-                  <div className="font-cabin text-[18px] font-bold text-[#83b64e] tracking-[1px] my-1">{r.account_number}</div>
-                  <div className="text-[12px] text-[#94a3b8]">a.n. {r.account_name}</div>
-                </div>
+              {banks.map((r: any, i: number) => (
+                <Reveal key={r.account_number} delay={i * 60}>
+                  <div className="hover-lift bg-[#f8fafc] border border-[#e2e8f0] rounded-xl p-5 h-full">
+                    {r.logo_url ? (
+                      <img src={r.logo_url} alt={r.bank_name} className="h-6 mx-auto mb-3 object-contain" />
+                    ) : (
+                      <div className="inline-block bg-[#83b64e] text-white font-cabin font-bold text-[11px] py-1 px-2.5 rounded-md mb-3">{r.bank_code || r.bank_name}</div>
+                    )}
+                    <div className="text-[12px] font-semibold text-[#94a3b8] uppercase tracking-[0.5px]">{r.bank_name}</div>
+                    <div className="font-cabin text-[18px] font-bold text-[#83b64e] tracking-[1px] my-1">{r.account_number}</div>
+                    <div className="text-[12px] text-[#94a3b8]">a.n. {r.account_name}</div>
+                  </div>
+                </Reveal>
               ))}
             </div>
             <div className="max-w-[760px] mx-auto mt-5 bg-[#eef5e4] rounded-xl p-3.5 flex items-center justify-center gap-2.5">

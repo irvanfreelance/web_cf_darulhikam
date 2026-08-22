@@ -42,7 +42,7 @@ export default function CategoryGrid({ categories }: { categories: any[] }) {
 
         return (
           <Link key={i} href={`/kategori/${encodeURIComponent(cat.name)}`} className="flex flex-col items-center cursor-pointer active:scale-95 group">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-2 shadow-sm border border-gray-50 \${iconBg}`}>
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-2 shadow-sm border border-gray-50 transition-transform duration-200 group-hover:scale-110 group-hover:shadow-md ${iconBg}`}>
               <IconComponent size={26} className={iconColor} />
             </div>
             <span className="text-[10px] font-semibold text-center text-gray-600">{cat.name}</span>

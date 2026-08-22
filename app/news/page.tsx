@@ -66,11 +66,11 @@ export default async function NewsPage() {
                   key={update.id}
                   href={`/news/${update.id}`}
                   prefetch={true}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden block"
+                  className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden block transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   {update.image_url && (
-                    <div className="h-40 w-full bg-gray-100 relative">
-                      <Image src={update.image_url} alt={update.title} fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" />
+                    <div className="h-40 w-full bg-gray-100 relative overflow-hidden">
+                      <Image src={update.image_url} alt={update.title} fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
                     </div>
                   )}
                   <div className="p-4">

@@ -121,7 +121,7 @@ export default async function CampaignDetail(props: {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pt-5 pb-40 -mt-5 bg-white rounded-t-2xl relative z-10 no-scrollbar shadow-lg">
+      <div className="flex-1 overflow-y-auto px-5 pt-5 pb-40 -mt-5 bg-white rounded-t-2xl relative z-10 no-scrollbar shadow-lg animate-in slide-in-from-bottom-4 fade-in duration-500">
         <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-4" />
         <div className="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full inline-block mb-3">
           {campaign.category_name}
@@ -132,7 +132,7 @@ export default async function CampaignDetail(props: {
           <p className="text-2xl font-bold text-teal-600 mb-1">{formatIDR(Number(campaign.collected))}</p>
           {!campaign.has_no_target && (
             <div className="w-full bg-gray-100 rounded-full h-2 mb-3 overflow-hidden">
-              <div className="bg-teal-500 h-full rounded-full" style={{ width: `${campaign.progress}%` }} />
+              <div className="bg-teal-500 h-full rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${campaign.progress}%` }} />
             </div>
           )}
           <div className="flex justify-between text-sm text-gray-600">

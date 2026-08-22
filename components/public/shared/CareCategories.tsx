@@ -1,28 +1,31 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-  X, Heart, GraduationCap, HandCoins, Leaf, HeartPulse, Users, MoonStar,
-  Home, Droplet, Utensils, BookOpen, Shield, Baby, Stethoscope, Wheat,
-  Building2, HandHelping, Sun, TreePine, Ambulance, School, Landmark, PawPrint,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { X, Heart } from 'lucide-react';
 
-// Keep in sync with the icon picker in the admin panel
-// (web_cf_darulhikam_admin/app/(admin)/web-care-categories/page.tsx).
-const ICON_MAP: Record<string, React.ComponentType<any>> = {
+// Fallback icons for categories that predate icon upload — shown only
+// until the admin uploads a custom icon_url for that category.
+import { GraduationCap, HandCoins, Leaf, HeartPulse, Users, MoonStar } from 'lucide-react';
+const FALLBACK_ICONS: Record<string, React.ComponentType<any>> = {
   GraduationCap, HandCoins, Leaf, HeartPulse, Users, MoonStar, Heart,
-  Home, Droplet, Utensils, BookOpen, Shield, Baby, Stethoscope, Wheat,
-  Building2, HandHelping, Sun, TreePine, Ambulance, School, Landmark, PawPrint,
 };
 
 interface CareCategory {
   icon_name: string;
+  icon_url: string | null;
   label: string;
   quote_text: string | null;
   quote_source: string | null;
   description: string | null;
   photo_url: string | null;
+}
+
+function CategoryIcon({ category, size }: { category: CareCategory; size: number }) {
+  if (category.icon_url) {
+    return <img src={category.icon_url} alt="" className="w-full h-full object-contain" />;
+  }
+  const Icon = FALLBACK_ICONS[category.icon_name] || Heart;
+  return <Icon size={size} className="text-white" />;
 }
 
 // Renders **bold** segments as <strong>, everything else as plain text.
@@ -54,22 +57,19 @@ export default function CareCategories({ categories }: { categories: CareCategor
   return (
     <>
       <div className="grid grid-cols-3 md:grid-cols-6 gap-5 md:gap-6">
-        {categories.map((c) => {
-          const Icon = ICON_MAP[c.icon_name] || Heart;
-          return (
-            <button
-              key={c.label}
-              type="button"
-              onClick={() => setSelected(c)}
-              className="flex flex-col items-center gap-2.5 group"
-            >
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-[#83b64e] rounded-2xl flex items-center justify-center shadow-sm transition-transform group-hover:scale-105 group-active:scale-95">
-                <Icon size={26} className="text-white" />
-              </div>
-              <span className="text-[12.5px] font-semibold text-[#334155] text-center leading-tight">{c.label}</span>
-            </button>
-          );
-        })}
+        {categories.map((c) => (
+          <button
+            key={c.label}
+            type="button"
+            onClick={() => setSelected(c)}
+            className="flex flex-col items-center gap-2.5 group"
+          >
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-[#83b64e] rounded-2xl flex items-center justify-center shadow-sm transition-transform group-hover:scale-105 group-active:scale-95 overflow-hidden p-2.5">
+              <CategoryIcon category={c} size={26} />
+            </div>
+            <span className="text-[12.5px] font-semibold text-[#334155] text-center leading-tight">{c.label}</span>
+          </button>
+        ))}
       </div>
 
       {isMounted && selected && (
@@ -95,11 +95,8 @@ export default function CareCategories({ categories }: { categories: CareCategor
 
             <div className="p-6 sm:p-7">
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-11 h-11 bg-[#83b64e] rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                  {(() => {
-                    const Icon = ICON_MAP[selected.icon_name] || Heart;
-                    return <Icon size={20} className="text-white" />;
-                  })()}
+                <div className="w-11 h-11 bg-[#83b64e] rounded-xl flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-2">
+                  <CategoryIcon category={selected} size={20} />
                 </div>
                 <h3 className="font-cabin text-xl font-bold text-[#0f1b35]">{selected.label}</h3>
               </div>

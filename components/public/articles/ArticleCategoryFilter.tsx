@@ -72,7 +72,7 @@ export default function ArticleCategoryFilter({
       </div>
 
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div key={String(activeTab)} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 animate-in fade-in duration-300">
         {filteredArticles.length === 0 ? (
           <div className="col-span-full text-center text-[#475569] py-12 bg-white rounded-2xl border border-[#e2e8f0]">
             <p className="font-semibold text-[15px] mb-1">Belum ada artikel dipublikasikan.</p>

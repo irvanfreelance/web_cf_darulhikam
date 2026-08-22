@@ -72,7 +72,7 @@ export async function getWebCareCategories() {
   let data = await redis.get(cacheKey);
   if (!data) {
     data = await query(`
-      SELECT icon_name, label, quote_text, quote_source, description, photo_url
+      SELECT icon_name, icon_url, label, quote_text, quote_source, description, photo_url
       FROM web_care_categories
       WHERE is_active = true
       ORDER BY display_order ASC, id ASC
