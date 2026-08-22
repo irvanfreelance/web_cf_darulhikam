@@ -2,7 +2,16 @@ import React from 'react';
 import Link from 'next/link';
 import { Star, Mail, Globe, MessageCircle } from 'lucide-react';
 
-export default function Footer({ config }: { config: any }) {
+const FALLBACK_PROGRAMS = [
+  { title: 'Beasiswa Generasi Rabbani', slug: null },
+  { title: 'Layanan Kesehatan', slug: null },
+  { title: 'Tanggap Bencana', slug: null },
+  { title: 'Modal Usaha Dhuafa', slug: null },
+];
+
+export default function Footer({ config, programs }: { config: any, programs?: any[] }) {
+  const footerPrograms = programs && programs.length > 0 ? programs : FALLBACK_PROGRAMS;
+
   return (
     <footer className="bg-[#ffffff] border-t border-[#e2e8f0] pt-12 pb-8">
       <div className="max-w-[1060px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
@@ -12,7 +21,7 @@ export default function Footer({ config }: { config: any }) {
               <Star size={17} className="text-white fill-white" />
             </div>
             <div>
-              <div className="font-cabin font-bold text-sm text-[#83b64e]">LAZ Darul Hikam</div>
+              <div className="font-cabin font-bold text-sm text-[#83b64e]">{config?.ngo_name || 'LAZ Darul Hikam'}</div>
               <div className="text-[10px] text-[#94a3b8]">SK Kemenag No. 52/2024</div>
             </div>
           </Link>
@@ -39,10 +48,11 @@ export default function Footer({ config }: { config: any }) {
         <div>
           <h4 className="font-cabin font-bold text-[15px] text-[#0f1b35] mb-4">Program</h4>
           <ul className="space-y-2 text-[13.5px] text-[#475569]">
-            <li><Link href="/program" className="hover:text-[#83b64e]">Beasiswa Generasi Rabbani</Link></li>
-            <li><Link href="/program" className="hover:text-[#83b64e]">Layanan Kesehatan</Link></li>
-            <li><Link href="/program" className="hover:text-[#83b64e]">Tanggap Bencana</Link></li>
-            <li><Link href="/program" className="hover:text-[#83b64e]">Modal Usaha Dhuafa</Link></li>
+            {footerPrograms.map((p: any) => (
+              <li key={p.slug || p.title}>
+                <Link href={p.slug ? `/donasi/${p.slug}` : '/program'} className="hover:text-[#83b64e]">{p.title}</Link>
+              </li>
+            ))}
           </ul>
         </div>
 

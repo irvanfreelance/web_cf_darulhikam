@@ -96,6 +96,24 @@ export async function getAllCampaigns(searchQ?: string | null) {
   return campaigns;
 }
 
+export async function getFooterPrograms() {
+  const cacheKey = 'web:footer_programs';
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT title, slug
+      FROM campaigns
+      WHERE status = 'ACTIVE' AND is_carousel = true
+      ORDER BY sort ASC
+      LIMIT 4
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 300 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
 export async function getCarouselCampaigns() {
   const rawCampaigns = await query(`
     SELECT c.*, 
