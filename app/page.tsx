@@ -1,15 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Heart, ChevronRight, Target, Eye, TrendingUp, GraduationCap, HandCoins, Leaf, HeartPulse, Users, MoonStar } from 'lucide-react';
+import { ShieldCheck, Heart, ChevronRight, Target, Eye, TrendingUp } from 'lucide-react';
 import CountUp from '@/components/public/shared/CountUp';
 import ProgramCard from '@/components/public/programs/ProgramCard';
 import ArticleCard from '@/components/public/articles/ArticleCard';
 import PartnersCarousel from '@/components/public/shared/PartnersCarousel';
+import CareCategories from '@/components/public/shared/CareCategories';
 import {
   getWebHeroConfig,
   getWebImpactMetrics,
   getWebTestimonials,
   getWebPartners,
+  getWebCareCategories,
   getLatestArticles
 } from '@/lib/web-queries';
 import { getAllCampaigns } from '@/lib/campaigns';
@@ -17,14 +19,15 @@ import { getAllCampaigns } from '@/lib/campaigns';
 export const revalidate = 300; // ISR 5 minutes
 
 export default async function Beranda() {
-  const [heroConfig, impactMetrics, testimonials, partners, articles, allCampaigns] = (await Promise.all([
+  const [heroConfig, impactMetrics, testimonials, partners, careCategories, articles, allCampaigns] = (await Promise.all([
     getWebHeroConfig(),
     getWebImpactMetrics(),
     getWebTestimonials(),
     getWebPartners(),
+    getWebCareCategories(),
     getLatestArticles(3),
     getAllCampaigns()
-  ])) as [any, any[], any[], any[], any[], any[]];
+  ])) as [any, any[], any[], any[], any[], any[], any[]];
 
   const featuredPrograms = allCampaigns.filter((p: any) => p.is_urgent).slice(0, 3);
   if (featuredPrograms.length < 3) {
@@ -120,23 +123,7 @@ export default async function Beranda() {
           <p className="text-[#64748b] text-[15px] leading-relaxed max-w-[640px] mx-auto mb-10">
             Setiap amanah dikelola dan disalurkan melalui berbagai program kebaikan untuk membantu, memberdayakan, dan membuka peluang bagi masyarakat untuk tumbuh lebih baik.
           </p>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-5 md:gap-6">
-            {[
-              { icon: GraduationCap, label: 'Peduli Pendidikan' },
-              { icon: HandCoins, label: 'Peduli Ekonomi' },
-              { icon: Leaf, label: 'Peduli Lingkungan' },
-              { icon: HeartPulse, label: 'Peduli Kesehatan' },
-              { icon: Users, label: 'Peduli Umat' },
-              { icon: MoonStar, label: 'Program Khusus' },
-            ].map((c) => (
-              <div key={c.label} className="flex flex-col items-center gap-2.5">
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-[#83b64e] rounded-2xl flex items-center justify-center shadow-sm">
-                  <c.icon size={26} className="text-white" />
-                </div>
-                <span className="text-[12.5px] font-semibold text-[#334155] text-center leading-tight">{c.label}</span>
-              </div>
-            ))}
-          </div>
+          <CareCategories categories={careCategories} />
         </div>
       </section>
 
