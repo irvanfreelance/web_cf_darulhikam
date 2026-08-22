@@ -4,6 +4,7 @@ import { ShieldCheck, Heart, ChevronRight, Target, Eye, TrendingUp, GraduationCa
 import CountUp from '@/components/public/shared/CountUp';
 import ProgramCard from '@/components/public/programs/ProgramCard';
 import ArticleCard from '@/components/public/articles/ArticleCard';
+import PartnersCarousel from '@/components/public/shared/PartnersCarousel';
 import {
   getWebHeroConfig,
   getWebImpactMetrics,
@@ -246,21 +247,15 @@ export default async function Beranda() {
       </section>
 
       {/* Mitra */}
-      <section className="bg-[#f4f6fb] py-12 px-6">
-        <div className="max-w-[1060px] mx-auto text-center">
+      <section className="bg-[#f4f6fb] py-12">
+        <div className="max-w-[1060px] mx-auto text-center px-6">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
             <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Jaringan & Kemitraan</span>
           </div>
           <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Dipercaya Lembaga Terkemuka</h2>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {partners.map((m: any) => (
-              <div key={m.name} className="bg-[#ffffff] border border-[#e2e8f0] rounded-xl px-5 py-2.5 text-[13.5px] font-semibold text-[#475569] shadow-sm">
-                {m.name}
-              </div>
-            ))}
-          </div>
         </div>
+        <PartnersCarousel partners={partners} />
       </section>
 
       {/* Latest News */}
