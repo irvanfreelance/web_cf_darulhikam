@@ -50,6 +50,23 @@ export async function getWebTestimonials() {
   return data;
 }
 
+export async function getWebBankAccounts() {
+  const cacheKey = `web:bank_accounts`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT bank_name, account_number, account_name, bank_code, logo_url
+      FROM web_bank_accounts
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 300 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
 export async function getWebPartners() {
   const cacheKey = `web:partners`;
   let data = await redis.get(cacheKey);
