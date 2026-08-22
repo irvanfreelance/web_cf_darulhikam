@@ -5,6 +5,7 @@ import CountUp from '@/components/public/shared/CountUp';
 import ProgramCard from '@/components/public/programs/ProgramCard';
 import ArticleCard from '@/components/public/articles/ArticleCard';
 import PartnersCarousel from '@/components/public/shared/PartnersCarousel';
+import TestimonialsCarousel from '@/components/public/shared/TestimonialsCarousel';
 import CareCategories from '@/components/public/shared/CareCategories';
 import Reveal from '@/components/public/shared/Reveal';
 import {
@@ -227,32 +228,9 @@ export default async function Beranda() {
               <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Suara Mereka yang Merasakan Dampaknya</h2>
             </div>
           </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {testimonials.slice(0, 3).map((t: any, i: number) => (
-              <Reveal key={t.person_name} delay={i * 100}>
-                <div className="hover-lift bg-[#f8fafc] rounded-2xl p-7 border border-[#e2e8f0] relative h-full">
-                  <div className="text-[48px] text-[#e8f0fb] font-cabin font-bold leading-none mb-2">"</div>
-                  <p className="text-[14.5px] text-[#475569] leading-relaxed italic mb-6 line-clamp-4">{t.quote}</p>
-                  <div className="flex items-center gap-3">
-                    {t.avatar_url ? (
-                      <img src={t.avatar_url} alt={t.person_name} className="w-11 h-11 rounded-full object-cover shrink-0" />
-                    ) : (
-                      <div className="w-11 h-11 rounded-full bg-[#83b64e] flex items-center justify-center font-cabin font-bold text-[15px] text-white shrink-0">
-                        {t.initials}
-                      </div>
-                    )}
-                    <div>
-                      <div className="font-cabin font-bold text-[14px]">{t.person_name}</div>
-                      <div className="text-[12.5px] text-[#94a3b8]">{t.person_role}</div>
-                      <div className={`text-[11px] px-2 py-0.5 rounded-full inline-block mt-1 font-bold ${t.person_type === 'muzakki' ? 'bg-[#eef5e4] text-[#83b64e]' : 'bg-[#fdf3e3] text-[#c9892a]'}`}>
-                        {t.person_type === 'muzakki' ? 'Muzakki' : 'Mustahiq'}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={100}>
+            <TestimonialsCarousel testimonials={testimonials} />
+          </Reveal>
         </div>
       </section>
 
