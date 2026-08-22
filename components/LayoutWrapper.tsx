@@ -6,7 +6,7 @@ import BottomNav from './layout/BottomNav';
 import Navbar from './public/layout/Navbar';
 import Footer from './public/layout/Footer';
 
-export default function LayoutWrapper({ children, configs }: { children: React.ReactNode, configs: any }) {
+export default function LayoutWrapper({ children, configs, footerPrograms }: { children: React.ReactNode, configs: any, footerPrograms?: any[] }) {
   const pathname = usePathname();
   
   // Routes for the Corporate Website
@@ -26,7 +26,7 @@ export default function LayoutWrapper({ children, configs }: { children: React.R
         <main className="flex-1 w-full">
           {children}
         </main>
-        <Footer config={configs} />
+        <Footer config={configs} programs={footerPrograms} />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import "./globals.css";
 import BottomNav from "@/components/layout/BottomNav";
 import { query } from "@/lib/db";
 import { redis } from "@/lib/redis";
+import { getFooterPrograms } from "@/lib/campaigns";
 import TrackingScripts from "@/components/TrackingScripts";
 import { Providers } from "@/components/Providers";
 
@@ -39,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
     if (cached) {
       configs = typeof cached === 'string' ? JSON.parse(cached) : cached;
     } else {
-      const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id FROM ngo_configs LIMIT 1');
+      const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id, short_description, address, whatsapp_number, facebook_url, instagram_url FROM ngo_configs LIMIT 1');
       if (res.length > 0) {
         configs = res[0];
         redis.set('ngo:configs:global_v4', JSON.stringify(configs), { ex: 3600 }).catch(() => {});
@@ -95,6 +96,7 @@ export default async function RootLayout({
 }>) {
   let configs = null;
   let pixelEvents = null;
+  let footerPrograms: any[] = [];
   try {
     // Cache ngo_configs in Redis – avoid DB hit on every render
     const configCacheKey = 'ngo:configs:global_v4';
@@ -108,7 +110,7 @@ export default async function RootLayout({
     if (cachedConfig) {
       configs = typeof cachedConfig === 'string' ? JSON.parse(cachedConfig) : cachedConfig;
     } else {
-      const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id, video_url FROM ngo_configs LIMIT 1');
+      const res = await query('SELECT ngo_name, logo_url, primary_color, favicon_url, meta_pixel_id, tiktok_pixel_id, google_ads_id, google_analytic_id, video_url, short_description, address, whatsapp_number, facebook_url, instagram_url FROM ngo_configs LIMIT 1');
       if (res.length > 0) {
         configs = res[0];
         // Cache for 1 hour
@@ -128,6 +130,12 @@ export default async function RootLayout({
     }
   } catch (e) {
     console.error("Failed to fetch ngo_configs or pixel_events for tracking", e);
+  }
+
+  try {
+    footerPrograms = await getFooterPrograms();
+  } catch (e) {
+    console.error("Failed to fetch footer programs", e);
   }
 
   return (
@@ -172,7 +180,7 @@ export default async function RootLayout({
           />
         )}
         <Providers>
-          <LayoutWrapper configs={configs}>
+          <LayoutWrapper configs={configs} footerPrograms={footerPrograms}>
             {children}
           </LayoutWrapper>
         </Providers>
