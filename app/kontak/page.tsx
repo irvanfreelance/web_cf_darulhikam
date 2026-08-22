@@ -57,7 +57,7 @@ export default async function KontakPage() {
                 </div>
                 <div>
                   <div className="font-cabin font-bold text-[14.5px] text-[#0f1b35] mb-1">Email Resmi</div>
-                  <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">layanan@lazdarulhikam.org</div>
+                  <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">{config?.email || "layanan@lazdarulhikam.org"}</div>
                 </div>
               </div>
               <div className="flex gap-4 items-start p-4 bg-white rounded-xl border border-[#e2e8f0]">
@@ -66,7 +66,7 @@ export default async function KontakPage() {
                 </div>
                 <div>
                   <div className="font-cabin font-bold text-[14.5px] text-[#0f1b35] mb-1">Jam Operasional</div>
-                  <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">Senin - Jumat: 08.00 - 17.00 WIB</div>
+                  <div className="text-[13.5px] text-[#94a3b8] leading-relaxed">{config?.office_hours || "Senin - Jumat: 08.00 - 17.00 WIB"}</div>
                 </div>
               </div>
             </div>
