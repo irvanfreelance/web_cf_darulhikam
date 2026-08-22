@@ -133,7 +133,7 @@ export default async function RootLayout({
   }
 
   try {
-    footerPrograms = await getFooterPrograms();
+    footerPrograms = (await getFooterPrograms()) as any[];
   } catch (e) {
     console.error("Failed to fetch footer programs", e);
   }

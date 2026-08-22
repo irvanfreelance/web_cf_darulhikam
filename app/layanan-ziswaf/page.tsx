@@ -4,10 +4,10 @@ import { DollarSign, Globe, MapPin, Heart, CheckCircle2, AlertTriangle } from 'l
 import { getWebLegality, getWebBankAccounts } from '@/lib/web-queries';
 
 export default async function LayananZiswafPage() {
-  const [legality, banks] = await Promise.all([
+  const [legality, banks] = (await Promise.all([
     getWebLegality(),
     getWebBankAccounts(),
-  ]);
+  ])) as [any, any[]];
 
   const TYPES = [
     { t:"Zakat Penghasilan", d:"2,5% dari penghasilan bersih per bulan jika telah mencapai nisab setara 85gr emas.", c:"text-[#83b64e]" },
