@@ -1,11 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
+import { stripHtml, truncateText } from '@/lib/utils';
 
 export default function ProgramCard({ p }: { p: any }) {
   const target = Number(p.target_amount) || 1;
   const collected = Number(p.collected) || 0;
   const prog = target > 0 ? Math.min(100, Math.round((collected / target) * 100)) : 0;
   const fmt = (n: number) => "Rp " + Math.round(n).toLocaleString("id-ID");
+  const excerpt = truncateText(stripHtml(p.description), 160);
 
   let catLabel = "Program";
   if (p.category_name) {
@@ -25,7 +27,7 @@ export default function ProgramCard({ p }: { p: any }) {
           {p.title}
         </h3>
         <p className="text-[13.5px] text-[#475569] leading-relaxed flex-1 mb-4 line-clamp-3">
-          {p.description}
+          {excerpt}
         </p>
         {!p.has_no_target && (
           <div className="mb-3">
