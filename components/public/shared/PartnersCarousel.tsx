@@ -22,7 +22,7 @@ export default function PartnersCarousel({ partners }: { partners: Partner[] }) 
               src={p.logo_url as string}
               alt={p.name}
               title={p.name}
-              className="h-10 md:h-12 w-auto max-w-[140px] object-contain grayscale opacity-70 transition hover:grayscale-0 hover:opacity-100"
+              className="h-10 md:h-12 w-auto max-w-[140px] object-contain opacity-90 transition hover:opacity-100 hover:scale-105"
             />
           );
           return (
