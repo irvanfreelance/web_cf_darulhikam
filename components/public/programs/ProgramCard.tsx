@@ -15,7 +15,7 @@ export default function ProgramCard({ p }: { p: any }) {
   }
 
   return (
-    <div className="group bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col hover-lift">
+    <div className="group h-full bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col hover-lift">
       <div className="h-[180px] overflow-hidden relative shrink-0">
         <img src={p.image_url || '/placeholder.jpg'} alt={p.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
         <div className="absolute top-2.5 left-2.5 bg-[#83b64e] text-white text-[11px] font-bold py-1 px-3 rounded-full">
@@ -23,7 +23,7 @@ export default function ProgramCard({ p }: { p: any }) {
         </div>
       </div>
       <div className="p-5 flex-1 flex flex-col">
-        <h3 className="font-cabin text-[16px] font-bold text-[#0f1b35] mb-2 leading-snug line-clamp-2">
+        <h3 className="font-cabin text-[16px] font-bold text-[#0f1b35] mb-2 leading-snug line-clamp-2 min-h-[2.6em]">
           {p.title}
         </h3>
         <p className="text-[13.5px] text-[#475569] leading-relaxed flex-1 mb-4 line-clamp-3">

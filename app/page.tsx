@@ -150,7 +150,7 @@ export default async function Beranda() {
           </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {featuredPrograms.map((p: any, i: number) => (
-              <Reveal key={p.id} delay={i * 100}>
+              <Reveal key={p.id} delay={i * 100} className="h-full">
                 <ProgramCard p={p} />
               </Reveal>
             ))}
