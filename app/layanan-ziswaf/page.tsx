@@ -1,17 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { DollarSign, Globe, MapPin, Heart, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { getWebLegality } from '@/lib/web-queries';
+import { getWebLegality, getWebBankAccounts } from '@/lib/web-queries';
 
 export default async function LayananZiswafPage() {
-  const legality = await getWebLegality();
-
-  // Ideally fetched from DB table payment_instructions/methods, but hardcoding based on PRD/JSX for now
-  const BANKS = [
-    { bank:"Bank Syariah Indonesia (BSI)", no:"711 - 9XXX - XXXX", logo:"BSI" },
-    { bank:"BCA Syariah", no:"090 - XXXX - XXX", logo:"BCA" },
-    { bank:"Mandiri Syariah", no:"700 - XXXX - XXX", logo:"BSM" },
-  ];
+  const [legality, banks] = await Promise.all([
+    getWebLegality(),
+    getWebBankAccounts(),
+  ]);
 
   const TYPES = [
     { t:"Zakat Penghasilan", d:"2,5% dari penghasilan bersih per bulan jika telah mencapai nisab setara 85gr emas.", c:"text-[#83b64e]" },
@@ -98,30 +94,36 @@ export default async function LayananZiswafPage() {
       </section>
 
       {/* Bank Accounts */}
-      <section className="bg-[#ffffff] py-16 px-6">
-        <div className="max-w-[1060px] mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
-            <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Rekening Resmi</span>
+      {banks?.length > 0 && (
+        <section className="bg-[#ffffff] py-16 px-6">
+          <div className="max-w-[1060px] mx-auto text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
+              <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Rekening Resmi</span>
+            </div>
+            <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Rekening Donasi Terpercaya</h2>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-[900px] mx-auto">
+              {banks.map((r: any) => (
+                <div key={r.account_number} className="bg-[#f8fafc] border border-[#e2e8f0] rounded-xl p-5">
+                  {r.logo_url ? (
+                    <img src={r.logo_url} alt={r.bank_name} className="h-6 mx-auto mb-3 object-contain" />
+                  ) : (
+                    <div className="inline-block bg-[#83b64e] text-white font-cabin font-bold text-[11px] py-1 px-2.5 rounded-md mb-3">{r.bank_code || r.bank_name}</div>
+                  )}
+                  <div className="text-[12px] font-semibold text-[#94a3b8] uppercase tracking-[0.5px]">{r.bank_name}</div>
+                  <div className="font-cabin text-[18px] font-bold text-[#83b64e] tracking-[1px] my-1">{r.account_number}</div>
+                  <div className="text-[12px] text-[#94a3b8]">a.n. {r.account_name}</div>
+                </div>
+              ))}
+            </div>
+            <div className="max-w-[760px] mx-auto mt-5 bg-[#eef5e4] rounded-xl p-3.5 flex items-center justify-center gap-2.5">
+              <AlertTriangle size={15} className="text-[#83b64e] shrink-0" />
+              <span className="text-[13.5px] text-[#83b64e] text-left leading-snug">LAZ Darul Hikam <strong>tidak memiliki rekening selain di atas</strong>. Harap waspada terhadap penipuan yang mengatasnamakan LAZ.</span>
+            </div>
           </div>
-          <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight mb-8">Rekening Donasi Terpercaya</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-[760px] mx-auto">
-            {BANKS.map(r => (
-              <div key={r.bank} className="bg-[#f8fafc] border border-[#e2e8f0] rounded-xl p-5">
-                <div className="inline-block bg-[#83b64e] text-white font-cabin font-bold text-[11px] py-1 px-2.5 rounded-md mb-3">{r.logo}</div>
-                <div className="text-[12px] font-semibold text-[#94a3b8] uppercase tracking-[0.5px]">{r.bank}</div>
-                <div className="font-cabin text-[18px] font-bold text-[#83b64e] tracking-[1px] my-1">{r.no}</div>
-                <div className="text-[12px] text-[#94a3b8]">a.n. LAZ Darul Hikam</div>
-              </div>
-            ))}
-          </div>
-          <div className="max-w-[760px] mx-auto mt-5 bg-[#eef5e4] rounded-xl p-3.5 flex items-center justify-center gap-2.5">
-            <AlertTriangle size={15} className="text-[#83b64e] shrink-0" />
-            <span className="text-[13.5px] text-[#83b64e] text-left leading-snug">LAZ Darul Hikam <strong>tidak memiliki rekening selain di atas</strong>. Harap waspada terhadap penipuan yang mengatasnamakan LAZ.</span>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

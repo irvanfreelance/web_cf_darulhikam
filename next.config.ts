@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.join(__dirname),
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours browser cache for images
