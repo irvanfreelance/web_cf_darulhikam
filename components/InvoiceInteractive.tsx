@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Copy, Clock, ChevronDown, Upload, Image as ImageIcon, CheckCircle, RefreshCcw, Loader2, Download } from 'lucide-react';
 import Link from 'next/link';
 import { formatIDR } from '@/lib/utils';
@@ -44,6 +44,73 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
   } else {
     displayVa = displayVa || 'Tidak tersedia';
   }
+
+  const hasAutoTriggeredSnap = useRef(false);
+
+  const triggerSnap = useCallback(() => {
+    if (!invoice?.payment_url) return;
+    let parsed: any = null;
+    try {
+      parsed = JSON.parse(invoice.payment_url);
+    } catch {
+      parsed = { redirect_url: invoice.payment_url };
+    }
+
+    const snapToken = parsed.snap_token;
+    const redirectUrl = parsed.redirect_url || invoice.payment_url;
+
+    if (snapToken && typeof window !== 'undefined' && (window as any).snap) {
+      (window as any).snap.pay(snapToken, {
+        onSuccess: () => router.push(`/status/${invoiceCode || invoice.invoice_code}`),
+        onPending: () => router.refresh(),
+        onError: () => alert('Pembayaran gagal atau dibatalkan.'),
+        onClose: () => console.log('Snap modal closed'),
+      });
+    } else if (redirectUrl && typeof window !== 'undefined') {
+      window.open(redirectUrl, '_blank');
+    }
+  }, [invoice, invoiceCode, router]);
+
+  // Load Midtrans Snap JS dynamically & Auto-trigger modal on mount
+  useEffect(() => {
+    let parsed: any = null;
+    if (invoice?.payment_url) {
+      try { parsed = JSON.parse(invoice.payment_url); } catch { parsed = { redirect_url: invoice.payment_url }; }
+    }
+
+    const isMidtrans = parsed?.snap_token || parsed?.provider === 'midtrans' || (invoice?.payment_provider?.toLowerCase() === 'midtrans' && invoice?.payment_url);
+
+    if (!isMidtrans) return;
+
+    const scriptId = 'midtrans-snap-script';
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+
+    const attemptAutoTrigger = () => {
+      if (!hasAutoTriggeredSnap.current && typeof window !== 'undefined' && (window as any).snap) {
+        hasAutoTriggeredSnap.current = true;
+        setTimeout(() => {
+          triggerSnap();
+        }, 300);
+      }
+    };
+
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://app.midtrans.com/snap/snap.js';
+      script.setAttribute('data-client-key', process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'Mid-client-BHJdJcj_-5xRENuz');
+      script.onload = () => {
+        attemptAutoTrigger();
+      };
+      document.body.appendChild(script);
+    } else {
+      if ((window as any).snap) {
+        attemptAutoTrigger();
+      } else {
+        script.addEventListener('load', attemptAutoTrigger);
+      }
+    }
+  }, [invoice, triggerSnap]);
 
   // Auto-redirect for Xendit e-wallets
   useEffect(() => {
@@ -317,87 +384,116 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
              )}
            </div>
            
-           {(() => {
-            const pmType = invoice.payment_method_type?.toLowerCase() || '';
-            const isVA = pmType.includes('va') || pmType.includes('bank') || pmType.includes('transfer');
-            const isManualLocal = pmType.includes('manual') || isManual;
+            {(() => {
+             const pmType = invoice.payment_method_type?.toLowerCase() || '';
+             const isVA = pmType.includes('va') || pmType.includes('bank') || pmType.includes('transfer');
+             const isManualLocal = pmType.includes('manual') || isManual;
+             const isVaValid = displayVa && displayVa !== 'Tidak tersedia';
 
+             // Check if payment_url contains Midtrans Snap JSON or URL
+             let parsedUrl: any = null;
+             if (invoice.payment_url) {
+               try { parsedUrl = JSON.parse(invoice.payment_url); } catch { parsedUrl = { redirect_url: invoice.payment_url }; }
+             }
+             const isMidtransSnap = parsedUrl?.snap_token || parsedUrl?.provider === 'midtrans' || (invoice.payment_provider?.toLowerCase() === 'midtrans' && invoice.payment_url);
 
+             if (isMidtransSnap && (!isVaValid || !isVA)) {
+               return (
+                 <div className="bg-slate-50 rounded-xl p-6 border border-dashed border-gray-300 relative text-center">
+                   <div className="flex flex-col items-center gap-2 mb-4">
+                     {invoice.payment_method_logo && (
+                       <img 
+                         src={invoice.payment_method_logo} 
+                         alt={invoice.payment_method_name} 
+                         className="h-8 max-w-[100px] object-contain rounded-md mb-1" 
+                       />
+                     )}
+                     <p className="text-xs text-gray-500 font-semibold">Bayar Menggunakan {invoice.payment_method_name}</p>
+                   </div>
+                   <button 
+                     onClick={triggerSnap}
+                     className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
+                   >
+                     Bayar Sekarang ({invoice.payment_method_name})
+                   </button>
+                   <p className="text-[10px] text-gray-400 mt-3 italic">*Klik tombol untuk membuka Modal / Instruksi Pembayaran Midtrans.</p>
+                 </div>
+               );
+             }
 
-            return isVA || isManualLocal ? (
-              <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-gray-300 relative text-left">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs text-gray-500 font-semibold">{isManualLocal ? 'Nomor Rekening' : 'Nomor Virtual Account'} ({invoice.payment_method_name})</p>
-                  {invoice.payment_method_logo && (
-                    <img 
-                      src={invoice.payment_method_logo} 
-                      alt={invoice.payment_method_name} 
-                      className="h-5 max-w-[80px] object-contain rounded-md" 
-                    />
-                  )}
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-bold tracking-wider text-gray-800">{displayVa}</span>
-                    {isManualLocal && <span className="text-xs text-gray-500 font-medium mt-1">a/n {displayName}</span>}
-                  </div>
-                  <button onClick={handleCopyVa} className="text-teal-600 bg-teal-50 p-2 shrink-0 rounded-lg hover:bg-teal-100 transition-colors active:scale-95" title="Salin">
-                    <Copy size={18} />
-                  </button>
-                </div>
-              </div>
-            ) : (pmType.includes('retail') || pmType.includes('outlet') || pmType.includes('over_the_counter')) ? (
-              <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-gray-300 relative text-left">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-xs text-gray-500 font-semibold">Kode Pembayaran ({invoice.payment_method_name})</p>
-                  {invoice.payment_method_logo && (
-                    <img 
-                      src={invoice.payment_method_logo} 
-                      alt={invoice.payment_method_name} 
-                      className="h-5 max-w-[80px] object-contain rounded-md" 
-                    />
-                  )}
-                </div>
-                <h2 className="text-3xl font-black tracking-widest text-gray-800 mb-4">{invoice.va_number}</h2>
-                <div className="bg-white p-3 rounded-lg border border-gray-200 inline-block mb-3">
-                  <img 
-                    src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${invoice.va_number}&scale=2&rotate=N&includetext`} 
-                    alt="Barcode Pembayaran"
-                    className="h-16 mx-auto"
-                  />
-                </div>
-                <button onClick={handleCopyVa} className="w-full flex items-center justify-center gap-2 text-teal-600 bg-teal-50 py-2 rounded-lg font-bold text-sm">
-                  <Copy size={16} /> Salin Kode
-                </button>
-              </div>
-            ) : (pmType.includes('e_wallet') || pmType.includes('ewallet') || pmType.includes('e-wallet')) ? (
-              <div className="bg-slate-50 rounded-xl p-6 border border-dashed border-gray-300 relative text-center">
-                <div className="flex flex-col items-center gap-2 mb-4">
-                  {invoice.payment_method_logo && (
-                    <img 
-                      src={invoice.payment_method_logo} 
-                      alt={invoice.payment_method_name} 
-                      className="h-8 max-w-[100px] object-contain rounded-md mb-1" 
-                    />
-                  )}
-                  <p className="text-xs text-gray-500 font-semibold">Bayar Menggunakan {invoice.payment_method_name}</p>
-                </div>
-                {invoice.payment_url ? (
-                  <a 
-                    href={invoice.payment_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="bg-[#6000D3] text-white font-bold py-3 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform"
-                    style={{ backgroundColor: invoice.payment_method_code === 'OVO' ? '#6000D3' : '#322E85' }}
-                  >
-                    Buka Aplikasi {invoice.payment_method_name}
-                  </a>
-                ) : (
-                  <p className="text-red-500 text-xs">Link pembayaran tidak tersedia.</p>
-                )}
-                <p className="text-[10px] text-gray-400 mt-4 italic">*Anda akan diarahkan ke aplikasi {invoice.payment_method_name} untuk menyelesaikan pembayaran.</p>
-              </div>
-            ) : (pmType.includes('qr') || pmType === 'qr_code') ? (
+             return isVA || isManualLocal ? (
+               isVaValid ? (
+                 <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-gray-300 relative text-left">
+                   <div className="flex items-center justify-between mb-2">
+                     <p className="text-xs text-gray-500 font-semibold">{isManualLocal ? 'Nomor Rekening' : 'Nomor Virtual Account'} ({invoice.payment_method_name})</p>
+                     {invoice.payment_method_logo && (
+                       <img 
+                         src={invoice.payment_method_logo} 
+                         alt={invoice.payment_method_name} 
+                         className="h-5 max-w-[80px] object-contain rounded-md" 
+                       />
+                     )}
+                   </div>
+                   <div className="flex items-center justify-between gap-3">
+                     <div className="flex flex-col">
+                       <span className="text-2xl font-bold tracking-wider text-gray-800">{displayVa}</span>
+                       {isManualLocal && <span className="text-xs text-gray-500 font-medium mt-1">a/n {displayName}</span>}
+                     </div>
+                     <button onClick={handleCopyVa} className="text-teal-600 bg-teal-50 p-2 shrink-0 rounded-lg hover:bg-teal-100 transition-colors active:scale-95" title="Salin">
+                       <Copy size={18} />
+                     </button>
+                   </div>
+                 </div>
+               ) : invoice.payment_url ? (
+                 <div className="bg-slate-50 rounded-xl p-6 border border-dashed border-gray-300 relative text-center">
+                   <div className="flex flex-col items-center gap-2 mb-4">
+                     {invoice.payment_method_logo && (
+                       <img 
+                         src={invoice.payment_method_logo} 
+                         alt={invoice.payment_method_name} 
+                         className="h-8 max-w-[100px] object-contain rounded-md mb-1" 
+                       />
+                     )}
+                     <p className="text-xs text-gray-500 font-semibold">Bayar Menggunakan {invoice.payment_method_name}</p>
+                   </div>
+                   <button 
+                     onClick={triggerSnap}
+                     className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
+                   >
+                     Bayar Sekarang ({invoice.payment_method_name})
+                   </button>
+                   <p className="text-[10px] text-gray-400 mt-3 italic">*Klik tombol di atas untuk membuka Modal Pembayaran Midtrans.</p>
+                 </div>
+               ) : (
+                 <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-gray-300 relative text-left">
+                   <p className="text-xs text-red-500 font-semibold">Nomor Virtual Account tidak dapat dibuat. Silakan coba metode pembayaran lain.</p>
+                 </div>
+               )
+             ) : (pmType.includes('retail') || pmType.includes('outlet') || pmType.includes('over_the_counter')) ? (
+               <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-gray-300 relative text-left">
+                 <div className="flex items-center justify-between mb-3">
+                   <p className="text-xs text-gray-500 font-semibold">Kode Pembayaran ({invoice.payment_method_name})</p>
+                   {invoice.payment_method_logo && (
+                     <img 
+                       src={invoice.payment_method_logo} 
+                       alt={invoice.payment_method_name} 
+                       className="h-5 max-w-[80px] object-contain rounded-md" 
+                     />
+                   )}
+                 </div>
+                 <h2 className="text-3xl font-black tracking-widest text-gray-800 mb-4">{invoice.va_number}</h2>
+                 <div className="bg-white p-3 rounded-lg border border-gray-200 inline-block mb-3">
+                   <img 
+                     src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${invoice.va_number}&scale=2&rotate=N&includetext`} 
+                     alt="Barcode Pembayaran"
+                     className="h-16 mx-auto"
+                   />
+                 </div>
+                 <button onClick={handleCopyVa} className="w-full flex items-center justify-center gap-2 text-teal-600 bg-teal-50 py-2 rounded-lg font-bold text-sm">
+                   <Copy size={16} /> Salin Kode
+                 </button>
+               </div>
+             ) : (pmType.includes('e_wallet') || pmType.includes('ewallet') || pmType.includes('e-wallet')) ? (
                <div className="bg-slate-50 rounded-xl p-6 border border-dashed border-gray-300 relative text-center">
                  <div className="flex flex-col items-center gap-2 mb-4">
                    {invoice.payment_method_logo && (
@@ -407,30 +503,53 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                        className="h-8 max-w-[100px] object-contain rounded-md mb-1" 
                      />
                    )}
-                   <p className="text-xs text-gray-500 font-semibold">Scan QR Code untuk Membayar</p>
+                   <p className="text-xs text-gray-500 font-semibold">Bayar Menggunakan {invoice.payment_method_name}</p>
                  </div>
-                 <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 inline-block">
-                   {(() => {
-                     let qrString = '';
-                     try {
-                       const urlData = JSON.parse(invoice.payment_url || '{}');
-                       qrString = urlData.qr_string || '';
-                     } catch (e) {
-                       qrString = invoice.payment_url || '';
-                     }
-                     return qrString ? (
-                       <img 
-                         src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrString)}`} 
-                         alt="QR Code Pembayaran"
-                         className="w-48 h-48 mx-auto"
-                       />
-                     ) : <p className="text-red-500 text-xs">QR Code tidak tersedia.</p>;
-                   })()}
-                 </div>
-                 <p className="text-[10px] text-gray-400 mt-4 italic">*Bisa di-scan menggunakan DANA, OVO, GoPay, ShopeePay, atau LinkAja.</p>
+                 {invoice.payment_url ? (
+                   <button 
+                     onClick={triggerSnap}
+                     className="w-full bg-[#6000D3] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
+                     style={{ backgroundColor: invoice.payment_method_code === 'OVO' ? '#6000D3' : '#322E85' }}
+                   >
+                     Bayar Sekarang ({invoice.payment_method_name})
+                   </button>
+                 ) : (
+                   <p className="text-red-500 text-xs">Link pembayaran tidak tersedia.</p>
+                 )}
+                 <p className="text-[10px] text-gray-400 mt-4 italic">*Anda akan diarahkan ke instruksi/modal pembayaran {invoice.payment_method_name}.</p>
                </div>
-            ) : null;
-           })()}
+             ) : (pmType.includes('qr') || pmType === 'qr_code') ? (
+                <div className="bg-slate-50 rounded-xl p-6 border border-dashed border-gray-300 relative text-center">
+                  <div className="flex flex-col items-center gap-2 mb-4">
+                    {invoice.payment_method_logo && (
+                      <img 
+                        src={invoice.payment_method_logo} 
+                        alt={invoice.payment_method_name} 
+                        className="h-8 max-w-[100px] object-contain rounded-md mb-1" 
+                      />
+                    )}
+                    <p className="text-xs text-gray-500 font-semibold">Scan QR Code / Bayar Sekarang</p>
+                  </div>
+                  {parsedUrl?.qr_string ? (
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 inline-block mb-3">
+                      <img 
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(parsedUrl.qr_string)}`} 
+                        alt="QR Code Pembayaran"
+                        className="w-48 h-48 mx-auto"
+                      />
+                    </div>
+                  ) : invoice.payment_url ? (
+                    <button 
+                      onClick={triggerSnap}
+                      className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base mb-2"
+                    >
+                      Buka Modal Pembayaran QRIS / Midtrans
+                    </button>
+                  ) : <p className="text-red-500 text-xs">QR Code tidak tersedia.</p>}
+                  <p className="text-[10px] text-gray-400 mt-2 italic">*Bisa di-scan menggunakan DANA, OVO, GoPay, ShopeePay, atau LinkAja.</p>
+                </div>
+             ) : null;
+            })()}
         </div>
 
         {/* Upload Proof Area (Only for Manual Transfer) */}
