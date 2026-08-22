@@ -128,6 +128,70 @@ export async function getWebLegality() {
   return data[0];
 }
 
+export async function getWebAboutContent() {
+  const cacheKey = `web:about_content`;
+  let data: any = await redis.get(cacheKey);
+  if (!data) {
+    const rows = await query(`SELECT * FROM web_about_content LIMIT 1`);
+    data = rows[0] || null;
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getWebHistoryTimeline() {
+  const cacheKey = `web:history_timeline`;
+  let data: any = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT year, description
+      FROM web_history_timeline
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getWebMissionPoints() {
+  const cacheKey = `web:mission_points`;
+  let data: any = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT content
+      FROM web_mission_points
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getWebLegalDocuments() {
+  const cacheKey = `web:legality`;
+  let data: any = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT title, document_number, issued_by
+      FROM web_legality
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
 // --- Transparansi ---
 
 export async function getWebFinancialReports() {
