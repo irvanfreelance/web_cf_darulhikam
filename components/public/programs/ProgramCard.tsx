@@ -1,6 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 
+function stripHtml(html: string) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/gi, ' ').trim();
+}
+
 export default function ProgramCard({ p }: { p: any }) {
   const target = Number(p.target_amount) || 1;
   const collected = Number(p.collected) || 0;
@@ -11,6 +16,8 @@ export default function ProgramCard({ p }: { p: any }) {
   if (p.category_name) {
     catLabel = p.category_name;
   }
+
+  const cleanDescription = stripHtml(p.description);
 
   return (
     <div className="group bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col hover-lift">
@@ -25,7 +32,7 @@ export default function ProgramCard({ p }: { p: any }) {
           {p.title}
         </h3>
         <p className="text-[13.5px] text-[#475569] leading-relaxed flex-1 mb-4 line-clamp-3">
-          {p.description}
+          {cleanDescription}
         </p>
         {!p.has_no_target && (
           <div className="mb-3">

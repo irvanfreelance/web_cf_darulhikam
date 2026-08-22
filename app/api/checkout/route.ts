@@ -5,6 +5,7 @@ import { redis } from '@/lib/redis';
 // Using generic fetch for midtrans and xendit to keep it lightweight on edge/serverless
 
 import { createXenditPaymentRequest, XenditPaymentType } from '@/lib/xendit';
+import { createMidtransTransaction } from '@/lib/midtrans';
 
 const checkoutSchema = z.object({
   campaignId: z.coerce.number(),
@@ -155,12 +156,26 @@ export async function POST(req: Request) {
     let paymentUrl = null;
     let externalVa = null;
     let xenditPaymentRequestId = null;
-    let xenditResponseData = null;
+    let gatewayResponseData: any = null;
 
     const provider = paymentMethod.provider?.toLowerCase();
     const type = paymentMethod.type?.toLowerCase() || '';
 
-    if (provider === 'xendit') {
+    if (provider === 'midtrans') {
+      const midtransResult = await createMidtransTransaction({
+        orderId: invoiceCode,
+        amount: Math.round(totalAmount),
+        paymentCode: paymentMethod.code,
+        paymentType: type,
+        customerName: name,
+        customerEmail: email || undefined,
+        customerPhone: phone || undefined,
+      });
+
+      paymentUrl = midtransResult.paymentUrl;
+      externalVa = midtransResult.vaNumber;
+      gatewayResponseData = midtransResult.rawResponse;
+    } else if (provider === 'xendit') {
       let xenditType: XenditPaymentType = 'VIRTUAL_ACCOUNT';
       
       if (type.includes('e_wallet') || type.includes('e-wallet') || type.includes('ewallet')) {
@@ -171,7 +186,7 @@ export async function POST(req: Request) {
         xenditType = 'QR_CODE';
       }
 
-      xenditResponseData = await createXenditPaymentRequest({
+      const xenditResponseData = await createXenditPaymentRequest({
         externalId: invoiceCode,
         amount: Math.round(totalAmount),
         currency: 'IDR',
@@ -184,6 +199,7 @@ export async function POST(req: Request) {
       });
 
       xenditPaymentRequestId = xenditResponseData.id;
+      gatewayResponseData = xenditResponseData;
 
       if (xenditType === 'VIRTUAL_ACCOUNT') {
         externalVa = xenditResponseData.payment_method.virtual_account.channel_properties.virtual_account_number;
@@ -385,7 +401,7 @@ export async function POST(req: Request) {
       invoiceCode, 
       '/api/checkout', 
       JSON.stringify(parsed), 
-      JSON.stringify({ payment_gateway_response: xenditResponseData, client_response: finalResponse }), 
+      JSON.stringify({ payment_gateway_response: gatewayResponseData, client_response: finalResponse }), 
       200
     ]).catch(err => {
       console.error("Async payment_logs insert error:", err);
