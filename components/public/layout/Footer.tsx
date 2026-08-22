@@ -38,9 +38,9 @@ export default function Footer({ config, programs }: { config: any, programs?: a
         <div>
           <h4 className="font-cabin font-bold text-[15px] text-[#0f1b35] mb-4">Tentang Kami</h4>
           <ul className="space-y-2 text-[13.5px] text-[#475569]">
-            <li><Link href="/tentang-kami" className="hover:text-[#83b64e]">Profil Lembaga</Link></li>
-            <li><Link href="/tentang-kami" className="hover:text-[#83b64e]">Visi & Misi</Link></li>
-            <li><Link href="/tentang-kami" className="hover:text-[#83b64e]">Susunan Pengurus</Link></li>
+            <li><Link href="/tentang-kami#profil" className="hover:text-[#83b64e]">Profil Lembaga</Link></li>
+            <li><Link href="/tentang-kami#visi-misi" className="hover:text-[#83b64e]">Visi & Misi</Link></li>
+            <li><Link href="/tentang-kami#pengurus" className="hover:text-[#83b64e]">Susunan Pengurus</Link></li>
             <li><Link href="/transparansi" className="hover:text-[#83b64e]">Laporan Keuangan</Link></li>
           </ul>
         </div>
@@ -58,11 +58,11 @@ export default function Footer({ config, programs }: { config: any, programs?: a
 
         <div>
           <h4 className="font-cabin font-bold text-[15px] text-[#0f1b35] mb-4">Kontak</h4>
-          <div className="text-[13.5px] text-[#475569] space-y-3">
-            <p>{config?.address || "Jl. Kebaikan Bangsa No. 99, Gedung Amal Lt. 2, Jakarta Selatan"}</p>
-            <p>Telp: {config?.whatsapp_number || "0800-1-ZAKAT"}</p>
-            <Link href="/kontak" className="inline-block mt-2 text-[#83b64e] font-bold hover:underline">Hubungi Kami &rarr;</Link>
-          </div>
+          <Link href="/kontak" className="block text-[13.5px] text-[#475569] space-y-3 group">
+            <p className="group-hover:text-[#83b64e] transition-colors">{config?.address || "Jl. Kebaikan Bangsa No. 99, Gedung Amal Lt. 2, Jakarta Selatan"}</p>
+            <p className="group-hover:text-[#83b64e] transition-colors">Telp: {config?.whatsapp_number || "0800-1-ZAKAT"}</p>
+            <span className="inline-block mt-2 text-[#83b64e] font-bold group-hover:underline">Hubungi Kami &rarr;</span>
+          </Link>
         </div>
       </div>
       

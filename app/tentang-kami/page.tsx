@@ -31,7 +31,7 @@ export default async function TentangKami() {
         </div>
       </div>
 
-      <section className="bg-[#ffffff] py-16 px-6">
+      <section id="profil" className="bg-[#ffffff] py-16 px-6 scroll-mt-20">
         <div className="max-w-[1060px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -59,7 +59,7 @@ export default async function TentangKami() {
         </div>
       </section>
 
-      <section className="bg-[#f4f6fb] py-16 px-6">
+      <section id="visi-misi" className="bg-[#f4f6fb] py-16 px-6 scroll-mt-20">
         <div className="max-w-[1060px] mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
@@ -87,7 +87,7 @@ export default async function TentangKami() {
         </div>
       </section>
 
-      <section className="bg-[#ffffff] py-16 px-6">
+      <section id="pengurus" className="bg-[#ffffff] py-16 px-6 scroll-mt-20">
         <div className="max-w-[1060px] mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="flex items-center gap-2 mb-2">
