@@ -7,9 +7,9 @@ export default function ArticleCard({ a }: { a: any }) {
   }) : '';
 
   return (
-    <Link href={`/kabar-kebaikan/${a.slug}`} className="bg-[#ffffff] rounded-xl overflow-hidden border border-[#e2e8f0] transition-shadow hover:shadow-lg block">
+    <Link href={`/kabar-kebaikan/${a.slug}`} className="group bg-[#ffffff] rounded-xl overflow-hidden border border-[#e2e8f0] hover-lift block">
       <div className="h-[160px] overflow-hidden">
-        <img src={a.featured_image_url || '/placeholder.jpg'} alt={a.title} className="w-full h-full object-cover transition-transform hover:scale-105" />
+        <img src={a.featured_image_url || '/placeholder.jpg'} alt={a.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
       </div>
       <div className="p-4">
         <div className="text-[11px] font-bold text-[#83b64e] uppercase tracking-widest mb-1.5">

@@ -4,6 +4,7 @@ import { getArticleBySlug, getRelatedArticles } from '@/lib/web-queries';
 import ArticleCard from '@/components/public/articles/ArticleCard';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import Reveal from '@/components/public/shared/Reveal';
 
 export const revalidate = 120;
 
@@ -78,7 +79,11 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
             </div>
             <h2 className="font-cabin text-[24px] font-bold text-[#0f1b35] leading-tight mb-7">Artikel Terkait</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {relatedArticles.map((a: any) => <ArticleCard key={a.slug} a={a} />)}
+              {relatedArticles.map((a: any, i: number) => (
+                <Reveal key={a.slug} delay={i * 100}>
+                  <ArticleCard a={a} />
+                </Reveal>
+              ))}
             </div>
           </div>
         </div>

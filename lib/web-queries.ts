@@ -67,6 +67,23 @@ export async function getWebPartners() {
   return data;
 }
 
+export async function getWebCareCategories() {
+  const cacheKey = `web:care_categories`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT icon_name, icon_url, label, quote_text, quote_source, description, photo_url
+      FROM web_care_categories
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
 export async function getLatestArticles(limit = 24) {
   const data = await query(`
     SELECT a.slug, a.title, a.excerpt, a.featured_image_url, a.published_at, a.category_id,

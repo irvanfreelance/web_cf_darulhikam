@@ -13,9 +13,9 @@ export default function ProgramCard({ p }: { p: any }) {
   }
 
   return (
-    <div className="bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col transition-shadow hover:shadow-lg">
+    <div className="group bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col hover-lift">
       <div className="h-[180px] overflow-hidden relative shrink-0">
-        <img src={p.image_url || '/placeholder.jpg'} alt={p.title} className="w-full h-full object-cover" />
+        <img src={p.image_url || '/placeholder.jpg'} alt={p.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
         <div className="absolute top-2.5 left-2.5 bg-[#83b64e] text-white text-[11px] font-bold py-1 px-3 rounded-full">
           {catLabel}
         </div>
@@ -34,7 +34,7 @@ export default function ProgramCard({ p }: { p: any }) {
               <span className="text-[#83b64e] font-bold">{prog}%</span>
             </div>
             <div className="h-[7px] bg-[#eef5e4] rounded-full overflow-hidden">
-              <div className="h-full bg-[#83b64e] rounded-full" style={{ width: `${prog}%` }} />
+              <div className="h-full bg-[#83b64e] rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${prog}%` }} />
             </div>
             <div className="flex justify-between text-[12px] text-[#94a3b8] mt-1">
               <span>{fmt(collected)}</span>
@@ -42,7 +42,7 @@ export default function ProgramCard({ p }: { p: any }) {
             </div>
           </div>
         )}
-        <Link href={`/donasi/${p.slug}`} className="w-full py-2.5 bg-[#83b64e] text-white text-center rounded-xl font-cabin font-bold text-[13.5px] transition-opacity hover:opacity-90">
+        <Link href={`/donasi/${p.slug}`} className="w-full py-2.5 bg-[#83b64e] text-white text-center rounded-xl font-cabin font-bold text-[13.5px] transition-all hover:opacity-90 hover:scale-[1.03] active:scale-95">
           Donasi Sekarang
         </Link>
       </div>

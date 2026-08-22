@@ -26,7 +26,70 @@
   --color-laz-redlt: #fef2f2;
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(131, 182, 78, 0.45)); }
+  50% { box-shadow: 0 0 0 10px var(--pulse-color-fade, rgba(131, 182, 78, 0)); }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
 @layer utilities {
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  /* Scroll-reveal: toggled by IntersectionObserver in <Reveal>. Starts hidden
+     so content isn't invisible if JS fails to load. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .reveal.reveal-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hover-lift {
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(15, 27, 53, 0.15);
+  }
+
+  .cta-pulse {
+    animation: cta-pulse 2.2s ease-out infinite;
+  }
+
+  .animate-float-soft {
+    animation: float-soft 3.5s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .cta-pulse, .animate-float-soft, .animate-marquee {
+      animation: none;
+    }
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

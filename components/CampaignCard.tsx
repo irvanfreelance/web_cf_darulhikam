@@ -7,22 +7,22 @@ import { Clock } from 'lucide-react';
 export default function CampaignCard({ camp, variant = 'default' }: { camp: any, variant?: 'default' | 'urgent' }) {
   if (variant === 'urgent') {
     return (
-      <Link href={`/donasi/${camp.slug}`} prefetch={true} className="min-w-[75%] bg-white rounded-xl shadow-sm border border-rose-50 overflow-hidden cursor-pointer snap-center block">
+      <Link href={`/donasi/${camp.slug}`} prefetch={true} className="group min-w-[75%] bg-white rounded-xl shadow-sm border border-rose-50 overflow-hidden cursor-pointer snap-center block transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]">
         <div className="h-32 w-full relative bg-gray-900 overflow-hidden">
           {/* Blurred Background */}
           <div className="absolute inset-0 scale-110 blur-xl opacity-30">
             <Image src={camp.image_url || '/placeholder.jpg'} alt="" fill className="object-cover" />
           </div>
           {/* Main Utuh Image */}
-          <Image src={camp.image_url || '/placeholder.jpg'} alt={camp.title} fill sizes="(max-width: 768px) 100vw, 400px" className="object-contain relative z-10" />
-          <div className="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm z-20">
+          <Image src={camp.image_url || '/placeholder.jpg'} alt={camp.title} fill sizes="(max-width: 768px) 100vw, 400px" className="object-contain relative z-10 transition-transform duration-500 group-hover:scale-105" />
+          <div className="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm z-20 animate-pulse">
             <Clock size={10} /> Sisa {camp.daysLeft} Hari
           </div>
         </div>
         <div className="p-4">
           <h3 className="font-bold text-gray-800 leading-tight mb-3 text-sm line-clamp-2">{camp.title}</h3>
           <div className="w-full bg-gray-100 rounded-full h-1.5 mb-2">
-            <div className="bg-gradient-to-r from-rose-400 to-rose-500 h-1.5 rounded-full" style={{ width: `${camp.progress}%` }}></div>
+            <div className="bg-gradient-to-r from-rose-400 to-rose-500 h-1.5 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
           </div>
           <div className="flex justify-between items-end">
             <p className="font-bold text-rose-500 text-sm">{formatIDR(Number(camp.collected))}</p>
@@ -34,14 +34,14 @@ export default function CampaignCard({ camp, variant = 'default' }: { camp: any,
   }
 
   return (
-    <Link href={`/donasi/${camp.slug}`} prefetch={true} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex gap-4 hover:border-teal-100 block">
+    <Link href={`/donasi/${camp.slug}`} prefetch={true} className="group bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex gap-4 block transition-all duration-200 hover:shadow-md hover:border-teal-100 hover:-translate-y-0.5 active:scale-[0.98]">
       <div className="w-28 h-28 rounded-lg overflow-hidden shrink-0 relative shadow-sm bg-gray-50 flex items-center justify-center">
         {/* Blurred Background */}
         <div className="absolute inset-0 scale-110 blur-md opacity-20">
           <Image src={camp.image_url || '/placeholder.jpg'} alt="" fill className="object-cover" />
         </div>
         {/* Main Utuh Image */}
-        <Image src={camp.image_url || '/placeholder.jpg'} alt={camp.title} fill sizes="(max-width: 768px) 112px, 112px" className="object-contain relative z-10" />
+        <Image src={camp.image_url || '/placeholder.jpg'} alt={camp.title} fill sizes="(max-width: 768px) 112px, 112px" className="object-contain relative z-10 transition-transform duration-500 group-hover:scale-105" />
       </div>
       <div className="flex-1 flex flex-col justify-between py-1">
         <div>
@@ -51,7 +51,7 @@ export default function CampaignCard({ camp, variant = 'default' }: { camp: any,
         <div>
           {!camp.has_no_target && (
             <div className="w-full bg-gray-100 rounded-full h-1 mb-1.5 mt-2">
-              <div className="bg-teal-500 h-1 rounded-full" style={{ width: `${camp.progress}%` }}></div>
+              <div className="bg-teal-500 h-1 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
             </div>
           )}
           <div className="flex justify-between items-center mt-2">
