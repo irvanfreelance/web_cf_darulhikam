@@ -89,8 +89,8 @@ export default function CareCategories({ categories }: { categories: CareCategor
             </button>
 
             {selected.photo_url && (
-              <div className="w-full h-48 sm:h-56 overflow-hidden rounded-t-3xl sm:rounded-t-3xl">
-                <img src={selected.photo_url} alt={selected.label} className="w-full h-full object-cover" />
+              <div className="w-full overflow-hidden rounded-t-3xl sm:rounded-t-3xl">
+                <img src={selected.photo_url} alt={selected.label} className="w-full h-auto" />
               </div>
             )}
 
