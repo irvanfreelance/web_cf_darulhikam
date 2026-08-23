@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // Hide the floating "N" dev tools badge (dev-mode only, never shown in production)
+  devIndicators: false,
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours browser cache for images

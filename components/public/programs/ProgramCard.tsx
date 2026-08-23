@@ -1,26 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
-
-function stripHtml(html: string) {
-  if (!html) return '';
-  return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/gi, ' ').trim();
-}
+import { stripHtml, truncateText } from '@/lib/utils';
 
 export default function ProgramCard({ p }: { p: any }) {
   const target = Number(p.target_amount) || 1;
   const collected = Number(p.collected) || 0;
   const prog = target > 0 ? Math.min(100, Math.round((collected / target) * 100)) : 0;
   const fmt = (n: number) => "Rp " + Math.round(n).toLocaleString("id-ID");
+  const excerpt = truncateText(stripHtml(p.description), 160);
 
   let catLabel = "Program";
   if (p.category_name) {
     catLabel = p.category_name;
   }
 
-  const cleanDescription = stripHtml(p.description);
-
   return (
-    <div className="group bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col hover-lift">
+    <div className="group h-full bg-[#ffffff] rounded-2xl overflow-hidden border border-[#e2e8f0] flex flex-col hover-lift">
       <div className="h-[180px] overflow-hidden relative shrink-0">
         <img src={p.image_url || '/placeholder.jpg'} alt={p.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
         <div className="absolute top-2.5 left-2.5 bg-[#83b64e] text-white text-[11px] font-bold py-1 px-3 rounded-full">
@@ -28,11 +23,11 @@ export default function ProgramCard({ p }: { p: any }) {
         </div>
       </div>
       <div className="p-5 flex-1 flex flex-col">
-        <h3 className="font-cabin text-[16px] font-bold text-[#0f1b35] mb-2 leading-snug line-clamp-2">
+        <h3 className="font-cabin text-[16px] font-bold text-[#0f1b35] mb-2 leading-snug line-clamp-2 min-h-[2.6em]">
           {p.title}
         </h3>
         <p className="text-[13.5px] text-[#475569] leading-relaxed flex-1 mb-4 line-clamp-3">
-          {cleanDescription}
+          {excerpt}
         </p>
         {!p.has_no_target && (
           <div className="mb-3">

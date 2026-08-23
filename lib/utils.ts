@@ -20,3 +20,17 @@ export function truncateText(text: string | null | undefined, length: number): s
   if (text.length <= length) return text;
   return text.substring(0, length) + '...';
 }
+
+const HTML_ENTITIES: Record<string, string> = {
+  '&nbsp;': ' ', '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&apos;': "'",
+};
+
+// Rich-text fields (campaign description, article body) are stored as HTML for the
+// full detail view. Card previews need a plain-text excerpt — this strips tags/entities
+// and collapses whitespace so every card gets a clean, consistently truncated summary.
+export function stripHtml(html: string | null | undefined): string {
+  if (!html) return "";
+  const withoutTags = html.replace(/<[^>]*>/g, ' ');
+  const decoded = withoutTags.replace(/&[a-zA-Z#0-9]+;/g, (m) => HTML_ENTITIES[m] ?? ' ');
+  return decoded.replace(/\s+/g, ' ').trim();
+}

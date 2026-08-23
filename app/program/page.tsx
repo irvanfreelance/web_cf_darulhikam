@@ -33,7 +33,7 @@ export default async function ProgramPage() {
         <div className="max-w-[1060px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {allCampaigns.map((p: any, i: number) => (
-              <Reveal key={p.id} delay={(i % 3) * 100}>
+              <Reveal key={p.id} delay={(i % 3) * 100} className="h-full">
                 <ProgramCard p={p} />
               </Reveal>
             ))}
