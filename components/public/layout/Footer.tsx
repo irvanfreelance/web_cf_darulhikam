@@ -17,13 +17,19 @@ export default function Footer({ config, programs }: { config: any, programs?: a
       <div className="max-w-[1060px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
         <div className="md:col-span-1">
           <Link href="/" className="flex items-center gap-2.5 mb-4">
-            <div className="w-[34px] h-[34px] bg-[#83b64e] rounded-lg flex items-center justify-center">
-              <Star size={17} className="text-white fill-white" />
-            </div>
-            <div>
-              <div className="font-cabin font-bold text-sm text-[#83b64e]">{config?.ngo_name || 'LAZ Darul Hikam'}</div>
-              <div className="text-[10px] text-[#94a3b8]">SK Kemenag No. 52/2024</div>
-            </div>
+            {config?.logo_url ? (
+              <img src={config.logo_url} alt="Logo" className="h-[38px] w-auto object-contain" />
+            ) : (
+              <>
+                <div className="w-[34px] h-[34px] bg-[#83b64e] rounded-lg flex items-center justify-center">
+                  <Star size={17} className="text-white fill-white" />
+                </div>
+                <div>
+                  <div className="font-cabin font-bold text-sm text-[#83b64e]">{config?.ngo_name || 'LAZ Darul Hikam'}</div>
+                  <div className="text-[10px] text-[#94a3b8]">SK Kemenag No. 52/2024</div>
+                </div>
+              </>
+            )}
           </Link>
           <p className="text-[13px] text-[#475569] leading-relaxed mb-4">
             {config?.short_description || "Lembaga amil zakat terpercaya, menyalurkan kebaikan Anda dengan amanah, transparan, dan terukur."}
