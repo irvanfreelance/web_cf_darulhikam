@@ -3,10 +3,10 @@ import Link from "next/link";
 import CheckoutButton from "@/components/CheckoutButton";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import { formatIDR } from "@/lib/utils";
 import ShareButton from "@/components/ShareButton";
 import AffiliateTracker from "@/components/AffiliateTracker";
 import CampaignTabs from "@/components/CampaignTabs";
+import LiveCampaignStats from "@/components/LiveCampaignStats";
 import type { Metadata } from "next";
 import { getCampaignBySlug, getAllCampaigns } from "@/lib/campaigns";
 
@@ -128,22 +128,15 @@ export default async function CampaignDetail(props: {
         </div>
         <h1 className="text-xl font-bold text-gray-800 leading-snug mb-3">{campaign.title}</h1>
 
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-4 mb-5">
-          <p className="text-2xl font-bold text-teal-600 mb-1">{formatIDR(Number(campaign.collected))}</p>
-          {!campaign.has_no_target && (
-            <div className="w-full bg-gray-100 rounded-full h-2 mb-3 overflow-hidden">
-              <div className="bg-teal-500 h-full rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${campaign.progress}%` }} />
-            </div>
-          )}
-          <div className="flex justify-between text-sm text-gray-600">
-            <span className="font-bold text-gray-800">{campaign.donors} Donatur</span>
-            {campaign.has_no_time_limit ? (
-              <span className="font-bold text-teal-600">Selalu Terbuka</span>
-            ) : (
-              <span className="font-bold text-gray-800">{campaign.daysLeft} Hari</span>
-            )}
-          </div>
-        </div>
+        <LiveCampaignStats
+          slug={campaign.slug}
+          initialCollected={Number(campaign.collected)}
+          initialDonors={Number(campaign.donors)}
+          hasNoTarget={!!campaign.has_no_target}
+          targetAmount={Number(campaign.target_amount)}
+          hasNoTimeLimit={!!campaign.has_no_time_limit}
+          daysLeft={campaign.daysLeft}
+        />
 
         {/* Client-side instant tab switcher — no URL navigation, no animations */}
         <CampaignTabs
