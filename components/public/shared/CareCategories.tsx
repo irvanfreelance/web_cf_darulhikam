@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Heart } from 'lucide-react';
 
 // Fallback icons for categories that predate icon upload — shown only
@@ -72,14 +73,14 @@ export default function CareCategories({ categories }: { categories: CareCategor
         ))}
       </div>
 
-      {isMounted && selected && (
+      {isMounted && selected && createPortal(
         <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={() => setSelected(null)}
           />
 
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl animate-in slide-in-from-bottom duration-300">
+          <div className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl animate-in slide-in-from-bottom duration-300">
             <button
               onClick={() => setSelected(null)}
               className="absolute top-4 right-4 z-10 p-2 bg-white/90 backdrop-blur-sm text-gray-500 hover:text-gray-700 rounded-full shadow-md transition-colors"
@@ -119,7 +120,8 @@ export default function CareCategories({ categories }: { categories: CareCategor
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
