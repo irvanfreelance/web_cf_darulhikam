@@ -8,6 +8,7 @@ import PartnersCarousel from '@/components/public/shared/PartnersCarousel';
 import TestimonialsCarousel from '@/components/public/shared/TestimonialsCarousel';
 import CareCategories from '@/components/public/shared/CareCategories';
 import Reveal from '@/components/public/shared/Reveal';
+import ImpactMetricsDisplay from '@/components/public/shared/ImpactMetricsDisplay';
 import {
   getWebHeroConfig,
   getWebImpactMetrics,
@@ -103,16 +104,7 @@ export default async function Beranda() {
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {impactMetrics.map((d: any, i: number) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-5 text-center">
-                <div className="font-cabin text-[28px] font-bold text-white">
-                  <CountUp target={Number(d.value)} />{d.suffix}
-                </div>
-                <div className="text-[12.5px] text-white/65 mt-1">{d.label}</div>
-              </div>
-            ))}
-          </div>
+          <ImpactMetricsDisplay metrics={impactMetrics} variant="hero" />
         </div>
       </section>
 
@@ -201,18 +193,9 @@ export default async function Beranda() {
             <p className="text-white/65 text-[15px] mb-10">Data penyaluran terverifikasi kami</p>
           </Reveal>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {impactMetrics.map((d: any, i: number) => (
-              <Reveal key={i} delay={i * 90}>
-                <div className="hover-lift bg-white/10 border border-white/10 rounded-xl py-8 px-6 text-center">
-                  <div className="font-cabin text-[36px] font-bold text-white">
-                    <CountUp target={Number(d.value)} />{d.suffix}
-                  </div>
-                  <div className="text-[14px] text-white/70 mt-2">{d.label}</div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={90}>
+            <ImpactMetricsDisplay metrics={impactMetrics} variant="section" />
+          </Reveal>
         </div>
       </section>
 
