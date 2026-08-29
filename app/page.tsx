@@ -8,29 +8,32 @@ import PartnersCarousel from '@/components/public/shared/PartnersCarousel';
 import TestimonialsCarousel from '@/components/public/shared/TestimonialsCarousel';
 import CareCategories from '@/components/public/shared/CareCategories';
 import Reveal from '@/components/public/shared/Reveal';
-import ImpactMetricsDisplay from '@/components/public/shared/ImpactMetricsDisplay';
+import HeroDistributionMap from '@/components/public/shared/HeroDistributionMap';
+import JejakKebaikanGrid from '@/components/public/shared/JejakKebaikanGrid';
 import {
   getWebHeroConfig,
-  getWebImpactMetrics,
+  getWebImpactCategories,
   getWebTestimonials,
   getWebPartners,
   getWebCareCategories,
-  getLatestArticles
+  getLatestArticles,
+  getWebDistributionPoints
 } from '@/lib/web-queries';
 import { getAllCampaigns } from '@/lib/campaigns';
 
 export const revalidate = 300; // ISR 5 minutes
 
 export default async function Beranda() {
-  const [heroConfig, impactMetrics, testimonials, partners, careCategories, articles, allCampaigns] = (await Promise.all([
+  const [heroConfig, impactCategories, distributionPoints, testimonials, partners, careCategories, articles, allCampaigns] = (await Promise.all([
     getWebHeroConfig(),
-    getWebImpactMetrics(),
+    getWebImpactCategories(),
+    getWebDistributionPoints(),
     getWebTestimonials(),
     getWebPartners(),
     getWebCareCategories(),
     getLatestArticles(3),
     getAllCampaigns()
-  ])) as [any, any[], any[], any[], any[], any[], any[]];
+  ])) as [any, any[], any[], any[], any[], any[], any[], any[]];
 
   const featuredPrograms = allCampaigns.filter((p: any) => p.is_urgent).slice(0, 3);
   if (featuredPrograms.length < 3) {
@@ -90,10 +93,10 @@ export default async function Beranda() {
               <span className="text-[12px] text-white/90 font-semibold">SK Kemenag RI No. 52 Tahun 2024</span>
             </div>
             <h2 className="font-cabin text-4xl lg:text-[40px] font-bold text-white leading-tight mb-3">
-              Zakat & Sedekahmu, Nyata Dampaknya
+              Jangkauan Jejak Kebaikan Zakat dan Sedekahmu
             </h2>
             <p className="text-white/75 text-[16px] leading-relaxed mb-8">
-              Setiap angka adalah jejak kebaikan yang tumbuh menjadi manfaat bagi sesama.
+              Setiap wilayah implementasi adalah jejak kebaikan yang tumbuh menjadi manfaat bagi sesama.
             </p>
             <div className="flex gap-4 flex-wrap">
               <Link href="/donasi" className="cta-pulse px-7 py-3.5 bg-white text-[#83b64e] rounded-xl font-cabin font-bold text-[15px] inline-flex items-center gap-2 transition-all hover:opacity-85 hover:scale-105 active:scale-95">
@@ -104,7 +107,7 @@ export default async function Beranda() {
               </Link>
             </div>
           </div>
-          <ImpactMetricsDisplay metrics={impactMetrics} variant="hero" />
+          <HeroDistributionMap points={distributionPoints} />
         </div>
       </section>
 
@@ -113,10 +116,10 @@ export default async function Beranda() {
         <div className="max-w-[1060px] mx-auto text-center">
           <Reveal>
             <h2 className="font-cabin text-[26px] md:text-[28px] font-bold text-[#0f1b35] leading-tight mb-3">
-              Zakat, Infak, dan Sedekahmu Menjadi Jejak Kebaikan
+              Zakat dan Sedekahmu, Nyata Dampaknya
             </h2>
             <p className="text-[#64748b] text-[15px] leading-relaxed max-w-[640px] mx-auto mb-10">
-              Setiap amanah dikelola dan disalurkan melalui berbagai program kebaikan untuk membantu, memberdayakan, dan membuka peluang bagi masyarakat untuk tumbuh lebih baik.
+              Setiap program adalah jejak kebaikan yang tumbuh menjadi manfaat bagi sesama.
             </p>
           </Reveal>
           <Reveal delay={100}>
@@ -189,12 +192,12 @@ export default async function Beranda() {
               <div className="w-[18px] h-0.5 bg-white rounded-full" />
               <span className="text-[12px] font-bold text-white tracking-[1.5px] uppercase">Bukti Dampak</span>
             </div>
-            <h2 className="font-cabin text-[30px] font-bold text-white mb-2">Angka yang Berbicara</h2>
-            <p className="text-white/65 text-[15px] mb-10">Data penyaluran terverifikasi kami</p>
+            <h2 className="font-cabin text-[30px] font-bold text-white mb-2">Zakat, Infak, dan Sedekahmu Menjadi Jejak Kebaikan</h2>
+            <p className="text-white/65 text-[15px] mb-10">Setiap amanah dikelola dan disalurkan melalui berbagai program kebaikan untuk membantu, memberdayakan, dan membuka peluang bagi masyarakat untuk tumbuh lebih baik.</p>
           </Reveal>
 
           <Reveal delay={90}>
-            <ImpactMetricsDisplay metrics={impactMetrics} variant="section" />
+            <JejakKebaikanGrid categories={impactCategories} />
           </Reveal>
         </div>
       </section>

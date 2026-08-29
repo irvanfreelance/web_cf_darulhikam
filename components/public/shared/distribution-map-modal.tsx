@@ -22,9 +22,10 @@ interface DistributionMapModalProps {
   isOpen: boolean;
   onClose: () => void;
   metrics?: any[];
+  points?: any[];
 }
 
-export default function DistributionMapModal({ isOpen, onClose, metrics }: DistributionMapModalProps) {
+export default function DistributionMapModal({ isOpen, onClose, metrics, points }: DistributionMapModalProps) {
   // Helper function to get metric value safely
   const getMetricValue = (key: string, defaultValue: string = "0") => {
     if (!metrics || !Array.isArray(metrics)) return defaultValue;
@@ -60,7 +61,7 @@ export default function DistributionMapModal({ isOpen, onClose, metrics }: Distr
            
            {/* Map Container */}
            <div className="w-full md:w-[65%] h-[40vh] md:h-full relative shrink-0">
-             <DynamicDistributionMap />
+             <DynamicDistributionMap points={points} />
            </div>
 
            {/* Stats Overlay Container (Right Side) */}

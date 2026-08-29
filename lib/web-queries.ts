@@ -33,6 +33,40 @@ export async function getWebImpactMetrics() {
   return data;
 }
 
+export async function getWebImpactCategories() {
+  const cacheKey = `web:impact_categories`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT icon_url, label, value, suffix
+      FROM web_impact_categories
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 300 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
+export async function getWebDistributionPoints() {
+  const cacheKey = `web:distribution_points`;
+  let data = await redis.get(cacheKey);
+  if (!data) {
+    data = await query(`
+      SELECT id, name, type, latitude, longitude, description
+      FROM web_distribution_points
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `);
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 300 });
+  } else if (typeof data === 'string') {
+    data = JSON.parse(data);
+  }
+  return data;
+}
+
 export async function getWebTestimonials() {
   const cacheKey = `web:testimonials`;
   let data = await redis.get(cacheKey);
