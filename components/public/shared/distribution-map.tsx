@@ -71,8 +71,8 @@ export default function DistributionMap({ className, points }: DistributionMapPr
         minZoom={2}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a>'
+          url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
         />
 
         {locations.map((loc, idx) => (
@@ -81,8 +81,8 @@ export default function DistributionMap({ className, points }: DistributionMapPr
             center={loc.pos}
             radius={loc.type === 'country' ? 8 : 6}
             pathOptions={{
-              color: loc.type === 'country' ? '#558033' : '#83b64e',
-              fillColor: loc.type === 'country' ? '#558033' : '#83b64e',
+              color: loc.type === 'country' ? '#4CAF50' : '#81C784',
+              fillColor: loc.type === 'country' ? '#4CAF50' : '#81C784',
               fillOpacity: 0.8,
               weight: 2
             }}
