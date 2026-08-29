@@ -72,7 +72,7 @@ export default function DistributionMap({ className, points }: DistributionMapPr
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         {locations.map((loc, idx) => (
@@ -81,8 +81,8 @@ export default function DistributionMap({ className, points }: DistributionMapPr
             center={loc.pos}
             radius={loc.type === 'country' ? 8 : 6}
             pathOptions={{
-              color: loc.type === 'country' ? '#4CAF50' : '#81C784',
-              fillColor: loc.type === 'country' ? '#4CAF50' : '#81C784',
+              color: loc.type === 'country' ? '#558033' : '#83b64e',
+              fillColor: loc.type === 'country' ? '#558033' : '#83b64e',
               fillOpacity: 0.8,
               weight: 2
             }}
