@@ -65,10 +65,10 @@ export default function CareCategories({ categories }: { categories: CareCategor
             onClick={() => setSelected(c)}
             className="flex flex-col items-center gap-2.5 group"
           >
-            <div className="w-14 h-14 md:w-16 md:h-16 bg-[#83b64e] rounded-2xl flex items-center justify-center shadow-sm transition-transform group-hover:scale-105 group-active:scale-95 overflow-hidden p-2.5">
-              <CategoryIcon category={c} size={26} />
+            <div className="w-20 h-20 md:w-[88px] md:h-[88px] bg-[#83b64e] rounded-2xl flex items-center justify-center shadow-sm transition-transform group-hover:scale-105 group-active:scale-95 overflow-hidden p-3.5">
+              <CategoryIcon category={c} size={38} />
             </div>
-            <span className="text-[12.5px] font-semibold text-[#334155] text-center leading-tight">{c.label}</span>
+            <span className="text-[13.5px] font-bold text-[#334155] text-center leading-tight">{c.label}</span>
           </button>
         ))}
       </div>

@@ -6,12 +6,14 @@ import DistributionMapModal from './distribution-map-modal';
 import { Map } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function ImpactMetricsDisplay({ 
-  metrics, 
-  variant = 'hero' 
-}: { 
-  metrics: any[], 
-  variant?: 'hero' | 'section' 
+export default function ImpactMetricsDisplay({
+  metrics,
+  variant = 'hero',
+  points
+}: {
+  metrics: any[],
+  variant?: 'hero' | 'section',
+  points?: any[]
 }) {
   const [isMapOpen, setIsMapOpen] = useState(false);
 
@@ -75,10 +77,11 @@ export default function ImpactMetricsDisplay({
         </div>
       )}
 
-      <DistributionMapModal 
-        isOpen={isMapOpen} 
-        onClose={() => setIsMapOpen(false)} 
-        metrics={metrics} 
+      <DistributionMapModal
+        isOpen={isMapOpen}
+        onClose={() => setIsMapOpen(false)}
+        metrics={metrics}
+        points={points}
       />
     </>
   );
