@@ -160,10 +160,10 @@ export default function CheckoutProfile() {
         <div className="bg-white rounded-2xl p-3 border border-gray-100 mb-4 flex justify-between items-center shadow-sm">
           <div>
             <p className="text-gray-500 text-[10px] font-bold mb-0.5 uppercase tracking-wider">Total Donasi</p>
-            <p className="text-teal-600 font-extrabold text-xl">{formatIDR(currentTotalAmount)}</p>
+            <p className="text-brand-600 font-extrabold text-xl">{formatIDR(currentTotalAmount)}</p>
           </div>
           {checkoutData.campaignCategoryName && (
-            <span className="bg-teal-50 text-teal-700 text-[8px] font-bold px-2 py-1 rounded-lg shadow-sm border border-teal-100 uppercase tracking-wider">
+            <span className="bg-brand-50 text-brand-700 text-[8px] font-bold px-2 py-1 rounded-lg shadow-sm border border-brand-100 uppercase tracking-wider">
               {checkoutData.campaignCategoryName}
             </span>
           )}
@@ -206,7 +206,7 @@ export default function CheckoutProfile() {
                     className="flex items-center gap-2 cursor-pointer select-none group"
                   >
                     <span className="text-[11px] font-medium text-gray-600 text-right leading-tight max-w-[80px]">Tampilkan Sebagai Hamba Allah</span>
-                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${isAnonymous ? 'border-transparent' : 'bg-white border-gray-300 group-hover:border-gray-400'}`} style={{ backgroundColor: isAnonymous ? 'var(--color-teal-500, #0d9488)' : undefined }}>
+                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${isAnonymous ? 'border-transparent' : 'bg-white border-gray-300 group-hover:border-gray-400'}`} style={{ backgroundColor: isAnonymous ? 'var(--color-brand-500, #83b64e)' : undefined }}>
                       {isAnonymous && <Check size={14} className="text-white" strokeWidth={4} />}
                     </div>
                   </div>
@@ -219,7 +219,7 @@ export default function CheckoutProfile() {
               </div>
 
               {/* Dynamic Primary Color Footer Bar */}
-              <div className="py-2 px-4 text-center" style={{ backgroundColor: 'var(--color-teal-600, #0d9488)' }}>
+              <div className="py-2 px-4 text-center" style={{ backgroundColor: 'var(--color-brand-600, #6ea341)' }}>
                 <p className="text-[10px] font-medium text-white tracking-tight">
                   *Notifikasi transaksi & penyaluran akan dikirim ke No.HP &/ Email yang aktif
                 </p>
@@ -233,7 +233,7 @@ export default function CheckoutProfile() {
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full bg-white border border-gray-200 py-2.5 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors"
+                  className="w-full bg-white border border-gray-200 py-2.5 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors"
                 />
               </div>
 
@@ -244,7 +244,7 @@ export default function CheckoutProfile() {
                   placeholder="081234xxxx"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  className="w-full bg-white border border-gray-200 py-2.5 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors"
+                  className="w-full bg-white border border-gray-200 py-2.5 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors"
                 />
                 {phone && !isValidPhone && <p className="text-red-500 text-[10px] mt-1">Format telepon tidak valid</p>}
               </div>
@@ -256,7 +256,7 @@ export default function CheckoutProfile() {
                   placeholder="contoh@gmail.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white border border-gray-200 py-2.5 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors"
+                  className="w-full bg-white border border-gray-200 py-2.5 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors"
                 />
                 {email && !isValidEmail && <p className="text-red-500 text-[10px] mt-1">Format email tidak valid</p>}
                 <p className="text-[9px] text-gray-400 mt-1.5 italic">Nomor WhatsApp dan Email diperlukan untuk pengiriman notifikasi.</p>
@@ -270,7 +270,7 @@ export default function CheckoutProfile() {
                   <p className="text-[13px] font-bold text-gray-800">Sembunyikan nama saya</p>
                   <p className="text-[10px] text-gray-500 italic mt-0.5">Tampil sebagai Hamba Allah</p>
                 </div>
-                <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${isAnonymous ? 'border-transparent' : 'bg-white border-gray-300 group-hover:border-gray-400'}`} style={{ backgroundColor: isAnonymous ? 'var(--color-teal-500, #0d9488)' : undefined }}>
+                <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${isAnonymous ? 'border-transparent' : 'bg-white border-gray-300 group-hover:border-gray-400'}`} style={{ backgroundColor: isAnonymous ? 'var(--color-brand-500, #83b64e)' : undefined }}>
                   {isAnonymous && <Check size={16} className="text-white" strokeWidth={4} />}
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function CheckoutProfile() {
               placeholder="Tuliskan doa Anda (opsional)..."
               value={doa}
               onChange={e => setDoa(e.target.value)}
-              className="w-full bg-white border border-gray-200 py-2 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors resize-none"
+              className="w-full bg-white border border-gray-200 py-2 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors resize-none"
             />
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function CheckoutProfile() {
           <div className="mb-6">
             <div className="flex justify-between items-end mb-3">
               <h3 className="font-bold text-gray-800 text-[11px] uppercase tracking-wider">ATAS NAMA (MUDHOHI)</h3>
-              <span className="text-teal-600 font-bold text-[10px] bg-teal-50 px-2 py-1 rounded">{namesAllowed} Pequrban</span>
+              <span className="text-brand-600 font-bold text-[10px] bg-brand-50 px-2 py-1 rounded">{namesAllowed} Pequrban</span>
             </div>
             <div className="bg-[#FFFCEB] border border-[#FDEB96] p-4 rounded-xl mb-4 text-center">
               <p className="text-xs text-[#8A6A00] leading-relaxed">
@@ -326,7 +326,7 @@ export default function CheckoutProfile() {
                       newNames[i] = e.target.value;
                       setQurbanNames(newNames);
                     }}
-                    className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-gray-200 py-3 px-4 rounded-xl outline-teal-500 text-sm transition-colors"
+                    className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-gray-200 py-3 px-4 rounded-xl outline-brand-500 text-sm transition-colors"
                   />
                 </div>
               ))}
@@ -339,7 +339,7 @@ export default function CheckoutProfile() {
         <button
           onClick={goNext}
           disabled={!isProfileComplete || isNavigating}
-          className={`w-full flex items-center justify-center gap-2 text-white font-bold text-lg py-4 rounded-xl active:scale-[0.98] transition-transform ${(!isProfileComplete || isNavigating) ? 'bg-gray-300' : 'bg-teal-600'}`}
+          className={`w-full flex items-center justify-center gap-2 text-white font-bold text-lg py-4 rounded-xl active:scale-[0.98] transition-transform ${(!isProfileComplete || isNavigating) ? 'bg-gray-300' : 'bg-brand-600'}`}
         >
           {isNavigating ? <><Loader2 className="animate-spin" size={20} /> Memproses...</> : 'Pilih Metode Pembayaran'}
         </button>

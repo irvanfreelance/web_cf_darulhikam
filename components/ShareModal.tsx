@@ -133,7 +133,7 @@ export default function ShareModal({ isOpen, onClose, url, title }: ShareModalPr
             onClick={handleCopy}
             className={cn(
               "flex items-center gap-1 px-4 py-2 rounded-lg text-xs font-bold transition-all",
-              copied ? "bg-emerald-500 text-white shadow-emerald-200" : "bg-teal-600 text-white shadow-teal-200 shadow-lg"
+              copied ? "bg-emerald-500 text-white shadow-emerald-200" : "bg-brand-600 text-white shadow-brand-200 shadow-lg"
             )}
           >
             {copied ? (

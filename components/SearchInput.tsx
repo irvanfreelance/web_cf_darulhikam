@@ -35,7 +35,7 @@ export default function SearchInput() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Cari kampanye atau kategori..."
-          className="w-full bg-white text-gray-800 rounded-full py-3.5 px-12 text-sm border border-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-sans"
+          className="w-full bg-white text-gray-800 rounded-full py-3.5 px-12 text-sm border border-gray-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all font-sans"
         />
         <Search size={18} className="absolute left-5 top-4 text-gray-400" />
       </div>

@@ -71,13 +71,13 @@ export default function LiveCampaignStats({
 
   return (
     <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-4 mb-5">
-      <p className="text-2xl font-bold text-teal-600 mb-1 transition-all duration-300">
+      <p className="text-2xl font-bold text-brand-600 mb-1 transition-all duration-300">
         {formatIDR(collected)}
       </p>
       {!hasNoTarget && (
         <div className="w-full bg-gray-100 rounded-full h-2 mb-3 overflow-hidden">
           <div
-            className="bg-teal-500 h-full rounded-full transition-[width] duration-1000 ease-out"
+            className="bg-brand-500 h-full rounded-full transition-[width] duration-1000 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -85,7 +85,7 @@ export default function LiveCampaignStats({
       <div className="flex justify-between text-sm text-gray-600">
         <span className="font-bold text-gray-800">{donors} Donatur</span>
         {hasNoTimeLimit ? (
-          <span className="font-bold text-teal-600">Selalu Terbuka</span>
+          <span className="font-bold text-brand-600">Selalu Terbuka</span>
         ) : (
           <span className="font-bold text-gray-800">{daysLeft} Hari</span>
         )}

@@ -41,7 +41,7 @@ async function getCategoryCampaigns(categorySlug: string) {
     campaignsData = JSON.parse(campaignsData) as any;
   }
   // Fetch configs
-  const cacheKeyConf = `ngo:configs:global_v3`;
+  const cacheKeyConf = `ngo:configs:global_v4`;
   let configsData: any = await redis.get(cacheKeyConf);
   if (!configsData) {
     const confRes = await query('SELECT * FROM ngo_configs LIMIT 1');

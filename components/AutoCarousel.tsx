@@ -167,7 +167,7 @@ export default function AutoCarousel({ campaigns }: { campaigns: any[] }) {
                 priority={idx >= originalLength && idx < originalLength * 2} 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-5">
-                <p className="text-teal-300 text-[11px] font-bold mb-1.5 uppercase tracking-wider">{camp.category_name}</p>
+                <p className="text-brand-300 text-[11px] font-bold mb-1.5 uppercase tracking-wider">{camp.category_name}</p>
                 <h2 className="text-white font-extrabold text-lg leading-tight w-full line-clamp-2 drop-shadow-lg">{camp.title}</h2>
               </div>
             </div>
