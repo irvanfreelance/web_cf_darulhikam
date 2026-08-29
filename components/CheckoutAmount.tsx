@@ -120,8 +120,8 @@ export default function CheckoutAmount({ campaign, variants }: any) {
         {/* Toggle Donasi Paket vs Donasi Bebas for fixed_amount campaigns */}
         {campaign.is_fixed_amount && !campaign.is_zakat && !campaign.is_qurban && (
           <div className="flex bg-gray-200/60 p-1 rounded-xl mb-6">
-             <button onClick={() => setDonationMode('package')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'package' ? 'bg-white text-teal-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Paket</button>
-             <button onClick={() => setDonationMode('open')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'open' ? 'bg-white text-teal-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Bebas</button>
+             <button onClick={() => setDonationMode('package')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'package' ? 'bg-white text-brand-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Paket</button>
+             <button onClick={() => setDonationMode('open')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'open' ? 'bg-white text-brand-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Bebas</button>
           </div>
         )}
 
@@ -131,23 +131,23 @@ export default function CheckoutAmount({ campaign, variants }: any) {
                <p className="text-xl font-extrabold text-emerald-800">{formatIDR(GOLD_PRICE_PER_GRAM)} <span className="text-sm font-medium">/ gram (Harga Emas)</span></p>
             </div>
             <div className="flex bg-gray-200/60 p-1 rounded-xl mb-6">
-               <button onClick={() => setZakatMode('calculator')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'calculator'?'bg-white text-teal-600 border border-gray-100':'text-gray-500'}`}>Kalkulator</button>
-               <button onClick={() => setZakatMode('manual')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'manual'?'bg-white text-teal-600 border border-gray-100':'text-gray-500'}`}>Input Manual</button>
+               <button onClick={() => setZakatMode('calculator')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'calculator'?'bg-white text-brand-600 border border-gray-100':'text-gray-500'}`}>Kalkulator</button>
+               <button onClick={() => setZakatMode('manual')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'manual'?'bg-white text-brand-600 border border-gray-100':'text-gray-500'}`}>Input Manual</button>
             </div>
             {zakatMode === 'calculator' ? (
-              <div className="bg-white border border-teal-100 rounded-2xl p-5 mb-6">
+              <div className="bg-white border border-brand-100 rounded-2xl p-5 mb-6">
                 <div className="flex gap-2 mb-4">
-                  <button onClick={() => setZakatCalcType('profesi')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'profesi'?'bg-teal-50 text-teal-700':'border-gray-200 text-gray-500'}`}>Profesi</button>
-                  <button onClick={() => setZakatCalcType('maal')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'maal'?'bg-teal-50 text-teal-700':'border-gray-200 text-gray-500'}`}>Maal</button>
+                  <button onClick={() => setZakatCalcType('profesi')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'profesi'?'bg-brand-50 text-brand-700':'border-gray-200 text-gray-500'}`}>Profesi</button>
+                  <button onClick={() => setZakatCalcType('maal')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'maal'?'bg-brand-50 text-brand-700':'border-gray-200 text-gray-500'}`}>Maal</button>
                 </div>
-                <input type="number" placeholder="Total (Rp)" value={zakatInput} onChange={e => setZakatInput(e.target.value)} className="w-full bg-slate-50 border border-gray-200 rounded-xl py-3 px-4 mb-4 outline-teal-500" />
-                <button onClick={calculateZakat} className="w-full bg-teal-100 text-teal-700 font-bold py-3 rounded-xl mb-4">Hitung Zakat</button>
+                <input type="number" placeholder="Total (Rp)" value={zakatInput} onChange={e => setZakatInput(e.target.value)} className="w-full bg-slate-50 border border-gray-200 rounded-xl py-3 px-4 mb-4 outline-brand-500" />
+                <button onClick={calculateZakat} className="w-full bg-brand-100 text-brand-700 font-bold py-3 rounded-xl mb-4">Hitung Zakat</button>
                 {zakatResult && (
                   <div className="mt-4"><p className="text-2xl font-bold text-emerald-600">{formatIDR(zakatResult)}</p></div>
                 )}
               </div>
             ) : (
-              <input type="number" placeholder="Nominal Zakat" value={customAmount} onChange={e => { setCustomAmount(e.target.value); setAmount(parseInt(e.target.value) || 0); }} className="w-full bg-white border border-gray-300 rounded-xl py-4 px-4 text-lg font-bold outline-teal-500 shadow-sm" />
+              <input type="number" placeholder="Nominal Zakat" value={customAmount} onChange={e => { setCustomAmount(e.target.value); setAmount(parseInt(e.target.value) || 0); }} className="w-full bg-white border border-gray-300 rounded-xl py-4 px-4 text-lg font-bold outline-brand-500 shadow-sm" />
             )}
           </>
         )}
@@ -158,7 +158,7 @@ export default function CheckoutAmount({ campaign, variants }: any) {
               <h3 className="font-bold text-gray-800 mb-3 text-sm">Pilih Nominal Cepat</h3>
               <div className="grid grid-cols-2 gap-3">
                 {quickAmounts.map(amt => (
-                  <button key={amt} onClick={() => { setAmount(amt); setCustomAmount(amt.toString()); }} className={`py-4 rounded-xl border text-center font-bold text-sm ${amount === amt ? 'bg-teal-50 border-teal-600 text-teal-700' : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'}`}>
+                  <button key={amt} onClick={() => { setAmount(amt); setCustomAmount(amt.toString()); }} className={`py-4 rounded-xl border text-center font-bold text-sm ${amount === amt ? 'bg-brand-50 border-brand-600 text-brand-700' : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'}`}>
                     {formatIDR(amt)}
                   </button>
                 ))}
@@ -174,7 +174,7 @@ export default function CheckoutAmount({ campaign, variants }: any) {
                   const val = parseInt(e.target.value) || 0;
                   setCustomAmount(e.target.value);
                   setAmount(val);
-                }} className="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-lg font-bold outline-teal-500" />
+                }} className="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-lg font-bold outline-brand-500" />
               </div>
               <p className="text-gray-400 text-[10px] mt-2">Minimum nominal Rp 10.000</p>
             </div>
@@ -184,7 +184,7 @@ export default function CheckoutAmount({ campaign, variants }: any) {
         {(donationMode === 'package' && variants && variants.length > 0) && (
           <div className="mb-6">
             <h3 className="font-bold text-gray-800 mb-3 text-sm">Tentukan Kuantitas</h3>
-            <div className="bg-white border border-teal-100 rounded-2xl p-5 shadow-[0_4px_20px_rgba(20,184,166,0.08)]">
+            <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-[0_4px_20px_rgba(20,184,166,0.08)]">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h4 className="font-extrabold text-gray-800">{variants[0].name}</h4>
@@ -193,13 +193,13 @@ export default function CheckoutAmount({ campaign, variants }: any) {
                 <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1 shadow-sm">
                   <button onClick={() => setPackageQty(Math.max(1, packageQty-1))} className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded-lg transition-all"><Minus size={16} /></button>
                   <span className="w-10 text-center font-bold text-lg text-gray-800">{packageQty}</span>
-                  <button onClick={() => setPackageQty(packageQty+1)} className="w-10 h-10 flex items-center justify-center text-teal-600 hover:text-teal-700 rounded-lg transition-all"><Plus size={16} /></button>
+                  <button onClick={() => setPackageQty(packageQty+1)} className="w-10 h-10 flex items-center justify-center text-brand-600 hover:text-brand-700 rounded-lg transition-all"><Plus size={16} /></button>
                 </div>
               </div>
               
               <div className="grid grid-cols-4 gap-2">
                 {[1, 2, 5, 10].map(q => (
-                  <button key={q} onClick={() => setPackageQty(q)} className={`py-2.5 rounded-xl border text-[11px] font-bold transition-all ${packageQty === q ? 'bg-teal-500 text-white border-teal-500 shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'}`}>{q} Qty</button>
+                  <button key={q} onClick={() => setPackageQty(q)} className={`py-2.5 rounded-xl border text-[11px] font-bold transition-all ${packageQty === q ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'}`}>{q} Qty</button>
                 ))}
               </div>
             </div>
@@ -210,9 +210,9 @@ export default function CheckoutAmount({ campaign, variants }: any) {
       <div className="absolute bottom-0 w-full bg-white p-4 border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] text-center">
          <div className="flex justify-between items-center mb-4">
            <span className="text-gray-500 font-bold text-sm">Total Tagihan</span>
-           <span className="text-2xl font-extrabold text-teal-600">{formatIDR(currentTotalAmount)}</span>
+           <span className="text-2xl font-extrabold text-brand-600">{formatIDR(currentTotalAmount)}</span>
          </div>
-         <button onClick={goNext} disabled={(donationMode === 'open' && amount < 10000)} className="w-full bg-teal-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Lanjutkan</button>
+         <button onClick={goNext} disabled={(donationMode === 'open' && amount < 10000)} className="w-full bg-brand-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Lanjutkan</button>
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ function PdfButton({ invoiceCode, status }: { invoiceCode: string; status: strin
       onClick={handleClick}
       disabled={loading}
       title="Cetak Bukti Donasi (PDF)"
-      className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-teal-600 hover:text-teal-700 transition-colors disabled:opacity-60"
+      className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-brand-600 hover:text-brand-700 transition-colors disabled:opacity-60"
     >
       {loading ? (
         <Loader2 size={13} className="animate-spin" />
@@ -72,7 +72,7 @@ function HistoryCard({ item }: { item: HistoryItem }) {
 
   return (
     <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-start gap-4 animate-fade-in">
-      <div className="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shrink-0 border border-teal-100 mt-0.5">
+      <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 shrink-0 border border-brand-100 mt-0.5">
         <Receipt size={20} />
       </div>
       <div className="flex-1 min-w-0">
@@ -83,7 +83,7 @@ function HistoryCard({ item }: { item: HistoryItem }) {
         >
           {item.campaign_title || 'Donasi Umum'}
         </h4>
-        <p className="font-bold text-teal-600 text-sm">
+        <p className="font-bold text-brand-600 text-sm">
           Rp {Number(item.total_amount).toLocaleString('id-ID')}
         </p>
         {/* PDF button — only for PAID */}
@@ -154,7 +154,7 @@ export default function HistoryList({ initialData, hasMoreInitial }: Props) {
 
       {loading && (
         <div className="flex justify-center py-4">
-          <Loader2 size={22} className="animate-spin text-teal-500" />
+          <Loader2 size={22} className="animate-spin text-brand-500" />
         </div>
       )}
 

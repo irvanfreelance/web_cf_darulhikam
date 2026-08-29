@@ -206,8 +206,8 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
           {/* Toggle Donasi Paket vs Donasi Bebas for fixed_amount campaigns */}
           {campaign.is_fixed_amount && !campaign.is_zakat && (
             <div className="flex bg-gray-200/60 p-1 rounded-xl mb-6">
-              <button onClick={() => setDonationMode('package')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'package' ? 'bg-white text-teal-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Paket</button>
-              <button onClick={() => setDonationMode('open')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'open' ? 'bg-white text-teal-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Bebas</button>
+              <button onClick={() => setDonationMode('package')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'package' ? 'bg-white text-brand-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Paket</button>
+              <button onClick={() => setDonationMode('open')} className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${donationMode === 'open' ? 'bg-white text-brand-600 shadow-sm border border-gray-100' : 'text-gray-500 hover:text-gray-700'}`}>Donasi Bebas</button>
             </div>
           )}
 
@@ -218,23 +218,23 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                 <p className="text-xl font-extrabold text-emerald-800">{formatIDR(GOLD_PRICE_PER_GRAM)} <span className="text-sm font-medium">/ gram (Harga Emas)</span></p>
               </div>
               <div className="flex bg-gray-200/60 p-1 rounded-xl mb-6">
-                <button onClick={() => setZakatMode('calculator')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'calculator' ? 'bg-white text-teal-600 border border-gray-100' : 'text-gray-500'}`}>Kalkulator</button>
-                <button onClick={() => setZakatMode('manual')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'manual' ? 'bg-white text-teal-600 border border-gray-100' : 'text-gray-500'}`}>Input Manual</button>
+                <button onClick={() => setZakatMode('calculator')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'calculator' ? 'bg-white text-brand-600 border border-gray-100' : 'text-gray-500'}`}>Kalkulator</button>
+                <button onClick={() => setZakatMode('manual')} className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${zakatMode === 'manual' ? 'bg-white text-brand-600 border border-gray-100' : 'text-gray-500'}`}>Input Manual</button>
               </div>
               {zakatMode === 'calculator' ? (
-                <div className="bg-white border border-teal-100 rounded-2xl p-5 mb-6">
+                <div className="bg-white border border-brand-100 rounded-2xl p-5 mb-6">
                   <div className="flex gap-2 mb-4">
-                    <button onClick={() => setZakatCalcType('profesi')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'profesi' ? 'bg-teal-50 text-teal-700' : 'border-gray-200 text-gray-500'}`}>Profesi</button>
-                    <button onClick={() => setZakatCalcType('maal')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'maal' ? 'bg-teal-50 text-teal-700' : 'border-gray-200 text-gray-500'}`}>Maal</button>
+                    <button onClick={() => setZakatCalcType('profesi')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'profesi' ? 'bg-brand-50 text-brand-700' : 'border-gray-200 text-gray-500'}`}>Profesi</button>
+                    <button onClick={() => setZakatCalcType('maal')} className={`flex-1 py-2 rounded-lg text-xs font-bold border ${zakatCalcType === 'maal' ? 'bg-brand-50 text-brand-700' : 'border-gray-200 text-gray-500'}`}>Maal</button>
                   </div>
-                  <input type="number" placeholder="Total (Rp)" value={zakatInput} onChange={e => setZakatInput(e.target.value)} className="w-full bg-slate-50 border border-gray-200 rounded-xl py-3 px-4 mb-4 outline-teal-500" />
-                  <button onClick={calculateZakat} className="w-full bg-teal-100 text-teal-700 font-bold py-3 rounded-xl mb-4">Hitung Zakat</button>
+                  <input type="number" placeholder="Total (Rp)" value={zakatInput} onChange={e => setZakatInput(e.target.value)} className="w-full bg-slate-50 border border-gray-200 rounded-xl py-3 px-4 mb-4 outline-brand-500" />
+                  <button onClick={calculateZakat} className="w-full bg-brand-100 text-brand-700 font-bold py-3 rounded-xl mb-4">Hitung Zakat</button>
                   {zakatResult && (
                     <div className="mt-4"><p className="text-2xl font-bold text-emerald-600">{formatIDR(zakatResult)}</p></div>
                   )}
                 </div>
               ) : (
-                <input type="number" placeholder="Nominal Zakat" value={donationData.customAmount} onChange={e => setDonationData({ ...donationData, customAmount: e.target.value, amount: parseInt(e.target.value) || 0 })} className="w-full bg-white border border-gray-300 rounded-xl py-4 px-4 text-lg font-bold outline-teal-500 shadow-sm" />
+                <input type="number" placeholder="Nominal Zakat" value={donationData.customAmount} onChange={e => setDonationData({ ...donationData, customAmount: e.target.value, amount: parseInt(e.target.value) || 0 })} className="w-full bg-white border border-gray-300 rounded-xl py-4 px-4 text-lg font-bold outline-brand-500 shadow-sm" />
               )}
             </>
           )}
@@ -245,7 +245,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                 <h3 className="font-bold text-gray-800 mb-3 text-sm">Pilih Nominal Cepat</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {quickAmounts.map(amt => (
-                    <button key={amt} onClick={() => setDonationData({ ...donationData, amount: amt, customAmount: amt.toString() })} className={`py-4 rounded-xl border text-center font-bold text-sm ${donationData.amount === amt ? 'bg-teal-50 border-teal-600 text-teal-700' : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'}`}>
+                    <button key={amt} onClick={() => setDonationData({ ...donationData, amount: amt, customAmount: amt.toString() })} className={`py-4 rounded-xl border text-center font-bold text-sm ${donationData.amount === amt ? 'bg-brand-50 border-brand-600 text-brand-700' : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'}`}>
                       {formatIDR(amt)}
                     </button>
                   ))}
@@ -260,7 +260,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                   <input type="number" placeholder="50000" value={donationData.customAmount} onChange={e => {
                     const val = parseInt(e.target.value) || 0;
                     setDonationData({ ...donationData, customAmount: e.target.value, amount: val });
-                  }} className="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-lg font-bold outline-teal-500" />
+                  }} className="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-lg font-bold outline-brand-500" />
                 </div>
                 <p className="text-gray-400 text-[10px] mt-2">Minimum nominal Rp 10.000</p>
               </div>
@@ -270,7 +270,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
           {(donationMode === 'package' && variants && variants.length > 0) && (
             <div className="mb-6">
               <h3 className="font-bold text-gray-800 mb-3 text-sm">Tentukan Kuantitas</h3>
-              <div className="bg-white border border-teal-100 rounded-2xl p-5 shadow-[0_4px_20px_rgba(20,184,166,0.08)]">
+              <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-[0_4px_20px_rgba(20,184,166,0.08)]">
                 <div className="flex justify-between items-center mb-6">
                   <div>
                     <h4 className="font-extrabold text-gray-800">{variants[0].name}</h4>
@@ -279,13 +279,13 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                   <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1 shadow-sm">
                     <button onClick={() => setPackageQty(Math.max(1, packageQty - 1))} className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded-lg transition-all"><Minus size={16} /></button>
                     <span className="w-10 text-center font-bold text-lg text-gray-800">{packageQty}</span>
-                    <button onClick={() => setPackageQty(packageQty + 1)} className="w-10 h-10 flex items-center justify-center text-teal-600 hover:text-teal-700 rounded-lg transition-all"><Plus size={16} /></button>
+                    <button onClick={() => setPackageQty(packageQty + 1)} className="w-10 h-10 flex items-center justify-center text-brand-600 hover:text-brand-700 rounded-lg transition-all"><Plus size={16} /></button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-4 gap-2">
                   {[1, 2, 5, 10].map(q => (
-                    <button key={q} onClick={() => setPackageQty(q)} className={`py-2.5 rounded-xl border text-[11px] font-bold transition-all ${packageQty === q ? 'bg-teal-500 text-white border-teal-500 shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'}`}>{q} Qty</button>
+                    <button key={q} onClick={() => setPackageQty(q)} className={`py-2.5 rounded-xl border text-[11px] font-bold transition-all ${packageQty === q ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'}`}>{q} Qty</button>
                   ))}
                 </div>
               </div>
@@ -296,14 +296,14 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
         <div className="absolute bottom-0 w-full bg-white p-4 border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] text-center">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-500 font-bold text-sm">Total Tagihan</span>
-            <span className="text-2xl font-extrabold text-teal-600">{formatIDR(currentTotalAmount)}</span>
+            <span className="text-2xl font-extrabold text-brand-600">{formatIDR(currentTotalAmount)}</span>
           </div>
           <button onClick={() => {
             if (donationMode === 'package' && variants && variants.length > 0) {
               setDonationData({ ...donationData, amount: variants[0].price * packageQty });
             }
             setStep('profile');
-          }} disabled={(donationMode === 'open' && donationData.amount < 10000)} className="w-full bg-teal-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Lanjutkan</button>
+          }} disabled={(donationMode === 'open' && donationData.amount < 10000)} className="w-full bg-brand-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Lanjutkan</button>
         </div>
       </div>
     );
@@ -322,10 +322,10 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
           <div className="bg-white rounded-2xl p-4 border border-gray-100 mb-6 flex justify-between items-center shadow-sm">
             <div>
               <p className="text-gray-500 text-[11px] font-bold mb-1 uppercase tracking-wider">Total Donasi</p>
-              <p className="text-teal-600 font-extrabold text-2xl">{formatIDR(currentTotalAmount)}</p>
+              <p className="text-brand-600 font-extrabold text-2xl">{formatIDR(currentTotalAmount)}</p>
             </div>
             {campaign.category_name && (
-              <span className="bg-teal-50 text-teal-700 text-[9px] font-bold px-2 py-1.5 rounded-lg shadow-sm border border-teal-100 uppercase tracking-wider">{campaign.category_name}</span>
+              <span className="bg-brand-50 text-brand-700 text-[9px] font-bold px-2 py-1.5 rounded-lg shadow-sm border border-brand-100 uppercase tracking-wider">{campaign.category_name}</span>
             )}
           </div>
 
@@ -335,18 +335,18 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
             <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
               <div className="mb-4">
                 <label className="block text-xs font-bold text-gray-700 mb-1.5">Nama Lengkap</label>
-                <input type="text" placeholder="" value={donationData.name} onChange={e => setDonationData({ ...donationData, name: e.target.value })} className="w-full bg-white border border-gray-200 py-3 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors" />
+                <input type="text" placeholder="" value={donationData.name} onChange={e => setDonationData({ ...donationData, name: e.target.value })} className="w-full bg-white border border-gray-200 py-3 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors" />
               </div>
 
               <div className="mb-4">
                 <label className="block text-xs font-bold text-gray-700 mb-1.5">Alamat Email</label>
-                <input type="email" placeholder="contoh@gmail.com" value={donationData.email} onChange={e => setDonationData({ ...donationData, email: e.target.value })} className={`w-full bg-white border ${donationData.email && !isValidEmail ? 'border-red-500' : 'border-gray-200'} py-3 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors`} />
+                <input type="email" placeholder="contoh@gmail.com" value={donationData.email} onChange={e => setDonationData({ ...donationData, email: e.target.value })} className={`w-full bg-white border ${donationData.email && !isValidEmail ? 'border-red-500' : 'border-gray-200'} py-3 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors`} />
                 {donationData.email && !isValidEmail && <p className="text-red-500 text-[10px] mt-1">Format email tidak valid</p>}
               </div>
 
               <div className="mb-5">
                 <label className="block text-xs font-bold text-gray-700 mb-1.5">Nomor WhatsApp <span className="text-gray-400 font-medium">(Opsional)</span></label>
-                <input type="tel" placeholder="081234xxxx" value={donationData.phone} onChange={e => setDonationData({ ...donationData, phone: e.target.value })} className={`w-full bg-white border ${donationData.phone && !isValidPhone ? 'border-red-500' : 'border-gray-200'} py-3 px-4 rounded-xl outline-teal-500 text-sm focus:border-teal-500 transition-colors`} />
+                <input type="tel" placeholder="081234xxxx" value={donationData.phone} onChange={e => setDonationData({ ...donationData, phone: e.target.value })} className={`w-full bg-white border ${donationData.phone && !isValidPhone ? 'border-red-500' : 'border-gray-200'} py-3 px-4 rounded-xl outline-brand-500 text-sm focus:border-brand-500 transition-colors`} />
                 {donationData.phone && !isValidPhone && <p className="text-red-500 text-[10px] mt-1">Format telepon tidak valid</p>}
                 <p className="text-[10px] text-gray-500 mt-2">Masukan nomor darurat bisa kami hubungi.</p>
               </div>
@@ -356,7 +356,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                   <p className="text-sm font-bold text-gray-800">Sembunyikan nama saya</p>
                   <p className="text-[10px] text-gray-500">Tampil sebagai Hamba Allah</p>
                 </div>
-                <div onClick={() => setDonationData({ ...donationData, isAnonymous: !donationData.isAnonymous })} className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${donationData.isAnonymous ? 'bg-teal-500' : 'bg-gray-300'}`}>
+                <div onClick={() => setDonationData({ ...donationData, isAnonymous: !donationData.isAnonymous })} className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${donationData.isAnonymous ? 'bg-brand-500' : 'bg-gray-300'}`}>
                   <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform ${donationData.isAnonymous ? 'translate-x-6' : ''}`}></div>
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
               <div className="mb-6">
                 <div className="flex justify-between items-end mb-3">
                   <h3 className="font-bold text-gray-800 text-[11px] uppercase tracking-wider">ATAS NAMA (MUDHOHI)</h3>
-                  <span className="text-teal-600 font-bold text-[10px] bg-teal-50 px-2 py-1 rounded">{namesAllowed} Pequrban</span>
+                  <span className="text-brand-600 font-bold text-[10px] bg-brand-50 px-2 py-1 rounded">{namesAllowed} Pequrban</span>
                 </div>
 
                 <div className="bg-[#FFFCEB] border border-[#FDEB96] p-4 rounded-xl mb-4 text-center">
@@ -387,7 +387,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                         const newNames = [...donationData.qurbanNames];
                         newNames[i] = e.target.value;
                         setDonationData({ ...donationData, qurbanNames: newNames });
-                      }} className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-gray-200 py-3 px-4 rounded-xl outline-teal-500 text-sm transition-colors" />
+                      }} className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-gray-200 py-3 px-4 rounded-xl outline-brand-500 text-sm transition-colors" />
                     </div>
                   ))}
                 </div>
@@ -397,7 +397,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
 
         </div>
         <div className="absolute bottom-0 w-full bg-white p-4 border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] text-center">
-          <button onClick={() => setStep('payment')} disabled={!isProfileComplete} className="w-full bg-teal-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Pilih Metode Pembayaran</button>
+          <button onClick={() => setStep('payment')} disabled={!isProfileComplete} className="w-full bg-brand-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Pilih Metode Pembayaran</button>
         </div>
       </div>
     );
@@ -427,9 +427,9 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
       <div className="flex-1 overflow-y-auto p-5 pb-32">
         <CampaignSummaryCard />
 
-        <div className="bg-teal-50/50 border border-teal-100 rounded-2xl p-4 mb-8 flex justify-between items-center shadow-sm">
-          <p className="text-teal-800 font-bold text-sm">Total Tagihan:</p>
-          <p className="text-teal-800 font-extrabold text-lg">{formatIDR(currentTotalAmount)}</p>
+        <div className="bg-brand-50/50 border border-brand-100 rounded-2xl p-4 mb-8 flex justify-between items-center shadow-sm">
+          <p className="text-brand-800 font-bold text-sm">Total Tagihan:</p>
+          <p className="text-brand-800 font-extrabold text-lg">{formatIDR(currentTotalAmount)}</p>
         </div>
 
         {Object.entries(groupPayments || {}).map(([type, methods]: any, idx) => (
@@ -445,7 +445,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
                       {m.logo_url ? <img src={m.logo_url} className="w-8 h-8 object-contain" /> : <div className="w-8 h-8 bg-gray-100 rounded-md flex items-center justify-center"><Banknote size={16} className="text-gray-400" /></div>}
                       <span className="font-bold text-sm text-gray-800">{m.name}</span>
                     </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-teal-500 bg-teal-500' : 'border-gray-300'}`}>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-brand-500 bg-brand-500' : 'border-gray-300'}`}>
                       {isSelected && <Check size={14} strokeWidth={4} className="text-white" />}
                     </div>
                   </div>
@@ -456,7 +456,7 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
         ))}
       </div>
       <div className="absolute bottom-0 w-full bg-white p-4 border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] text-center">
-        <button onClick={submitDonation} disabled={!donationData.paymentMethod || loading} className="w-full bg-teal-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">
+        <button onClick={submitDonation} disabled={!donationData.paymentMethod || loading} className="w-full bg-brand-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">
           {loading ? "Memproses..." : "Bayar Sekarang"}
         </button>
       </div>

@@ -249,7 +249,7 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
             </div>
             <div className="flex justify-between items-center pt-3">
               <span className="text-gray-800 font-bold text-sm">Total Tagihan</span>
-              <span className="text-teal-600 font-extrabold text-base">{formatIDR(finalTotalAmount)}</span>
+              <span className="text-brand-600 font-extrabold text-base">{formatIDR(finalTotalAmount)}</span>
             </div>
           </div>
         </div>
@@ -258,13 +258,13 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
 
         {selectedPayment && !isChangingPayment ? (
           /* Quick-confirm card for returning users — one tap to checkout */
-          <div className="bg-white border-2 border-teal-500 rounded-xl p-4 shadow-sm mb-6 flex items-center justify-between">
+          <div className="bg-white border-2 border-brand-500 rounded-xl p-4 shadow-sm mb-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-100">
                 {selectedPayment.logo_url ? (
                   <img src={selectedPayment.logo_url} className="w-10 h-10 object-contain" alt={selectedPayment.name} />
                 ) : (
-                  <Banknote className="text-teal-600" size={24} />
+                  <Banknote className="text-brand-600" size={24} />
                 )}
               </div>
               <div>
@@ -274,7 +274,7 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
             </div>
             <button
               onClick={() => setIsChangingPayment(true)}
-              className="text-teal-600 font-bold text-sm px-4 py-2 border border-teal-100 rounded-lg bg-teal-50 hover:bg-teal-100 transition-colors"
+              className="text-brand-600 font-bold text-sm px-4 py-2 border border-brand-100 rounded-lg bg-brand-50 hover:bg-brand-100 transition-colors"
             >
               Ganti
             </button>
@@ -293,11 +293,11 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
                     onClick={() => setActiveCategory(isActive ? '' : group.type)}
                     className={`p-3 rounded-xl border text-left transition-all ${
                       isActive
-                        ? 'bg-teal-50/60 border-teal-400 shadow-sm ring-1 ring-teal-300'
+                        ? 'bg-brand-50/60 border-brand-400 shadow-sm ring-1 ring-brand-300'
                         : 'bg-white border-gray-100 shadow-sm hover:bg-gray-50'
                     }`}
                   >
-                    <h3 className={`font-bold text-[13px] leading-snug ${isActive ? 'text-teal-800' : 'text-gray-900'}`}>
+                    <h3 className={`font-bold text-[13px] leading-snug ${isActive ? 'text-brand-800' : 'text-gray-900'}`}>
                       {info.title}
                     </h3>
                     {info.subtitle && <p className="text-[10px] text-gray-400 mt-0.5 leading-tight">{info.subtitle}</p>}
@@ -308,14 +308,14 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
                   {isActive && isLeftCol && <div />}
 
                   {isActive && (
-                    <div className="col-span-2 bg-white rounded-xl shadow-sm border border-teal-200 overflow-hidden mt-1 mb-2">
+                    <div className="col-span-2 bg-white rounded-xl shadow-sm border border-brand-200 overflow-hidden mt-1 mb-2">
                       {group.methods.map((m: any, mIdx: number, arr: any[]) => {
                         const isSelected = selectedPayment?.id === m.id;
                         return (
                           <div
                             key={m.id}
                             onClick={() => selectPayment(m)}
-                            className={`p-4 flex items-center justify-between cursor-pointer transition-colors ${mIdx !== arr.length - 1 ? 'border-b border-gray-100' : ''} bg-white hover:bg-teal-50/30`}
+                            className={`p-4 flex items-center justify-between cursor-pointer transition-colors ${mIdx !== arr.length - 1 ? 'border-b border-gray-100' : ''} bg-white hover:bg-brand-50/30`}
                           >
                             <div className="flex items-center gap-3">
                               {m.logo_url
@@ -331,7 +331,7 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
                                 )}
                               </div>
                             </div>
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-teal-500 bg-teal-500' : 'border-gray-300'}`}>
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-brand-500 bg-brand-500' : 'border-gray-300'}`}>
                               {isSelected && <Check size={12} strokeWidth={4} className="text-white" />}
                             </div>
                           </div>
@@ -358,7 +358,7 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
         <button
           onClick={submitDonation}
           disabled={!selectedPayment || loading}
-          className={`w-full flex items-center justify-center gap-2 text-white font-bold text-lg py-4 rounded-xl active:scale-[0.98] transition-transform ${(!selectedPayment || loading) ? 'bg-gray-300' : 'bg-teal-600'}`}
+          className={`w-full flex items-center justify-center gap-2 text-white font-bold text-lg py-4 rounded-xl active:scale-[0.98] transition-transform ${(!selectedPayment || loading) ? 'bg-gray-300' : 'bg-brand-600'}`}
         >
           {loading ? <><Loader2 className="animate-pulse" size={20} /> Memproses...</> : 'Bayar Sekarang'}
         </button>

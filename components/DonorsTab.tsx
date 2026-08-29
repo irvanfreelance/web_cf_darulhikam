@@ -122,7 +122,7 @@ export default function DonorsTab({ slug }: { slug: string }) {
               <h4 className="font-bold text-gray-900 text-sm">{donor.name}</h4>
               <p className="text-xs text-gray-400 mt-0.5">{formatDate(donor.date)}</p>
             </div>
-            <p className="font-bold text-teal-600 text-sm shrink-0 ml-2">{formatIDR(donor.amount)}</p>
+            <p className="font-bold text-brand-600 text-sm shrink-0 ml-2">{formatIDR(donor.amount)}</p>
           </div>
           {donor.message && (
             <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 px-3 py-2 rounded-lg border border-gray-100 mt-1.5">

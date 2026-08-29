@@ -24,6 +24,16 @@
   --color-laz-teksmt: #94a3b8;
   --color-laz-red: #dc2626;
   --color-laz-redlt: #fef2f2;
+
+  --color-brand-50: #f2f8ea;
+  --color-brand-100: #e4f0d4;
+  --color-brand-200: #cbe4b3;
+  --color-brand-300: #b3d68f;
+  --color-brand-400: #9bc873;
+  --color-brand-500: #83b64e;
+  --color-brand-600: #6ea341;
+  --color-brand-700: #558033;
+  --color-brand-800: #416426;
 }
 
 @keyframes marquee {

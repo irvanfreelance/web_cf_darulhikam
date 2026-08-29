@@ -24,7 +24,7 @@ async function getUpdates() {
 }
 
 async function getNgoConfig() {
-  const cacheKey = `ngo:configs:global_v2`;
+  const cacheKey = `ngo:configs:global_v4`;
   let configsData: any = await redis.get(cacheKey);
   if (!configsData) {
     const confRes = await query('SELECT * FROM ngo_configs LIMIT 1', []);

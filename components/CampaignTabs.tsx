@@ -50,12 +50,12 @@ export default function CampaignTabs({ slug, description, updates }: Props) {
             key={key}
             onClick={() => setActiveTab(key)}
             className={`pb-3 flex-1 font-bold text-sm text-center relative ${
-              activeTab === key ? 'text-teal-600' : 'text-gray-400'
+              activeTab === key ? 'text-brand-600' : 'text-gray-400'
             }`}
           >
             {label}
             {activeTab === key && (
-              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-teal-500 rounded-t-full" />
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-500 rounded-t-full" />
             )}
           </button>
         ))}
@@ -70,8 +70,8 @@ export default function CampaignTabs({ slug, description, updates }: Props) {
           className="text-gray-600 text-sm leading-relaxed text-justify mb-4 campaign-description prose prose-sm max-w-none"
           dangerouslySetInnerHTML={{ __html: description }}
         />
-        <div className="bg-teal-50/50 p-3.5 rounded-lg border border-teal-100/50 mb-4">
-          <p className="text-teal-800 text-[11px] leading-relaxed font-medium">
+        <div className="bg-brand-50/50 p-3.5 rounded-lg border border-brand-100/50 mb-4">
+          <p className="text-brand-800 text-[11px] leading-relaxed font-medium">
             Donasi Anda sangat berarti. Mari kita bersama-sama mewujudkan kebaikan ini sekarang juga. 
             Berapapun donasi Anda akan sangat membantu tujuan mulia ini.
           </p>
@@ -86,7 +86,7 @@ export default function CampaignTabs({ slug, description, updates }: Props) {
             <p className="text-gray-500 text-sm font-medium">Belum ada info terbaru saat ini.</p>
           </div>
         ) : (
-          <div className="relative border-l-2 border-teal-100 ml-3 pl-5 space-y-6 pb-6">
+          <div className="relative border-l-2 border-brand-100 ml-3 pl-5 space-y-6 pb-6">
             {updates.map((update) => {
               const formattedDate = new Intl.DateTimeFormat('id-ID', {
                 day: 'numeric',
@@ -97,15 +97,15 @@ export default function CampaignTabs({ slug, description, updates }: Props) {
                 <Link
                   href={`/news/${update.id}`}
                   key={update.id}
-                  className="block relative bg-white border border-gray-100 shadow-sm rounded-xl p-4 hover:border-teal-200 active:scale-[0.98] transition-transform"
+                  className="block relative bg-white border border-gray-100 shadow-sm rounded-xl p-4 hover:border-brand-200 active:scale-[0.98] transition-transform"
                 >
-                  <div className="absolute -left-[27px] top-4 w-4 h-4 bg-teal-500 rounded-full border-4 border-white shadow-sm" />
-                  <p className="text-[10px] text-teal-600 font-bold mb-1 uppercase tracking-wider">
+                  <div className="absolute -left-[27px] top-4 w-4 h-4 bg-brand-500 rounded-full border-4 border-white shadow-sm" />
+                  <p className="text-[10px] text-brand-600 font-bold mb-1 uppercase tracking-wider">
                     {formattedDate}
                   </p>
                   <h4 className="font-bold text-gray-800 text-sm mb-2 leading-tight">{update.title}</h4>
                   <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed mb-3">{update.excerpt}</p>
-                  <span className="text-teal-600 text-[11px] font-bold flex items-center gap-1">
+                  <span className="text-brand-600 text-[11px] font-bold flex items-center gap-1">
                     Baca selengkapnya <ChevronRight size={12} />
                   </span>
                 </Link>

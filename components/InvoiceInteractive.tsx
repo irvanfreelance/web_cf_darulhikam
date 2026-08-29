@@ -285,13 +285,13 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
       {/* Toast VA */}
       {copiedVa && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-4 py-2 rounded-lg shadow-xl text-sm font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-4">
-          <div className="w-2 h-2 rounded-full bg-teal-400"></div> Nomor berhasil disalin
+          <div className="w-2 h-2 rounded-full bg-brand-400"></div> Nomor berhasil disalin
         </div>
       )}
       {/* Toast Amount */}
       {copiedAmount && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-4 py-2 rounded-lg shadow-xl text-sm font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-4">
-          <div className="w-2 h-2 rounded-full bg-teal-400"></div> Nominal berhasil disalin
+          <div className="w-2 h-2 rounded-full bg-brand-400"></div> Nominal berhasil disalin
         </div>
       )}
 
@@ -348,7 +348,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
 
 
         <div className="bg-white border text-center border-gray-100 rounded-2xl p-6 shadow-sm mb-6 relative overflow-hidden">
-           <div className="absolute top-0 left-0 w-full h-1 bg-teal-500"></div>
+           <div className="absolute top-0 left-0 w-full h-1 bg-brand-500"></div>
            <p className="text-gray-500 text-sm font-semibold mb-1">Total Tagihan</p>
            
            <div className="flex flex-col items-center justify-center mb-6">
@@ -376,8 +376,8 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                );
              })() : (
                <div className="flex items-center justify-center gap-3 w-full">
-                 <h1 className="text-3xl font-extrabold text-teal-600">{formatIDR(Number(invoice.total_amount))}</h1>
-                 <button onClick={handleCopyAmount} className="text-teal-600 bg-teal-50 p-1.5 rounded-lg hover:bg-teal-100 transition-colors active:scale-95" title="Salin Nominal">
+                 <h1 className="text-3xl font-extrabold text-brand-600">{formatIDR(Number(invoice.total_amount))}</h1>
+                 <button onClick={handleCopyAmount} className="text-brand-600 bg-brand-50 p-1.5 rounded-lg hover:bg-brand-100 transition-colors active:scale-95" title="Salin Nominal">
                    <Copy size={16} />
                  </button>
                </div>
@@ -412,7 +412,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                    </div>
                    <button 
                      onClick={triggerSnap}
-                     className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
+                     className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
                    >
                      Bayar Sekarang ({invoice.payment_method_name})
                    </button>
@@ -439,7 +439,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                        <span className="text-2xl font-bold tracking-wider text-gray-800">{displayVa}</span>
                        {isManualLocal && <span className="text-xs text-gray-500 font-medium mt-1">a/n {displayName}</span>}
                      </div>
-                     <button onClick={handleCopyVa} className="text-teal-600 bg-teal-50 p-2 shrink-0 rounded-lg hover:bg-teal-100 transition-colors active:scale-95" title="Salin">
+                     <button onClick={handleCopyVa} className="text-brand-600 bg-brand-50 p-2 shrink-0 rounded-lg hover:bg-brand-100 transition-colors active:scale-95" title="Salin">
                        <Copy size={18} />
                      </button>
                    </div>
@@ -458,7 +458,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                    </div>
                    <button 
                      onClick={triggerSnap}
-                     className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
+                     className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base"
                    >
                      Bayar Sekarang ({invoice.payment_method_name})
                    </button>
@@ -489,7 +489,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                      className="h-16 mx-auto"
                    />
                  </div>
-                 <button onClick={handleCopyVa} className="w-full flex items-center justify-center gap-2 text-teal-600 bg-teal-50 py-2 rounded-lg font-bold text-sm">
+                 <button onClick={handleCopyVa} className="w-full flex items-center justify-center gap-2 text-brand-600 bg-brand-50 py-2 rounded-lg font-bold text-sm">
                    <Copy size={16} /> Salin Kode
                  </button>
                </div>
@@ -541,7 +541,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                   ) : invoice.payment_url ? (
                     <button 
                       onClick={triggerSnap}
-                      className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base mb-2"
+                      className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform text-base mb-2"
                     >
                       Buka Modal Pembayaran QRIS / Midtrans
                     </button>
@@ -569,12 +569,12 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
             {!previewUrl ? (
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-teal-200 bg-teal-50/50 hover:bg-teal-50 transition-colors rounded-xl p-8"
+                className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-brand-200 bg-brand-50/50 hover:bg-brand-50 transition-colors rounded-xl p-8"
               >
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
-                  <Upload className="text-teal-500" size={24} />
+                  <Upload className="text-brand-500" size={24} />
                 </div>
-                <span className="font-semibold text-sm text-teal-700">Pilih Foto Bukti Transfer</span>
+                <span className="font-semibold text-sm text-brand-700">Pilih Foto Bukti Transfer</span>
               </button>
             ) : (
               <div className="w-full border border-gray-200 rounded-xl overflow-hidden relative group">
@@ -585,9 +585,9 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
                     <RefreshCcw size={20} />
                   </button>
                 </div>
-                <div className="bg-teal-50 border-t border-gray-100 p-3 flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-teal-700 text-xs font-semibold">
-                    <CheckCircle size={14} className="text-teal-500" /> Foto siap diunggah
+                <div className="bg-brand-50 border-t border-gray-100 p-3 flex justify-between items-center">
+                  <div className="flex items-center gap-2 text-brand-700 text-xs font-semibold">
+                    <CheckCircle size={14} className="text-brand-500" /> Foto siap diunggah
                   </div>
                   <button onClick={handleClearFile} className="text-gray-500 hover:text-red-500 text-xs font-medium">Batal</button>
                 </div>
@@ -598,7 +598,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
 
         <div className="flex justify-between items-center mb-4 px-1">
           <h3 className="font-bold text-gray-800 text-lg">Cara Pembayaran</h3>
-          <button onClick={handleDownloadPDF} disabled={isDownloadingPdf} className="flex items-center gap-1.5 text-teal-600 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
+          <button onClick={handleDownloadPDF} disabled={isDownloadingPdf} className="flex items-center gap-1.5 text-brand-600 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
             {isDownloadingPdf ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
             Download PDF
           </button>
@@ -609,7 +609,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
             <details key={idx} className="group bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" open={idx === 0}>
               <summary className="font-bold text-sm text-gray-800 p-4 cursor-pointer list-none flex justify-between items-center bg-gray-50/50 hover:bg-gray-50 transition-colors select-none">
                 <span className="flex items-center gap-2.5">
-                  <span className="w-6 h-6 bg-teal-500 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">{idx + 1}</span>
+                  <span className="w-6 h-6 bg-brand-500 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">{idx + 1}</span>
                   {inst.title}
                 </span>
                 <ChevronDown size={18} className="text-gray-400 group-open:rotate-180 transition-transform shrink-0 ml-2" />
@@ -624,7 +624,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
         <button 
           onClick={handleConfirmSubmit}
           disabled={isUploading || (isManual && !selectedFile && !invoice?.proof_transfer)}
-          className={`w-full flex justify-center items-center gap-2 text-center text-white font-bold text-lg py-4 rounded-xl shadow-lg transition-transform block ${isUploading || (isManual && !selectedFile && !invoice?.proof_transfer) ? 'bg-gray-300 shadow-none cursor-not-allowed' : 'bg-teal-600 shadow-teal-600/20 active:scale-[0.98]'}`}
+          className={`w-full flex justify-center items-center gap-2 text-center text-white font-bold text-lg py-4 rounded-xl shadow-lg transition-transform block ${isUploading || (isManual && !selectedFile && !invoice?.proof_transfer) ? 'bg-gray-300 shadow-none cursor-not-allowed' : 'bg-brand-600 shadow-brand-600/20 active:scale-[0.98]'}`}
         >
           {isUploading ? (
             <><Loader2 className="animate-spin" size={20} /> Memproses...</>
@@ -649,7 +649,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
               </button>
               <button 
                 onClick={executeSubmit}
-                className="flex-1 py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center"
+                className="flex-1 py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center"
               >
                 Yakin, Unggah
               </button>

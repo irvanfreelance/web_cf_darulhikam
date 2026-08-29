@@ -34,8 +34,8 @@ export default function CampaignCard({ camp, variant = 'default' }: { camp: any,
   }
 
   return (
-    <Link href={`/donasi/${camp.slug}`} prefetch={true} className="group bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex gap-4 block transition-all duration-200 hover:shadow-md hover:border-teal-100 hover:-translate-y-0.5 active:scale-[0.98]">
-      <div className="w-28 h-28 rounded-lg overflow-hidden shrink-0 relative shadow-sm bg-gray-50 flex items-center justify-center">
+    <Link href={`/donasi/${camp.slug}`} prefetch={true} className="group bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex gap-4 block transition-all duration-200 hover:shadow-md hover:border-brand-100 hover:-translate-y-0.5 active:scale-[0.98]">
+      <div className="w-28 h-28 rounded-lg overflow-hidden shrink-0 relative shadow-sm bg-brand-50 flex items-center justify-center">
         {/* Blurred Background */}
         <div className="absolute inset-0 scale-110 blur-md opacity-20">
           <Image src={camp.image_url || '/placeholder.jpg'} alt="" fill className="object-cover" />
@@ -45,17 +45,17 @@ export default function CampaignCard({ camp, variant = 'default' }: { camp: any,
       </div>
       <div className="flex-1 flex flex-col justify-between py-1">
         <div>
-          <p className="text-[10px] text-teal-600 font-bold mb-1 uppercase tracking-wider bg-teal-50 w-fit px-1.5 py-0.5 rounded">{camp.category_name}</p>
+          <p className="text-[10px] text-brand-600 font-bold mb-1 uppercase tracking-wider bg-brand-50 w-fit px-1.5 py-0.5 rounded">{camp.category_name}</p>
           <h3 className="font-bold text-gray-800 leading-tight text-sm line-clamp-2 mb-1.5">{camp.title}</h3>
         </div>
         <div>
           {!camp.has_no_target && (
             <div className="w-full bg-gray-100 rounded-full h-1 mb-1.5 mt-2">
-              <div className="bg-teal-500 h-1 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
+              <div className="bg-brand-500 h-1 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
             </div>
           )}
           <div className="flex justify-between items-center mt-2">
-            <p className="font-bold text-teal-600 text-xs">{formatIDR(Number(camp.collected))}</p>
+            <p className="font-bold text-brand-600 text-xs">{formatIDR(Number(camp.collected))}</p>
             {!camp.has_no_target && <span className="bg-gray-100 text-gray-600 text-[9px] px-1.5 py-0.5 rounded font-bold">{camp.progress}%</span>}
             {camp.has_no_target && !camp.has_no_time_limit && <span className="text-[10px] text-gray-500">{camp.daysLeft} Hari</span>}
             {camp.has_no_target && camp.has_no_time_limit && <span className="text-[10px] text-gray-500 font-medium">Tanpa Batas</span>}

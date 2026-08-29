@@ -13,7 +13,7 @@ export const revalidate = 0; // Always dynamic (personal data)
 const LIMIT = 5;
 
 async function getNgoConfig() {
-  const cacheKey = `ngo:configs:global_v2`;
+  const cacheKey = `ngo:configs:global_v4`;
   let configsData: any = await redis.get(cacheKey);
   if (!configsData) {
     const confRes = await query('SELECT * FROM ngo_configs LIMIT 1', []);
@@ -105,10 +105,10 @@ export default async function DonasiSayaPage() {
 
       <div className="flex-1 overflow-y-auto px-5 pt-6 no-scrollbar">
         {/* Stats Card */}
-        <div className="bg-gradient-to-br from-teal-500 to-emerald-400 rounded-3xl p-6 text-white shadow-lg shadow-teal-500/30 mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-brand-500 to-emerald-400 rounded-3xl p-6 text-white shadow-lg shadow-brand-500/30 mb-8 relative overflow-hidden">
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl" />
           <div className="relative z-10">
-            <p className="text-teal-50 text-sm font-semibold mb-1">Total Kebaikanmu</p>
+            <p className="text-brand-50 text-sm font-semibold mb-1">Total Kebaikanmu</p>
             <h2 className="text-3xl font-bold mb-4 tracking-tight">Level: {level}</h2>
             <div className="flex flex-wrap gap-2 mb-2">
               <div className="flex items-center text-xs bg-white/20 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm">
@@ -120,7 +120,7 @@ export default async function DonasiSayaPage() {
                 <span className="font-bold">{paidCount}x</span>
               </div>
             </div>
-            <div className="flex items-center text-[10px] text-teal-100 mt-2">
+            <div className="flex items-center text-[10px] text-brand-100 mt-2">
               <Award size={12} className="mr-1 text-yellow-300 fill-yellow-300" />
               <span>Teruslah menebar manfaat untuk sesama</span>
             </div>

@@ -14,7 +14,7 @@ export default async function LoginPage() {
 
   let configs = null;
   try {
-    const cacheKey = 'ngo:configs:global_v3';
+    const cacheKey = 'ngo:configs:global_v4';
     const cached = await redis.get(cacheKey);
     if (cached) {
       configs = typeof cached === 'string' ? JSON.parse(cached) : cached;

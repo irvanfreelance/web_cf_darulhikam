@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { query } from '@/lib/db';
 import { redis } from '@/lib/redis';
-import { Heart, Clock, User, Globe, Mail, MessageCircle, ChevronLeft } from "lucide-react";
+import { Star, Clock, User, ChevronLeft } from "lucide-react";
+import { FacebookIcon, InstagramIcon, WhatsappIcon } from "@/components/icons/SocialIcons";
 import { formatIDR } from "@/lib/utils";
 import SearchInput from "@/components/SearchInput";
 import CampaignCard from "@/components/CampaignCard";
@@ -41,7 +42,7 @@ async function getData(searchQ?: string) {
   }
 
   // 3. Fetch configs
-  const cacheKeyConf = `ngo:configs:global_v2`;
+  const cacheKeyConf = `ngo:configs:global_v4`;
   let configsData: any = await redis.get(cacheKeyConf);
   if (!configsData) {
     const confRes = await query('SELECT * FROM ngo_configs LIMIT 1');
@@ -72,7 +73,7 @@ export default async function Home(props: { searchParams?: Promise<{ [key: strin
   const urgentCampaigns = allCampaigns.filter((c: any) => c.is_urgent && !isSearching);
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-teal-50/60 to-slate-50 relative pb-24">
+    <div className="flex flex-col h-full bg-gradient-to-b from-brand-50/60 to-slate-50 relative pb-24">
       {/* Header */}
       <Header isSearching={isSearching} logoUrl={configs?.logo_url} ngoName={configs?.ngo_name} />
 
@@ -142,10 +143,10 @@ export default async function Home(props: { searchParams?: Promise<{ [key: strin
               <img src={configs.logo_url} alt="Logo" className="h-8 w-auto object-contain" />
             ) : (
               <>
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center shadow-sm">
-                  <Heart size={16} className="text-white fill-white" />
+                <div className="w-8 h-8 bg-[#83b64e] rounded-lg flex items-center justify-center shadow-sm">
+                  <Star size={16} className="text-white fill-white" />
                 </div>
-                <span className="font-extrabold text-teal-700 text-base leading-none tracking-tight">Peduli<span className="text-teal-400">Sesama</span></span>
+                <span className="font-extrabold text-[#83b64e] text-base leading-none tracking-tight">LAZ Darul Hikam</span>
               </>
             )}
           </div>
@@ -157,12 +158,12 @@ export default async function Home(props: { searchParams?: Promise<{ [key: strin
             <p>{configs?.address || "Jl. Kebaikan Bangsa No. 99, Gedung Amal Lt. 2, Jakarta Selatan"}</p>
           </div>
           <div className="flex gap-4">
-            <a href={configs?.facebook_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><Mail size={14} /></a>
-            <a href={configs?.instagram_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><Globe size={14} /></a>
-            <a href={configs?.whatsapp_number ? `https://wa.me/${configs.whatsapp_number}` : '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-teal-600 hover:bg-teal-50 transition-colors"><MessageCircle size={14} /></a>
+            <a href={configs?.facebook_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-600 hover:bg-brand-50 transition-colors"><FacebookIcon size={14} /></a>
+            <a href={configs?.instagram_url || '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-600 hover:bg-brand-50 transition-colors"><InstagramIcon size={14} /></a>
+            <a href={configs?.whatsapp_number ? `https://wa.me/${configs.whatsapp_number}` : '#'} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-600 hover:bg-brand-50 transition-colors"><WhatsappIcon size={14} /></a>
           </div>
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-            <p className="text-[10px] text-gray-400">© {new Date().getFullYear()} {configs?.ngo_name || 'Yayasan Peduli Sesama'}. All rights reserved.</p>
+            <p className="text-[10px] text-gray-400">© {new Date().getFullYear()} {configs?.ngo_name || 'LAZ Darul Hikam'}. All rights reserved.</p>
           </div>
         </div>
       )}
