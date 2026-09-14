@@ -98,6 +98,14 @@ export default async function Beranda() {
             <p className="text-white/75 text-[16px] leading-relaxed mb-8">
               Setiap wilayah implementasi adalah jejak kebaikan yang tumbuh menjadi manfaat bagi sesama.
             </p>
+            <div className="flex gap-4 flex-wrap">
+              <Link href="/donasi" className="cta-pulse px-7 py-3.5 bg-white text-[#83b64e] rounded-xl font-cabin font-bold text-[15px] inline-flex items-center gap-2 transition-all hover:opacity-85 hover:scale-105 active:scale-95">
+                <Heart size={16} className="fill-[#83b64e]" /> Donasi Sekarang
+              </Link>
+              <Link href="/program" className="px-7 py-3.5 bg-white/10 border-2 border-white/40 text-white rounded-xl font-cabin font-bold text-[15px] inline-flex items-center transition-all hover:bg-white/20 hover:scale-105 active:scale-95">
+                Lihat Program
+              </Link>
+            </div>
           </div>
           <HeroDistributionMap points={distributionPoints} />
         </div>
@@ -110,17 +118,9 @@ export default async function Beranda() {
             <h2 className="font-cabin text-[26px] md:text-[28px] font-bold text-[#0f1b35] leading-tight mb-3">
               Zakat dan Sedekahmu, Nyata Dampaknya
             </h2>
-            <p className="text-[#64748b] text-[15px] leading-relaxed max-w-[640px] mx-auto mb-8">
+            <p className="text-[#64748b] text-[15px] leading-relaxed max-w-[640px] mx-auto mb-10">
               Setiap program adalah jejak kebaikan yang tumbuh menjadi manfaat bagi sesama.
             </p>
-            <div className="flex gap-3 flex-wrap justify-center mb-12">
-              <Link href="/donasi" className="px-6 py-3 bg-[#83b64e] text-white rounded-xl font-cabin font-bold text-[14px] inline-flex items-center gap-2 transition-all hover:opacity-85 hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(131,182,78,0.3)]">
-                <Heart size={15} className="fill-white" /> Donasi Sekarang
-              </Link>
-              <Link href="/program" className="px-6 py-3 bg-white border border-[#e2e8f0] text-[#0f1b35] rounded-xl font-cabin font-bold text-[14px] inline-flex items-center transition-all hover:bg-[#f4f6fb] hover:-translate-y-0.5">
-                Lihat Program
-              </Link>
-            </div>
           </Reveal>
           <Reveal delay={100}>
             <CareCategories categories={careCategories} />

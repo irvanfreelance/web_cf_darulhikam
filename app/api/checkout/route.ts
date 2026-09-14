@@ -294,6 +294,10 @@ export async function POST(req: Request) {
         WHERE cb.bundle_campaign_id = $1
       `, [parsed.campaignId]);
 
+      if (bundleItems.length === 0) {
+        throw new Error(`Bundle campaign ${parsed.campaignId} has no configured items in campaign_bundles`);
+      }
+
       let totalCalculatedValue = 0;
       bundleItems.forEach((item: any) => {
         totalCalculatedValue += (item.qty * item.unit_price);
