@@ -130,6 +130,15 @@ export async function POST(req: Request) {
               },
             });
           }
+        } else {
+          // Invoice was marked PAID but has no matching `transactions` row (e.g. a
+          // misconfigured bundle campaign) — stats/donor pipeline can't run. Surface
+          // this loudly instead of silently no-op'ing.
+          console.error(`[Xendit Webhook] PAID invoice ${invoiceCode} has no linked transactions row — stats/donor update skipped`);
+          await query(`
+            INSERT INTO payment_logs (invoice_code, endpoint, request_payload, response_payload, http_status)
+            VALUES ($1, $2, $3, $4, $5)
+          `, [invoiceCode, `/api/webhooks/xendit${event ? `:${event}` : ''}`, JSON.stringify(payload), JSON.stringify({ warning: 'PAID invoice has no linked transactions row; stats/donor update skipped' }), 200]).catch(() => {});
         }
       } catch (redisErr) {
         console.error("Redis/Workflow update error:", redisErr);
