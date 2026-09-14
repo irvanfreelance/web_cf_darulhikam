@@ -43,7 +43,7 @@ function BottomSheet({ title, onClose, children }: { title: string; onClose: () 
 
 export default function CampaignList({ campaigns, categories = [], collapsible = true, defaultUrgentOnly = false, hideUrgentChip = false }: { campaigns: any[]; categories?: Category[]; collapsible?: boolean; defaultUrgentOnly?: boolean; hideUrgentChip?: boolean }) {
   const [expanded, setExpanded] = useState(!collapsible);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const [sortBy, setSortBy] = useState<SortOption>(defaultUrgentOnly ? 'urgent' : 'newest');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [urgentOnly, setUrgentOnly] = useState(defaultUrgentOnly);
