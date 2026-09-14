@@ -110,7 +110,7 @@ export default async function CampaignDetail(props: {
         />
         
         <div className="absolute top-0 w-full p-4 flex justify-between items-center bg-gradient-to-b from-black/60 to-transparent z-20">
-          <Link href="/" className="w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-black/40 transition-all">
+          <Link href="/donasi" className="w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-black/40 transition-all">
             <ChevronLeft size={24} />
           </Link>
           <ShareButton

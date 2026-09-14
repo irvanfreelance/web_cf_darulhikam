@@ -10,7 +10,8 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   // Hide BottomNav on detail campaign, checkout flow, invoice, and status pages
-  if (pathname?.startsWith('/donasi/') || pathname?.startsWith('/invoice/') || pathname?.startsWith('/status/')) {
+  const isDonasiListPage = pathname === '/donasi/mendesak' || pathname === '/donasi/riwayat';
+  if ((pathname?.startsWith('/donasi/') && !isDonasiListPage) || pathname?.startsWith('/invoice/') || pathname?.startsWith('/status/')) {
     return null;
   }
 
