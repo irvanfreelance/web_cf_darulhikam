@@ -4,7 +4,34 @@ import Image from 'next/image';
 import { formatIDR } from '@/lib/utils';
 import { Clock } from 'lucide-react';
 
-export default function CampaignCard({ camp, variant = 'default' }: { camp: any, variant?: 'default' | 'urgent' }) {
+export default function CampaignCard({ camp, variant = 'default' }: { camp: any, variant?: 'default' | 'urgent' | 'grid' }) {
+  if (variant === 'grid') {
+    return (
+      <Link href={`/donasi/${camp.slug}`} prefetch={true} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden block transition-all duration-200 hover:shadow-md hover:border-brand-100 hover:-translate-y-0.5 active:scale-[0.98]">
+        <div className="aspect-[4/3] w-full relative bg-brand-50 overflow-hidden">
+          <div className="absolute inset-0 scale-110 blur-md opacity-20">
+            <Image src={camp.image_url || '/placeholder.jpg'} alt="" fill className="object-cover" />
+          </div>
+          <Image src={camp.image_url || '/placeholder.jpg'} alt={camp.title} fill sizes="(max-width: 768px) 50vw, 200px" className="object-contain relative z-10 transition-transform duration-500 group-hover:scale-105" />
+        </div>
+        <div className="p-3">
+          <h3 className="font-bold text-gray-800 leading-tight text-[13px] line-clamp-2 mb-2 min-h-[2.4em]">{camp.title}</h3>
+          {!camp.has_no_target && (
+            <div className="w-full bg-gray-100 rounded-full h-1 mb-2">
+              <div className="bg-brand-500 h-1 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
+            </div>
+          )}
+          <div className="flex justify-between items-center">
+            <p className="font-bold text-brand-600 text-xs">{formatIDR(Number(camp.collected))}</p>
+            {!camp.has_no_target && <span className="text-[9px] text-gray-400 font-semibold shrink-0">{camp.progress}%</span>}
+            {camp.has_no_target && !camp.has_no_time_limit && <span className="text-[9px] text-gray-400 font-semibold shrink-0">{camp.daysLeft} Hari</span>}
+            {camp.has_no_target && camp.has_no_time_limit && <span className="text-[10px] text-gray-400 font-bold shrink-0">∞</span>}
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
   if (variant === 'urgent') {
     return (
       <Link href={`/donasi/${camp.slug}`} prefetch={true} className="group min-w-[75%] bg-white rounded-xl shadow-sm border border-rose-50 overflow-hidden cursor-pointer snap-center block transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]">
