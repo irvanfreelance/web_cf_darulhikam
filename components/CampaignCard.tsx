@@ -15,18 +15,22 @@ export default function CampaignCard({ camp, variant = 'default' }: { camp: any,
           </div>
           {/* Main Utuh Image */}
           <Image src={camp.image_url || '/placeholder.jpg'} alt={camp.title} fill sizes="(max-width: 768px) 100vw, 400px" className="object-contain relative z-10 transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm z-20 animate-pulse">
-            <Clock size={10} /> Sisa {camp.daysLeft} Hari
-          </div>
+          {!camp.has_no_time_limit && (
+            <div className="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm z-20 animate-pulse">
+              <Clock size={10} /> Sisa {camp.daysLeft} Hari
+            </div>
+          )}
         </div>
         <div className="p-4">
           <h3 className="font-bold text-gray-800 leading-tight mb-3 text-sm line-clamp-2">{camp.title}</h3>
-          <div className="w-full bg-gray-100 rounded-full h-1.5 mb-2">
-            <div className="bg-gradient-to-r from-rose-400 to-rose-500 h-1.5 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
-          </div>
+          {!camp.has_no_target && (
+            <div className="w-full bg-gray-100 rounded-full h-1.5 mb-2">
+              <div className="bg-gradient-to-r from-rose-400 to-rose-500 h-1.5 rounded-full transition-[width] duration-1000 ease-out" style={{ width: `${camp.progress}%` }}></div>
+            </div>
+          )}
           <div className="flex justify-between items-end">
             <p className="font-bold text-rose-500 text-sm">{formatIDR(Number(camp.collected))}</p>
-            <p className="text-[10px] text-gray-400 font-semibold">{camp.progress}%</p>
+            <p className="text-[10px] text-gray-400 font-semibold">{camp.has_no_target ? '∞' : `${camp.progress}%`}</p>
           </div>
         </div>
       </Link>
