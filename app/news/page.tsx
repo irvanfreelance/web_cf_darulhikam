@@ -4,11 +4,12 @@ import { Newspaper } from "lucide-react";
 import Header from "@/components/layout/Header";
 import { query } from '@/lib/db';
 import { redis } from '@/lib/redis';
+import { getBaseUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
 async function getUpdates() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = getBaseUrl();
   try {
     const res = await fetch(`${baseUrl}/api/news`, { next: { revalidate: 60 } });
     if (!res.ok) {

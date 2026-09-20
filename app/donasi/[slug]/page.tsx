@@ -9,6 +9,7 @@ import CampaignTabs from "@/components/CampaignTabs";
 import LiveCampaignStats from "@/components/LiveCampaignStats";
 import type { Metadata } from "next";
 import { getCampaignBySlug, getAllCampaigns } from "@/lib/campaigns";
+import { getBaseUrl } from "@/lib/utils";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -114,7 +115,7 @@ export default async function CampaignDetail(props: {
             <ChevronLeft size={24} />
           </Link>
           <ShareButton
-            url={`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/donasi/${campaign.slug}`}
+            url={`${getBaseUrl()}/donasi/${campaign.slug}`}
             title={campaign.title}
             className="w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-black/40 transition-all"
           />
