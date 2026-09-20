@@ -3,11 +3,12 @@ import Link from "next/link";
 import { ChevronLeft, Heart } from "lucide-react";
 import { notFound } from "next/navigation";
 import ShareButton from "@/components/ShareButton";
+import { getBaseUrl } from "@/lib/utils";
 
 export const dynamic = 'force-dynamic';
 
 async function getUpdateDetail(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = getBaseUrl();
   try {
     const res = await fetch(`${baseUrl}/api/news/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) {
@@ -44,7 +45,7 @@ export default async function NewsDetailPage(props: { params: Promise<{ id: stri
           <h2 className="font-bold text-lg text-gray-800 ml-2">Detail Berita</h2>
         </div>
         <ShareButton 
-          url={`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/news/${update.id}`} 
+          url={`${getBaseUrl()}/news/${update.id}`}
           title={update.title} 
         />
       </div>

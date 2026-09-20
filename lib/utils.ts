@@ -15,6 +15,16 @@ export function formatIDR(amount: number | null | undefined): string {
   }).format(amount);
 }
 
+// Resolves the site's public base URL: an explicit NEXT_PUBLIC_BASE_URL first,
+// then Vercel's auto-injected deployment URL, only falling back to localhost
+// when neither is set (local dev). Prevents share/callback links from silently
+// pointing at localhost in a deployed environment that lacks NEXT_PUBLIC_BASE_URL.
+export function getBaseUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL;
+  if (!raw || raw.trim() === '') return 'http://localhost:3000';
+  return raw.startsWith('http') ? raw : `https://${raw}`;
+}
+
 export function truncateText(text: string | null | undefined, length: number): string {
   if (!text) return "";
   if (text.length <= length) return text;
