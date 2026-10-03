@@ -30,9 +30,9 @@ const fontAlbert = Albert_Sans({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  let title = "PeduliSesama - Publik Donasi";
+  let title = "LAZ Darul Hikam";
   let favicon = "/favicon.ico";
-  let siteName = "PeduliSesama";
+  let siteName = "LAZ Darul Hikam";
   try {
     const cached = await redis.get('ngo:configs:global_v4');
     let configs: any = null;
@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 
     if (configs?.ngo_name) {
-      title = `${configs.ngo_name} - Publik Donasi`;
+      title = configs.ngo_name;
       siteName = configs.ngo_name;
     }
     if (configs?.favicon_url) {
@@ -85,6 +85,9 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: title,
       description: `Platform Donasi Publik ${siteName}`,
+    },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
     },
   };
 }
