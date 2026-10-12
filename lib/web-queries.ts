@@ -120,12 +120,12 @@ export async function getWebCareCategories() {
 
 export async function getLatestArticles(limit = 24) {
   const data = await query(`
-    SELECT a.slug, a.title, a.excerpt, a.featured_image_url, a.published_at, a.category_id,
+    SELECT a.slug, a.title, a.title_long, a.excerpt, a.featured_image_url, a.published_at, a.created_at, a.category_id,
            c.name as category_name, c.slug as category_slug
     FROM web_articles a
     LEFT JOIN web_article_categories c ON a.category_id = c.id
     WHERE a.status = 'published' AND a.deleted_at IS NULL
-    ORDER BY a.published_at DESC
+    ORDER BY COALESCE(a.published_at, a.created_at) DESC
     LIMIT $1
   `, [limit]);
   return data;
@@ -281,9 +281,11 @@ export async function getWebFaqs() {
 
 export async function getArticleBySlug(slug: string) {
   const data = await query(`
-    SELECT slug, title, body, excerpt, featured_image_url, published_at, category_id, seo_title, seo_description
-    FROM web_articles
-    WHERE slug = $1 AND status = 'published' AND deleted_at IS NULL
+    SELECT a.slug, a.title, a.title_long, a.body, a.excerpt, a.featured_image_url, a.published_at, a.created_at, a.category_id, a.seo_title, a.seo_description,
+           c.name as category_name, c.slug as category_slug
+    FROM web_articles a
+    LEFT JOIN web_article_categories c ON a.category_id = c.id
+    WHERE a.slug = $1 AND a.status = 'published' AND a.deleted_at IS NULL
     LIMIT 1
   `, [slug]);
   return data[0];
@@ -291,10 +293,12 @@ export async function getArticleBySlug(slug: string) {
 
 export async function getRelatedArticles(categoryId: number | null, excludeSlug: string, limit = 3) {
   const data = await query(`
-    SELECT slug, title, excerpt, featured_image_url, published_at, category_id
-    FROM web_articles
-    WHERE status = 'published' AND deleted_at IS NULL AND slug != $1
-    ORDER BY (category_id = $2) DESC, published_at DESC
+    SELECT a.slug, a.title, a.title_long, a.excerpt, a.featured_image_url, a.published_at, a.created_at, a.category_id,
+           c.name as category_name, c.slug as category_slug
+    FROM web_articles a
+    LEFT JOIN web_article_categories c ON a.category_id = c.id
+    WHERE a.status = 'published' AND a.deleted_at IS NULL AND a.slug != $1
+    ORDER BY (a.category_id = $2) DESC, COALESCE(a.published_at, a.created_at) DESC
     LIMIT $3
   `, [excludeSlug, categoryId, limit]);
   return data;

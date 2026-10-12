@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getArticleBySlug, getRelatedArticles } from '@/lib/web-queries';
 import ArticleCard from '@/components/public/articles/ArticleCard';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronLeft } from 'lucide-react';
 import Reveal from '@/components/public/shared/Reveal';
 
@@ -13,12 +14,14 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   const article = await getArticleBySlug(params.slug);
   if (!article) return { title: 'Artikel Tidak Ditemukan' };
 
+  const description = article.seo_description || article.excerpt || article.title_long;
+
   return {
     title: article.seo_title || article.title,
-    description: article.seo_description || article.excerpt,
+    description: description,
     openGraph: {
       title: article.seo_title || article.title,
-      description: article.seo_description || article.excerpt,
+      description: description,
       images: [{ url: article.featured_image_url || '/placeholder.jpg' }],
     }
   };
@@ -34,7 +37,7 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
 
   const relatedArticles = await getRelatedArticles(article.category_id, article.slug, 3);
 
-  const dateStr = article.published_at ? new Date(article.published_at).toLocaleDateString('id-ID', {
+  const dateStr = (article.published_at || article.created_at) ? new Date(article.published_at || article.created_at).toLocaleDateString('id-ID', {
     day: 'numeric', month: 'long', year: 'numeric'
   }) : '';
 
@@ -47,19 +50,28 @@ export default async function ArticleDetailPage(props: { params: Promise<{ slug:
         
         <div className="mb-8">
           <div className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase mb-3">
-            {article.category_id ? `Kategori ${article.category_id}` : 'Berita'}
+            {article.category_name || (article.category_id ? `Kategori ${article.category_id}` : 'Berita')}
           </div>
           <h1 className="font-cabin text-[32px] md:text-[40px] font-bold text-[#0f1b35] leading-tight mb-4">
             {article.title}
           </h1>
-          <div className="text-[14px] text-[#94a3b8] flex items-center gap-2">
-            <span>Dipublikasikan: {dateStr}</span>
-          </div>
+          {dateStr && (
+            <div className="text-[14px] text-[#94a3b8] flex items-center gap-2">
+              <span>Dipublikasikan: {dateStr}</span>
+            </div>
+          )}
         </div>
 
         {article.featured_image_url && (
-          <div className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden mb-10 border border-[#e2e8f0]">
-            <img src={article.featured_image_url} alt={article.title} className="w-full h-full object-cover" />
+          <div className="w-full relative aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden mb-10 border border-[#e2e8f0]">
+            <Image
+              src={article.featured_image_url}
+              alt={article.title}
+              fill
+              priority
+              sizes="(max-width: 800px) 100vw, 800px"
+              className="object-cover"
+            />
           </div>
         )}
 
