@@ -6,6 +6,7 @@ import ArticleCard from './ArticleCard';
 interface Category {
   id: string | number;
   label: string;
+  slug?: string;
 }
 
 interface ArticleCategoryFilterProps {
@@ -23,8 +24,9 @@ export default function ArticleCategoryFilter({
   const defaultTabs: Category[] = [
     { id: 'all', label: 'Semua' },
     ...categories.map((c: any) => ({
-      id: c.id,
-      label: c.name
+      id: String(c.id),
+      label: c.name,
+      slug: c.slug
     }))
   ];
 
@@ -38,13 +40,28 @@ export default function ArticleCategoryFilter({
 
   const filteredArticles = initialArticles.filter((a: any) => {
     if (activeTab === 'all') return true;
-    if (typeof activeTab === 'number') {
-      return Number(a.category_id) === activeTab;
+
+    // 1. Cocokkan berdasarkan ID kategori (baik bertipe string maupun number)
+    if (a.category_id != null && String(a.category_id) === String(activeTab)) {
+      return true;
     }
-    const catSlug = (a.category_slug || a.category_name || '').toLowerCase();
-    const catTitle = (a.title || '').toLowerCase();
+
+    // 2. Cocokkan berdasarkan slug atau nama kategori tab aktif
+    const currentTab = tabs.find((t) => String(t.id) === String(activeTab));
+    if (currentTab) {
+      if (currentTab.slug && a.category_slug && currentTab.slug.toLowerCase() === a.category_slug.toLowerCase()) {
+        return true;
+      }
+      if (currentTab.label && a.category_name && currentTab.label.toLowerCase() === a.category_name.toLowerCase()) {
+        return true;
+      }
+    }
+
+    // 3. Fallback jika activeTab berupa slug/keyword langsung (misal: 'laporan', 'kisah')
     const tabKey = String(activeTab).toLowerCase();
-    return catSlug.includes(tabKey) || catTitle.includes(tabKey);
+    const catSlug = (a.category_slug || '').toLowerCase();
+    const catName = (a.category_name || '').toLowerCase();
+    return catSlug === tabKey || catSlug.includes(tabKey) || catName.includes(tabKey);
   });
 
   return (
