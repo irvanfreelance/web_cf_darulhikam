@@ -41,14 +41,32 @@ function BottomSheet({ title, onClose, children }: { title: string; onClose: () 
   );
 }
 
+const VIEW_MODE_KEY = 'campaignViewMode';
+
 export default function CampaignList({ campaigns, categories = [], collapsible = true, defaultUrgentOnly = false, hideUrgentChip = false }: { campaigns: any[]; categories?: Category[]; collapsible?: boolean; defaultUrgentOnly?: boolean; hideUrgentChip?: boolean }) {
   const [expanded, setExpanded] = useState(!collapsible);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [sortBy, setSortBy] = useState<SortOption>(defaultUrgentOnly ? 'urgent' : 'newest');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [urgentOnly, setUrgentOnly] = useState(defaultUrgentOnly);
   const [showFilter, setShowFilter] = useState(false);
   const [showSort, setShowSort] = useState(false);
+
+  // Restore the donor's last choice after mount (keeps SSR and first client render identical).
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(VIEW_MODE_KEY);
+      if (saved === 'list' || saved === 'grid') setViewMode(saved);
+    } catch {}
+  }, []);
+
+  const toggleViewMode = () => {
+    const next = viewMode === 'list' ? 'grid' : 'list';
+    setViewMode(next);
+    try {
+      localStorage.setItem(VIEW_MODE_KEY, next);
+    } catch {}
+  };
 
   const processedCampaigns = useMemo(() => {
     let list = urgentOnly ? campaigns.filter((c) => c.is_urgent) : campaigns;
@@ -94,7 +112,7 @@ export default function CampaignList({ campaigns, categories = [], collapsible =
           <ArrowDownUp size={14} /> Urutkan
         </button>
         <button
-          onClick={() => setViewMode((v) => (v === 'list' ? 'grid' : 'list'))}
+          onClick={toggleViewMode}
           className="ml-auto w-9 h-9 flex items-center justify-center rounded-full border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors shrink-0"
           aria-label={viewMode === 'list' ? 'Tampilan grid' : 'Tampilan list'}
         >
