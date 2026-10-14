@@ -83,7 +83,7 @@ export default async function Home(props: { searchParams?: Promise<{ [key: strin
 
           {/* Urgent Highlight */}
           {urgentCampaigns.length > 0 && (
-            <div className="mt-2 mb-8 bg-gradient-to-b from-rose-50/80 to-transparent py-5 border-t border-rose-100/50">
+            <div className="mt-2 mb-2 bg-gradient-to-b from-rose-50/80 to-transparent pt-5 pb-1 border-t border-rose-100/50">
               <div className="px-5 flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <div className="bg-rose-100 p-1.5 rounded-lg"><Clock size={18} className="text-rose-500" /></div>
@@ -113,7 +113,7 @@ export default async function Home(props: { searchParams?: Promise<{ [key: strin
             <p className="text-sm font-medium text-gray-500 mt-1">{allCampaigns.length} Program Ditemukan</p>
           </div>
         ) : (
-          <h2 className="font-bold text-gray-800 text-base mb-4 mt-2">
+          <h2 className="font-bold text-gray-800 text-base mb-4 mt-0">
             Rekomendasi Kebaikan
           </h2>
         )}
