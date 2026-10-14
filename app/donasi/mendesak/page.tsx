@@ -2,21 +2,12 @@ import { query } from '@/lib/db';
 import { redis } from '@/lib/redis';
 import Header from '@/components/layout/Header';
 import CampaignList from '@/components/CampaignList';
-import { getAllCampaigns } from '@/lib/campaigns';
+import { getAllCampaigns, getActiveCategories } from '@/lib/campaigns';
 
 async function getData() {
   const campaigns = await getAllCampaigns();
 
-  const cacheKeyCat = `api:categories:all_v3`;
-  let categoriesData = await redis.get(cacheKeyCat);
-  if (!categoriesData) {
-    const cats = await query(`SELECT * FROM categories WHERE is_active = true ORDER BY id ASC`);
-    const payload = { data: cats };
-    await redis.set(cacheKeyCat, JSON.stringify(payload));
-    categoriesData = payload as any;
-  } else if (typeof categoriesData === 'string') {
-    categoriesData = JSON.parse(categoriesData);
-  }
+  const categories = await getActiveCategories();
 
   const cacheKeyConf = `ngo:configs:global_v4`;
   let configsData: any = await redis.get(cacheKeyConf);
@@ -34,7 +25,7 @@ async function getData() {
 
   return {
     campaigns: campaigns || [],
-    categories: (categoriesData as any).data || [],
+    categories,
     configs: configsData,
   };
 }
