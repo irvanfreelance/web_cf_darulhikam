@@ -11,7 +11,7 @@ import CampaignList from "@/components/CampaignList";
 import CategoryGrid from "@/components/CategoryGrid";
 import Header from "@/components/layout/Header";
 import AutoCarousel from "@/components/AutoCarousel";
-import { getAllCampaigns, getCarouselCampaigns } from "@/lib/campaigns";
+import { getAllCampaigns, getCarouselCampaigns, getActiveCategories } from "@/lib/campaigns";
 
 
 async function getData(searchQ?: string) {
@@ -20,17 +20,7 @@ async function getData(searchQ?: string) {
   
   // 2. Fetch categories directly (could also be moved to a service later)
 
-  // 2. Fetch categories directly
-  const cacheKeyCat = `api:categories:all_v3`;
-  let categoriesData = await redis.get(cacheKeyCat);
-  if (!categoriesData) {
-    const cats = await query(`SELECT * FROM categories WHERE is_active = true ORDER BY id ASC`);
-    const payload = { data: cats };
-    await redis.set(cacheKeyCat, JSON.stringify(payload)); // Forever TTL
-    categoriesData = payload as any;
-  } else if (typeof categoriesData === 'string') {
-    categoriesData = JSON.parse(categoriesData) as any;
-  }
+  const categories = await getActiveCategories();
 
   // 2.5 Fetch Carousel Campaigns (Cached Forever)
   const cacheKeyCarousel = `api:campaigns:carousel_v1`;
@@ -60,7 +50,7 @@ async function getData(searchQ?: string) {
   return { 
     campaigns: campaigns || [], 
     carouselCampaigns: (carouselCampaigns as any) || [],
-    categories: (categoriesData as any).data || [],
+    categories,
     configs: configsData
   };
 }

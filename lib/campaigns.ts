@@ -161,3 +161,26 @@ async function mergeRedisStats(rawCampaigns: any[]) {
     };
   }));
 }
+
+/**
+ * Active categories that have at least one ACTIVE campaign.
+ * Single EXISTS probe per category (index on campaigns.category_id), cached 2 min in Redis.
+ */
+export async function getActiveCategories() {
+  const cacheKey = `api:categories:with_campaigns_v4`;
+  const cached = await redis.get(cacheKey);
+  if (cached) return (typeof cached === 'string' ? JSON.parse(cached) : cached) as any[];
+
+  const cats = await query(`
+    SELECT cat.id, cat.name, cat.color_theme, cat.icon_name, cat.icon_url
+    FROM categories cat
+    WHERE cat.is_active = true
+      AND EXISTS (
+        SELECT 1 FROM campaigns c
+        WHERE c.category_id = cat.id AND c.status = 'ACTIVE'
+      )
+    ORDER BY cat.display_order ASC, cat.id ASC
+  `);
+  await redis.set(cacheKey, JSON.stringify(cats), { ex: 120 });
+  return cats;
+}
