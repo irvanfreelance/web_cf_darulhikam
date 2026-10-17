@@ -58,8 +58,8 @@ export async function POST(req: Request) {
 
     // Fetch notification template from DB
     const tmplRows = await query(
-      `SELECT subject, message_content FROM notification_templates WHERE event_trigger = 'checkout_pending' AND channel = 'EMAIL' AND is_active = true LIMIT 1`
-    );
+      `SELECT COALESCE(subject, '') AS subject, message_content FROM notification_templates WHERE event_trigger = 'checkout_pending' AND channel = 'EMAIL' AND is_active = true LIMIT 1`
+    ).catch(() => []);
     if (tmplRows.length === 0) {
       return NextResponse.json({ status: 'skipped', message: 'No active checkout_pending email template' });
     }

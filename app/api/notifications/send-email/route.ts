@@ -62,7 +62,7 @@ export async function POST(req: Request) {
         WHERE t.invoice_id = $1
       `, [inv.id]),
       query(`SELECT ngo_name, primary_color FROM ngo_configs LIMIT 1`),
-      query(`SELECT subject, message_content FROM notification_templates WHERE event_trigger = 'payment_paid' AND channel = 'EMAIL' AND is_active = true LIMIT 1`),
+      query(`SELECT COALESCE(subject, '') AS subject, message_content FROM notification_templates WHERE event_trigger = 'payment_paid' AND channel = 'EMAIL' AND is_active = true LIMIT 1`).catch(() => []),
     ]);
 
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');

@@ -83,8 +83,8 @@ export async function POST(req: Request) {
         }
 
         const tmplRows = await query(
-          `SELECT subject, message_content FROM notification_templates WHERE event_trigger = 'checkout_pending' AND channel = 'EMAIL' AND is_active = true LIMIT 1`
-        );
+          `SELECT COALESCE(subject, '') AS subject, message_content FROM notification_templates WHERE event_trigger = 'checkout_pending' AND channel = 'EMAIL' AND is_active = true LIMIT 1`
+        ).catch(() => []);
         if (tmplRows.length === 0) continue;
 
         const pmType = (inv.payment_method_type || '').toLowerCase();
