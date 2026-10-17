@@ -43,12 +43,22 @@ export async function POST(req: Request) {
       newStatus = 'FAILED';
     }
 
+    // Determine partitioned table (same pattern as Xendit webhook)
+    let targetTable = 'invoices';
+    const dateMatch = order_id.match(/INV-(\d{4})(\d{2})\d{2}-/);
+    if (dateMatch) {
+      const suffix = `y${dateMatch[1]}m${dateMatch[2]}`;
+      const tableName = `invoices_${suffix}`;
+      const tableCheck = await query(`SELECT to_regclass($1) as exists`, [`public.${tableName}`]);
+      if (tableCheck[0].exists) targetTable = tableName;
+    }
+
     if (newStatus === 'PAID') {
-      await query(`
-        UPDATE invoices
-        SET status = $1, paid_at = CURRENT_TIMESTAMP
-        WHERE invoice_code = $2 AND status != 'PAID'
-      `, [newStatus, order_id]);
+      const q = `SET status = $1, paid_at = CURRENT_TIMESTAMP WHERE invoice_code = $2 AND status != 'PAID'`;
+      await query(`UPDATE "${targetTable}" ${q}`, [newStatus, order_id]);
+      if (targetTable !== 'invoices') {
+        await query(`UPDATE invoices ${q}`, [newStatus, order_id]);
+      }
 
       // REAL-TIME UPDATES & WORKFLOW (mirrors the Xendit webhook)
       try {
@@ -141,11 +151,11 @@ export async function POST(req: Request) {
         console.error("QStash Email trigger error:", err);
       }
     } else {
-      await query(`
-        UPDATE invoices 
-        SET status = $1
-        WHERE invoice_code = $2 AND status != 'PAID'
-      `, [newStatus, order_id]);
+      const q = `SET status = $1 WHERE invoice_code = $2 AND status != 'PAID'`;
+      await query(`UPDATE "${targetTable}" ${q}`, [newStatus, order_id]);
+      if (targetTable !== 'invoices') {
+        await query(`UPDATE invoices ${q}`, [newStatus, order_id]);
+      }
     }
 
     const responsePayload = { status: 'success', new_status: newStatus, transaction_status };
