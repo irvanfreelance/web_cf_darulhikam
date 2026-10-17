@@ -2,6 +2,7 @@ import { query } from '@/lib/db';
 import { redis } from '@/lib/redis';
 import { notFound } from 'next/navigation';
 import InvoiceInteractive from '@/components/InvoiceInteractive';
+import { parseManualAccount, fillInstructionPlaceholders } from '@/lib/payment-instructions';
 
 export const revalidate = 0; // Don't cache invoice pages (status changes live)
 
@@ -101,7 +102,14 @@ async function getInvoice(invoiceCode: string) {
     `, [invoice.id]),
   ]);
 
-  const result = { ...invoice, instructions, lineItems, ngoName, ngoLogo };
+  const manualAccount = parseManualAccount(invoice.va_number, invoice.payment_method_code);
+  const result = {
+    ...invoice,
+    instructions: fillInstructionPlaceholders(instructions as { title: string; content: string }[], manualAccount),
+    lineItems,
+    ngoName,
+    ngoLogo,
+  };
 
   // Normalize payment method type for frontend consistency
   const rawType = (result.payment_method_type || '').toLowerCase();

@@ -6,6 +6,25 @@ import Link from 'next/link';
 import { formatIDR } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
+// Shrink phone photos (often 5-10MB) so they fit the ~4.5MB serverless body limit.
+async function compressImage(file: File, maxSide = 1600, quality = 0.8): Promise<File> {
+  if (!file.type.startsWith('image/') || file.type === 'image/gif') return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+    if (scale === 1 && file.size <= 1_500_000) return file;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob: Blob | null = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', quality));
+    if (!blob || blob.size >= file.size) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+  } catch {
+    return file;
+  }
+}
+
 export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: any, invoiceCode?: string }) {
   const router = useRouter();
   const [copiedVa, setCopiedVa] = useState(false);
@@ -219,32 +238,36 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
     try {
       // 1. Upload file to our API (Vercel Blob)
       const form = new FormData();
-      form.append('file', selectedFile);
+      form.append('file', await compressImage(selectedFile));
       
       const uploadRes = await fetch('/api/upload', {
         method: 'POST',
         body: form
       });
       
-      if (!uploadRes.ok) throw new Error('Upload failed');
-      const uploadData = await uploadRes.json();
+      const uploadData = await uploadRes.json().catch(() => ({}));
+      if (!uploadRes.ok || !uploadData.url) throw new Error(uploadData.error || 'Upload failed');
       const fileUrl = uploadData.url;
 
       // 2. We skip updating the DB here for SIM-, but we could if we wanted
       if (invoice.invoice_code && !invoice.invoice_code.startsWith('SIM-')) {
-        await fetch(`/api/invoice/${invoice.invoice_code}/upload`, {
+        const saveRes = await fetch(`/api/invoice/${invoice.invoice_code}/upload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ proofUrl: fileUrl })
         });
+        if (!saveRes.ok) {
+          const saveData = await saveRes.json().catch(() => ({}));
+          throw new Error(saveData.error || 'Gagal menyimpan bukti transfer');
+        }
       }
 
       // Upload success, go back to home or success
       router.push(`/status/${invoiceCode || 'SIM'}`);
       router.refresh();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Terjadi kesalahan saat mengunggah foto. Silakan coba lagi.');
+      alert(`Gagal mengunggah foto: ${err?.message || 'terjadi kesalahan'}. Silakan coba lagi.`);
     } finally {
       setIsUploading(false);
     }
@@ -281,7 +304,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 relative pb-32">
+    <div className="flex flex-col min-h-screen bg-slate-50 relative pb-24">
       {/* Toast VA */}
       {copiedVa && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-4 py-2 rounded-lg shadow-xl text-sm font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-4">
@@ -604,7 +627,7 @@ export default function InvoiceInteractive({ invoice, invoiceCode }: { invoice: 
           </button>
         </div>
         
-        <div className="flex flex-col gap-3 mb-6">
+        <div className="flex flex-col gap-3 mb-2">
           {invoice.instructions?.map((inst: any, idx: number) => (
             <details key={idx} className="group bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" open={idx === 0}>
               <summary className="font-bold text-sm text-gray-800 p-4 cursor-pointer list-none flex justify-between items-center bg-gray-50/50 hover:bg-gray-50 transition-colors select-none">
