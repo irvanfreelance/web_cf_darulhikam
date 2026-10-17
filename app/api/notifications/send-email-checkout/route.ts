@@ -3,7 +3,7 @@ import { Receiver } from '@upstash/qstash';
 import { query } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
 import { replaceTemplateVars } from '@/lib/email-templates';
-import { parseManualAccount } from '@/lib/payment-instructions';
+import { parseManualAccount, fillInstructionPlaceholders } from '@/lib/payment-instructions';
 import { formatIDR } from '@/lib/utils';
 
 /**
@@ -72,9 +72,9 @@ export async function POST(req: Request) {
     let rekening = '-';
     let instruksiHtml = '';
 
-    // For manual transfer: extract rekening from payment_method.code (format: "rekening|nama")
+    // For manual transfer: extract rekening from va_number or payment_method.code (format: "rekening|nama")
     if (pmType.includes('manual')) {
-      const account = parseManualAccount(inv.payment_method_code, inv.va_number);
+      const account = parseManualAccount(inv.va_number, inv.payment_method_code);
       if (account) {
         rekening = account.rekening;
         vaNumber = account.rekening;
@@ -88,12 +88,15 @@ export async function POST(req: Request) {
     ).catch(() => []);
 
     if (instrRows.length > 0) {
-      instruksiHtml = instrRows
-        .map((r: any) => `<strong>${r.title}</strong>\n${r.content}`)
+      const account = parseManualAccount(inv.va_number, inv.payment_method_code);
+      const filledRows = fillInstructionPlaceholders(instrRows as { title: string; content: string }[], account);
+      instruksiHtml = filledRows
+        .map((r) => `<strong>${r.title}</strong>\n${r.content}`)
         .join('\n\n');
     }
 
     const uniqueCode = Number(inv.total_amount) - Number(inv.base_amount);
+    const manualAcc = pmType.includes('manual') ? parseManualAccount(inv.va_number, inv.payment_method_code) : null;
     const vars: Record<string, string> = {
       nama: inv.donor_name_snapshot || 'Donatur',
       nominal: formatIDR(Number(inv.base_amount)),
@@ -102,6 +105,7 @@ export async function POST(req: Request) {
       va_number: vaNumber,
       bank_name: bankName,
       rekening,
+      atas_nama: manualAcc?.atasNama || '-',
       instruksi: instruksiHtml,
       total_transfer: formatIDR(Number(inv.total_amount)),
     };
