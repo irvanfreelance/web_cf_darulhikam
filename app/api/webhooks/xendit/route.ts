@@ -167,6 +167,26 @@ export async function POST(req: Request) {
       } catch (err) {
         console.error("QStash Paid Notification trigger error:", err);
       }
+
+      // Email receipt (async via QStash; retried on failure, idempotent by is_email_paid_sent)
+      try {
+        const qstashUrl = process.env.QSTASH_URL;
+        const qstashToken = process.env.QSTASH_TOKEN;
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+        if (qstashUrl && qstashToken && baseUrl) {
+          await fetch(`${qstashUrl}/v2/publish/${baseUrl}/api/notifications/send-email`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${qstashToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ invoiceCode: invoiceCode })
+          });
+        }
+      } catch (err) {
+        console.error("QStash Email trigger error:", err);
+      }
     }
 
     return NextResponse.json({ status: 'success' });
