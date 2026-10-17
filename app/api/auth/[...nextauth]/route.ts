@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { query } from "@/lib/db";
 
 export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { Receiver } from '@upstash/qstash';
 import { query } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
-import { buildDonationPaidEmail } from '@/lib/email-templates';
+import { buildDonationPaidEmail, replaceTemplateVars } from '@/lib/email-templates';
+import { formatIDR } from '@/lib/utils';
 
 /**
  * Internal endpoint called by QStash to email the donor once an invoice is PAID.
@@ -55,26 +56,51 @@ export async function POST(req: Request) {
     if (inv.is_email_paid_sent) return NextResponse.json({ status: 'skipped', message: 'Email already sent' });
     if (!inv.donor_email) return NextResponse.json({ status: 'skipped', message: 'No email address' });
 
-    const [items, ngo] = await Promise.all([
+    const [items, ngo, tmplRows] = await Promise.all([
       query(`
         SELECT c.title FROM "${txTable}" t JOIN campaigns c ON c.id = t.campaign_id
         WHERE t.invoice_id = $1
       `, [inv.id]),
       query(`SELECT ngo_name, primary_color FROM ngo_configs LIMIT 1`),
+      query(`SELECT subject, message_content FROM notification_templates WHERE event_trigger = 'payment_paid' AND channel = 'EMAIL' AND is_active = true LIMIT 1`),
     ]);
 
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '');
-    const mail = buildDonationPaidEmail({
-      ngoName: ngo[0]?.ngo_name || 'LAZ Darul Hikam',
-      donorName: inv.donor_name_snapshot || 'Donatur',
-      invoiceCode,
-      amount: Number(inv.total_amount),
-      paymentMethod: inv.payment_method_name || '-',
-      paidAt: new Date(inv.paid_at),
-      campaignTitles: items.map((r: any) => r.title),
-      invoiceUrl: `${baseUrl}/invoice/${invoiceCode}`,
-      brandColor: ngo[0]?.primary_color,
-    });
+
+    let mail: { subject: string; html: string; text: string };
+
+    if (tmplRows.length > 0) {
+      // Use DB template with variable replacement
+      const vars: Record<string, string> = {
+        nama: inv.donor_name_snapshot || 'Donatur',
+        nominal: formatIDR(Number(inv.total_amount)),
+        invoice_code: invoiceCode,
+        metode: inv.payment_method_name || '-',
+        va_number: inv.va_number || '-',
+        bank_name: inv.payment_method_name || '-',
+        rekening: inv.va_number || '-',
+        instruksi: '',
+        total_transfer: formatIDR(Number(inv.total_amount)),
+      };
+      mail = {
+        subject: replaceTemplateVars(tmplRows[0].subject, vars),
+        html: replaceTemplateVars(tmplRows[0].message_content, vars),
+        text: `Donasi ${vars.nominal} (${invoiceCode}) telah diterima. Jazakumullahu khairan.`,
+      };
+    } else {
+      // Fallback to hardcoded template
+      mail = buildDonationPaidEmail({
+        ngoName: ngo[0]?.ngo_name || 'LAZ Darul Hikam',
+        donorName: inv.donor_name_snapshot || 'Donatur',
+        invoiceCode,
+        amount: Number(inv.total_amount),
+        paymentMethod: inv.payment_method_name || '-',
+        paidAt: new Date(inv.paid_at),
+        campaignTitles: items.map((r: any) => r.title),
+        invoiceUrl: `${baseUrl}/invoice/${invoiceCode}`,
+        brandColor: ngo[0]?.primary_color,
+      });
+    }
 
     let status = 'SUCCESS';
     let response: any;

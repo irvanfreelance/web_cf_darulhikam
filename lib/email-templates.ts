@@ -1,5 +1,15 @@
 import { formatIDR } from './utils';
 
+/**
+ * Replace {variable} placeholders in a template string.
+ * Unknown placeholders are left as-is.
+ */
+export function replaceTemplateVars(template: string, vars: Record<string, string>): string {
+  return template.replace(/\{([a-z_]+)\}/g, (match, key) =>
+    Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : match
+  );
+}
+
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 

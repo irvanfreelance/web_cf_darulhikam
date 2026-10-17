@@ -387,6 +387,43 @@ export async function POST(req: Request) {
       }
     }
 
+    // 7b. Trigger checkout email for VA and manual transfer (not e-wallet/qris/retail)
+    const shouldSendCheckoutEmail =
+      email &&
+      (pmType === 'va' || pmType.includes('virtual_account') || pmType.includes('manual'));
+
+    if (shouldSendCheckoutEmail) {
+      const qstashUrl = process.env.QSTASH_URL;
+      const qstashToken = process.env.QSTASH_TOKEN;
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+      if (qstashUrl && qstashToken && baseUrl) {
+        fetch(`${qstashUrl}/v2/publish/${baseUrl}/api/notifications/send-email-checkout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${qstashToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ invoiceCode }),
+        }).catch(async (qErr) => {
+          // QStash itself failed — log to notification_logs for cron retry
+          console.error('[checkout] QStash email trigger failed, logging for retry:', qErr.message);
+          query(
+            `INSERT INTO notification_logs (template_id, invoice_code, recipient, channel, request_payload, status)
+             VALUES (NULL, $1, $2, 'EMAIL', $3, 'PENDING_RETRY')`,
+            [invoiceCode, email, JSON.stringify({ invoiceCode, event: 'checkout_pending' })]
+          ).catch(() => {});
+        });
+      } else {
+        // QStash not configured — log for manual retry
+        query(
+          `INSERT INTO notification_logs (template_id, invoice_code, recipient, channel, request_payload, status)
+           VALUES (NULL, $1, $2, 'EMAIL', $3, 'PENDING_RETRY')`,
+          [invoiceCode, email, JSON.stringify({ invoiceCode, event: 'checkout_pending' })]
+        ).catch(() => {});
+      }
+    }
+
     const finalResponse = {
       status: 'success',
       message: 'Checkout initialized',
