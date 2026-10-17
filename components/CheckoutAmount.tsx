@@ -9,12 +9,18 @@ import CampaignSummaryCard from './CampaignSummaryCard';
 const GOLD_PRICE_PER_GRAM = 1250000;
 const NISAB_MAAL = 85 * GOLD_PRICE_PER_GRAM;
 const NISAB_PROFESI = Math.floor(NISAB_MAAL / 12);
-const quickAmounts = [10000, 25000, 50000, 100000, 200000, 500000];
+const DEFAULT_QUICK_AMOUNTS = [10000, 25000, 50000, 100000, 200000, 500000];
 
 const LS_KEY = 'lenteradonasi_checkout_data';
 
 export default function CheckoutAmount({ campaign, variants }: any) {
   const router = useRouter();
+
+  const quickAmounts: number[] = (campaign.suggestion_amounts && Array.isArray(campaign.suggestion_amounts) && campaign.suggestion_amounts.length > 0)
+    ? campaign.suggestion_amounts.map(Number)
+    : DEFAULT_QUICK_AMOUNTS;
+
+  const minAmount: number = campaign.minimum_amount ? Number(campaign.minimum_amount) : 10000;
 
   const [donationMode, setDonationMode] = useState((campaign.is_fixed_amount || campaign.is_qurban) ? 'package' : 'open');
   const [packageQty, setPackageQty] = useState(1);
@@ -176,7 +182,7 @@ export default function CheckoutAmount({ campaign, variants }: any) {
                   setAmount(val);
                 }} className="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-lg font-bold outline-brand-500" />
               </div>
-              <p className="text-gray-400 text-[10px] mt-2">Minimum nominal Rp 10.000</p>
+              <p className="text-gray-400 text-[10px] mt-2">Minimum nominal {formatIDR(minAmount)}</p>
             </div>
           </>
         )}
@@ -212,7 +218,7 @@ export default function CheckoutAmount({ campaign, variants }: any) {
            <span className="text-gray-500 font-bold text-sm">Total Tagihan</span>
            <span className="text-2xl font-extrabold text-brand-600">{formatIDR(currentTotalAmount)}</span>
          </div>
-         <button onClick={goNext} disabled={(donationMode === 'open' && amount < 10000)} className="w-full bg-brand-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Lanjutkan</button>
+         <button onClick={goNext} disabled={(donationMode === 'open' && amount < minAmount)} className="w-full bg-brand-600 text-white font-bold text-lg py-4 rounded-xl disabled:bg-gray-300 active:scale-[0.98] transition-transform">Lanjutkan</button>
       </div>
     </div>
   );
