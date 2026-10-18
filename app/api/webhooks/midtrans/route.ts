@@ -50,7 +50,64 @@ export async function POST(req: Request) {
       const suffix = `y${dateMatch[1]}m${dateMatch[2]}`;
       const tableName = `invoices_${suffix}`;
       const tableCheck = await query(`SELECT to_regclass($1) as exists`, [`public.${tableName}`]);
-      if (tableCheck[0].exists) targetTable = tableName;
+      if (tableCheck[0]?.exists) targetTable = tableName;
+    }
+
+    // Check if order_id exists in targetTable or invoices
+    const existingCheck = await query(
+      `SELECT 1 FROM "${targetTable}" WHERE invoice_code = $1 LIMIT 1`,
+      [order_id]
+    ).catch(async () => {
+      // Fallback check to master invoices table if targetTable check failed
+      return await query(`SELECT 1 FROM invoices WHERE invoice_code = $1 LIMIT 1`, [order_id]).catch(() => []);
+    });
+
+    // If order_id does not exist locally, forward the entire payload to external webhook
+    if (!existingCheck || existingCheck.length === 0) {
+      console.log(`[Midtrans Webhook] order_id ${order_id} not found locally. Forwarding payload to https://ldh-walkimpact.vercel.app/api/webhooks/midtrans`);
+
+      try {
+        const forwardUrl = 'https://ldh-walkimpact.vercel.app/api/webhooks/midtrans';
+        const forwardRes = await fetch(forwardUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const forwardData = await forwardRes.json().catch(() => ({}));
+
+        // Log the forwarded action
+        await query(`
+          INSERT INTO payment_logs (invoice_code, endpoint, request_payload, response_payload, http_status)
+          VALUES ($1, $2, $3, $4, $5)
+        `, [
+          order_id,
+          '/api/webhooks/midtrans (forwarded)',
+          JSON.stringify(payload),
+          JSON.stringify({ forwarded_to: forwardUrl, status: forwardRes.status, data: forwardData }),
+          forwardRes.status,
+        ]).catch(() => {});
+
+        return NextResponse.json(
+          {
+            status: 'forwarded',
+            message: `order_id ${order_id} not found locally, forwarded to ${forwardUrl}`,
+            forwarded_response: forwardData,
+          },
+          { status: forwardRes.status }
+        );
+      } catch (forwardErr: any) {
+        console.error(`[Midtrans Webhook] Failed to forward payload for order_id ${order_id}:`, forwardErr);
+        return NextResponse.json(
+          {
+            status: 'error',
+            message: `Failed to forward webhook to external URL: ${forwardErr.message}`,
+          },
+          { status: 502 }
+        );
+      }
     }
 
     if (newStatus === 'PAID') {
