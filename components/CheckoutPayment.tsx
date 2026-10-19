@@ -144,8 +144,9 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
   }, []);
 
   const submitDonation = useCallback(async () => {
-    if (currentTotalAmount < 10000) {
-      alert('Nominal donasi minimal Rp 10.000');
+    const minAmount = Number(checkoutData?.campaignMinAmount) || 1000;
+    if (currentTotalAmount < minAmount) {
+      alert(`Nominal donasi minimal ${formatIDR(minAmount)}`);
       return;
     }
 

@@ -93,6 +93,7 @@ export default function CheckoutAmount({ campaign, variants }: any) {
       campaignIsZakat: campaign.is_zakat,
       campaignIsQurban: campaign.is_qurban,
       campaignIsFixedAmount: campaign.is_fixed_amount,
+      campaignMinAmount: minAmount,
       amount: currentTotalAmount,
       donationMode,
       packageQty,
