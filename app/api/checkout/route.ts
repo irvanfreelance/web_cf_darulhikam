@@ -8,15 +8,17 @@ import { createXenditPaymentRequest, XenditPaymentType } from '@/lib/xendit';
 import { createMidtransTransaction } from '@/lib/midtrans';
 
 const checkoutSchema = z.object({
-  campaignId: z.coerce.number(),
-  amount: z.coerce.number().min(10000),
-  donorName: z.string().min(1),
+  campaignId: z.coerce.number({ message: 'ID Program tidak valid' }),
+  amount: z.coerce
+    .number({ message: 'Nominal donasi harus berupa angka' })
+    .min(10000, { message: 'Nominal donasi minimal Rp 10.000' }),
+  donorName: z.string().trim().min(1, { message: 'Nama donatur wajib diisi' }),
   donorEmail: z.string().optional().nullable(),
   donorPhone: z.string().optional().nullable(),
   isAnonymous: z.boolean(),
   doa: z.string().optional().nullable(),
-  paymentMethodId: z.coerce.number(),
-  paymentType: z.string(),
+  paymentMethodId: z.coerce.number({ message: 'Metode pembayaran tidak valid' }),
+  paymentType: z.string({ message: 'Jenis pembayaran wajib dipilih' }),
   qty: z.coerce.number().default(1),
   qurbanNames: z.array(z.string()).optional(),
   affiliateId: z.coerce.number().optional().nullable(),
@@ -455,6 +457,16 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("Checkout Error:", error);
+
+    if (error instanceof z.ZodError) {
+      const friendlyMessage = error.issues.map(issue => issue.message).filter(Boolean).join(', ') || 'Data donasi tidak valid.';
+      return NextResponse.json({
+        status: 'error',
+        message: friendlyMessage,
+        data: null
+      }, { status: 400 });
+    }
+
     return NextResponse.json({
       status: 'error',
       message: error.message || 'Internal Server Error',

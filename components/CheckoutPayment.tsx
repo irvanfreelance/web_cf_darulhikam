@@ -144,7 +144,11 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
   }, []);
 
   const submitDonation = useCallback(async () => {
-    if (!selectedPayment || !checkoutData) return;
+    if (currentTotalAmount < 10000) {
+      alert('Nominal donasi minimal Rp 10.000');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -185,7 +189,16 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
         localStorage.removeItem(LS_KEY);
         router.push(`/invoice/${data.data.invoice_code}`);
       } else {
-        alert(data.message || 'Gagal membuat invoice');
+        let msg = data.message || 'Gagal membuat invoice';
+        if (typeof msg === 'string' && (msg.startsWith('[') || msg.startsWith('{'))) {
+          try {
+            const parsedErr = JSON.parse(msg);
+            if (Array.isArray(parsedErr) && parsedErr[0]?.message) {
+              msg = parsedErr.map((p: any) => p.message).join(', ');
+            }
+          } catch { /* ignore */ }
+        }
+        alert(msg);
         setLoading(false);
       }
     } catch (err) {

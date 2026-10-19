@@ -168,7 +168,16 @@ export default function CheckoutFlow({ campaign, variants, paymentMethods }: any
       if (data.status === 'success') {
         router.push(`/invoice/${data.data.invoice_code}`);
       } else {
-        alert(data.message || 'Gagal membuat invoice');
+        let msg = data.message || 'Gagal membuat invoice';
+        if (typeof msg === 'string' && (msg.startsWith('[') || msg.startsWith('{'))) {
+          try {
+            const parsedErr = JSON.parse(msg);
+            if (Array.isArray(parsedErr) && parsedErr[0]?.message) {
+              msg = parsedErr.map((p: any) => p.message).join(', ');
+            }
+          } catch { /* ignore */ }
+        }
+        alert(msg);
       }
     } catch (err) {
       console.error(err);
