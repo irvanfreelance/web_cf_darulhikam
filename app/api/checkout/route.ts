@@ -11,7 +11,7 @@ const checkoutSchema = z.object({
   campaignId: z.coerce.number({ message: 'ID Program tidak valid' }),
   amount: z.coerce
     .number({ message: 'Nominal donasi harus berupa angka' })
-    .min(10000, { message: 'Nominal donasi minimal Rp 10.000' }),
+    .min(1, { message: 'Nominal donasi tidak valid' }),
   donorName: z.string().trim().min(1, { message: 'Nama donatur wajib diisi' }),
   donorEmail: z.string().optional().nullable(),
   donorPhone: z.string().optional().nullable(),
@@ -280,9 +280,13 @@ export async function POST(req: Request) {
 
     // Redundant duplicate to Partition Table removed (Native partitioning handles this automatically)
 
-    // Check if campaign is bundle
-    const campaignResult = await query(`SELECT is_bundle FROM campaigns WHERE id = $1`, [parsed.campaignId]);
+    // Check if campaign is bundle + fetch minimum_amount for validation
+    const campaignResult = await query(`SELECT is_bundle, minimum_amount FROM campaigns WHERE id = $1`, [parsed.campaignId]);
     const isBundle = campaignResult.length > 0 ? campaignResult[0].is_bundle : false;
+    const minAmount = campaignResult.length > 0 ? Number(campaignResult[0].minimum_amount) || 1000 : 1000;
+    if (parsed.amount < minAmount) {
+      return NextResponse.json({ status: 'error', message: `Nominal donasi minimal Rp ${minAmount.toLocaleString('id-ID')}` }, { status: 400 });
+    }
 
     let transactionIdToUse = null;
 
