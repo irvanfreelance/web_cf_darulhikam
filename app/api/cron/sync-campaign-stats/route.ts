@@ -1,0 +1,45 @@
+import { NextResponse } from 'next/server';
+import { query } from '@/lib/db';
+import { redis } from '@/lib/redis';
+
+// Called by Vercel Cron every 5 minutes.
+// Recalculates all campaign stats from actual PAID invoices so that
+// manual admin confirmations are reflected without needing webhook triggers.
+export async function GET(req: Request) {
+  const authHeader = req.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const rows = await query(`
+    SELECT t.campaign_id,
+           SUM(i.total_amount)::bigint AS total_collected,
+           COUNT(DISTINCT i.id)::int    AS total_donors
+    FROM invoices i
+    JOIN transactions t ON t.invoice_id = i.id AND t.invoice_created_at = i.created_at
+    WHERE i.status = 'PAID'
+    GROUP BY t.campaign_id
+  `);
+
+  for (const row of rows) {
+    const { campaign_id, total_collected, total_donors } = row;
+    const collected = Number(total_collected);
+    const donors = Number(total_donors);
+
+    await query(`
+      INSERT INTO campaign_stats (campaign_id, collected_amount, donor_count, updated_at)
+      VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+      ON CONFLICT (campaign_id) DO UPDATE
+        SET collected_amount = EXCLUDED.collected_amount,
+            donor_count      = EXCLUDED.donor_count,
+            updated_at       = CURRENT_TIMESTAMP
+    `, [campaign_id, collected, donors]);
+
+    await redis.hset(`campaign:${campaign_id}:stats`, {
+      collected_amount: collected,
+      donor_count: donors,
+    });
+  }
+
+  return NextResponse.json({ ok: true, synced: rows.length });
+}
