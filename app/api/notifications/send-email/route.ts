@@ -3,6 +3,7 @@ import { Receiver } from '@upstash/qstash';
 import { query } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
 import { buildDonationPaidEmail, replaceTemplateVars } from '@/lib/email-templates';
+import { getKwitansiData, buildKwitansiPdf } from '@/lib/kwitansi-pdf';
 import { formatIDR } from '@/lib/utils';
 
 /**
@@ -102,10 +103,30 @@ export async function POST(req: Request) {
       });
     }
 
+    // Build kwitansi PDF attachment (silently skip on failure so email still sends)
+    let pdfAttachment: { filename: string; content: Buffer; contentType: string } | undefined;
+    try {
+      const kwitansiData = await getKwitansiData(invoiceCode);
+      if (kwitansiData) {
+        const pdfBuf = await buildKwitansiPdf(kwitansiData);
+        pdfAttachment = {
+          filename: `kwitansi-${invoiceCode}.pdf`,
+          content: pdfBuf,
+          contentType: 'application/pdf',
+        };
+      }
+    } catch (pdfErr: any) {
+      console.warn('[send-email] kwitansi PDF skipped:', pdfErr.message);
+    }
+
     let status = 'SUCCESS';
     let response: any;
     try {
-      response = await sendEmail({ to: inv.donor_email, ...mail });
+      response = await sendEmail({
+        to: inv.donor_email,
+        ...mail,
+        attachments: pdfAttachment ? [pdfAttachment] : undefined,
+      });
     } catch (err: any) {
       status = 'FAILED';
       response = { error: err.message };
