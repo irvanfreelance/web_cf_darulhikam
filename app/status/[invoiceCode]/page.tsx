@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { Clock, CheckCircle2, ChevronRight, HelpCircle, HeartHandshake, Share2, ReceiptText } from 'lucide-react';
+import { Clock, CheckCircle2, HelpCircle, ReceiptText } from 'lucide-react';
 import { query } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import { formatIDR } from '@/lib/utils';
+import StatusShareButton from '@/components/StatusShareButton';
 
 export const revalidate = 0;
 
@@ -13,7 +14,9 @@ async function getInvoiceStatus(invoiceCode: string) {
   }
 
   const invoices = await query(`
-    SELECT i.status, i.total_amount, i.invoice_code, i.created_at, pm.name as payment_method_name, c.title as campaign_title
+    SELECT i.status, i.total_amount, i.invoice_code, i.created_at,
+           i.donor_name_snapshot, i.is_anonymous,
+           pm.name as payment_method_name, c.title as campaign_title, c.slug as campaign_slug
     FROM invoices i
     LEFT JOIN transactions t ON i.id = t.invoice_id
     LEFT JOIN campaigns c ON t.campaign_id = c.id
@@ -63,8 +66,11 @@ export default async function StatusPage(props: { params: Promise<{ invoiceCode:
             </div>
           </div>
           <h1 className="text-2xl font-extrabold text-gray-800 mb-2">Alhamdulillah!</h1>
-          <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+          <p className="text-gray-500 text-sm leading-relaxed">
             Donasi Anda telah berhasil diverifikasi.
+          </p>
+          <p className="text-gray-600 text-sm mt-3 mb-6 leading-relaxed px-2 italic">
+            &ldquo;Semoga Allah SWT memberikan pahala kepada <span className="font-semibold not-italic">{invoice.is_anonymous ? 'Hamba Allah' : (invoice.donor_name_snapshot || 'Donatur')}</span> atas harta yang telah dikeluarkan dan menjadi berkah dan suci atas harta yang lainnya.&rdquo;
           </p>
 
           {/* Receipt Card */}
@@ -104,12 +110,15 @@ export default async function StatusPage(props: { params: Promise<{ invoiceCode:
              </div>
           </div>
 
-          <Link href="/" className="w-full bg-teal-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg shadow-teal-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3">
+          <Link href="/donasi" className="w-full bg-teal-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg shadow-teal-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3">
             Selesai
           </Link>
-          <button className="w-full bg-white text-teal-600 border border-teal-200 font-bold text-sm py-4 rounded-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-            <Share2 size={16} /> Bagikan Kebaikan Ini
-          </button>
+          <StatusShareButton
+            campaignTitle={invoice.campaign_title || 'Program Kebaikan'}
+            campaignSlug={invoice.campaign_slug || ''}
+            donorName={invoice.is_anonymous ? 'Hamba Allah' : (invoice.donor_name_snapshot || 'Donatur')}
+            amount={Number(invoice.total_amount)}
+          />
         </div>
       </div>
     );

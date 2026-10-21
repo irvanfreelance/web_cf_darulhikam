@@ -5,11 +5,18 @@
  */
 import nodemailer from 'nodemailer';
 
+interface Attachment {
+  filename: string;
+  content: Buffer;
+  contentType: string;
+}
+
 interface SendEmailParams {
   to: string;
   subject: string;
   html: string;
   text?: string;
+  attachments?: Attachment[];
 }
 
 const globalForMail = globalThis as unknown as { mailer?: nodemailer.Transporter };
@@ -32,7 +39,7 @@ function getTransporter() {
   return globalForMail.mailer;
 }
 
-export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
+export async function sendEmail({ to, subject, html, text, attachments }: SendEmailParams) {
   const user = process.env.GMAIL_USER!;
   const info = await getTransporter().sendMail({
     from: process.env.EMAIL_FROM || user,
@@ -40,6 +47,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
     subject,
     html,
     text,
+    attachments,
   });
   return { messageId: info.messageId, accepted: info.accepted as string[], rejected: info.rejected as string[] };
 }
