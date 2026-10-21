@@ -133,6 +133,12 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
   const adminFee = adminFeeFlat + (currentTotalAmount * (adminFeePct / 100));
   const finalTotalAmount = currentTotalAmount + adminFee;
 
+  // Types with min 1.000 — shown even for small amounts
+  const LOW_AMOUNT_TYPES = new Set(['e_wallet', 'qr_code']);
+  const visibleGroups = currentTotalAmount < 10000
+    ? groupedArray.filter(g => LOW_AMOUNT_TYPES.has(g.type))
+    : groupedArray;
+
   const selectPayment = useCallback((m: any) => {
     setSelectedPayment(m);
     setIsChangingPayment(false);
@@ -295,8 +301,12 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
           </div>
         ) : (
           /* Category grid + expandable methods */
+          <>
+          {currentTotalAmount < 10000 && groupedArray.length > visibleGroups.length && (
+            <p className="text-xs text-gray-400 mb-3 px-1">Metode VA, Transfer Manual, dan Retail tersedia untuk donasi di atas Rp 10.000.</p>
+          )}
           <div className="grid grid-cols-2 gap-2.5">
-            {groupedArray.map((group, idx) => {
+            {visibleGroups.map((group, idx) => {
               const info = typeInfo[group.type] || { title: typeLabels[group.type] || group.type, subtitle: '' };
               const previewText = group.methods.map((m: any) => m.name).join(', ');
               const isActive = activeCategory === group.type;
@@ -357,6 +367,7 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
               );
             })}
           </div>
+          </>
         )}
 
         {/* NGO Note */}
