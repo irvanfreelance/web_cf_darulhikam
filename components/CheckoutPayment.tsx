@@ -69,7 +69,9 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
     }
     setCheckoutData(parsed);
 
-    // Restore previously selected payment method
+    // Restore previously selected payment method — only if valid for current amount
+    const amount = parsed.amount || 0;
+    const LOW_AMOUNT_TYPES = new Set(['e_wallet', 'qr_code']);
     const donorRaw = localStorage.getItem(DONOR_KEY);
     if (donorRaw && paymentMethods?.length > 0) {
       try {
@@ -77,9 +79,13 @@ export default function CheckoutPayment({ paymentMethods }: { paymentMethods: an
         if (donor.paymentMethodId) {
           const found = paymentMethods.find((pm: any) => pm.id === donor.paymentMethodId);
           if (found) {
-            setSelectedPayment(found);
-            setIsChangingPayment(false);
-            return;
+            const isValidForAmount = amount >= 10000 || LOW_AMOUNT_TYPES.has(found.type);
+            if (isValidForAmount) {
+              setSelectedPayment(found);
+              setIsChangingPayment(false);
+              return;
+            }
+            // Method not valid for this amount — fall through to grid
           }
         }
       } catch { /* ignore */ }
