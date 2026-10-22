@@ -3,7 +3,6 @@ import { Receiver } from '@upstash/qstash';
 import { query } from '@/lib/db';
 import { sendEmail } from '@/lib/email';
 import { buildDonationPaidEmail, replaceTemplateVars } from '@/lib/email-templates';
-import { getKwitansiData, buildKwitansiPdf } from '@/lib/kwitansi-pdf';
 import { formatIDR } from '@/lib/utils';
 
 /**
@@ -111,9 +110,10 @@ export async function POST(req: Request) {
       });
     }
 
-    // Build kwitansi PDF attachment (silently skip on failure so email still sends)
+    // Build kwitansi PDF attachment — dynamic import so a module load error never blocks email
     let pdfAttachment: { filename: string; content: Buffer; contentType: string } | undefined;
     try {
+      const { getKwitansiData, buildKwitansiPdf } = await import('@/lib/kwitansi-pdf');
       const kwitansiData = await getKwitansiData(invoiceCode);
       if (kwitansiData) {
         const pdfBuf = await buildKwitansiPdf(kwitansiData);
