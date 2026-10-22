@@ -184,6 +184,9 @@ export async function createMidtransTransaction(params: MidtransChargeParams): P
     },
     enabled_payments: enabledPayments,
     customer_details: customerDetails,
+    callbacks: {
+      finish: `${process.env.NEXT_PUBLIC_BASE_URL}/status/${orderId}`,
+    },
   };
 
   console.log(`[Midtrans Snap API Request]`, JSON.stringify(snapBody));
