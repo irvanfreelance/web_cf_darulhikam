@@ -110,9 +110,9 @@ export default async function TransparansiPage() {
             <div className="text-center mb-10 flex flex-col items-center">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-[18px] h-0.5 bg-[#83b64e] rounded-full" />
-                <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Laporan Keuangan</span>
+                <span className="text-[12px] font-bold text-[#83b64e] tracking-[1.5px] uppercase">Laporan Bulanan</span>
               </div>
-              <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Unduh Laporan Audit</h2>
+              <h2 className="font-cabin text-[28px] font-bold text-[#0f1b35] leading-tight">Unduh Jejak Kebaikan</h2>
             </div>
           </Reveal>
           <div className="grid gap-4 max-w-[720px] mx-auto">
