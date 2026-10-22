@@ -72,6 +72,10 @@ export async function POST(req: Request) {
 
     if (tmplRows.length > 0) {
       // Use DB template with variable replacement
+      const paidDate = new Date(inv.paid_at);
+      const tanggal = paidDate.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Asia/Jakarta' });
+      const program = items.map((r: any) => r.title).join(', ') || '-';
+
       const vars: Record<string, string> = {
         nama: inv.donor_name_snapshot || 'Donatur',
         nominal: formatIDR(Number(inv.total_amount)),
@@ -82,6 +86,10 @@ export async function POST(req: Request) {
         rekening: inv.va_number || '-',
         instruksi: '',
         total_transfer: formatIDR(Number(inv.total_amount)),
+        tanggal,
+        program,
+        tanggal_bayar: tanggal,
+        nama_program: program,
       };
       mail = {
         subject: replaceTemplateVars(tmplRows[0].subject, vars),
