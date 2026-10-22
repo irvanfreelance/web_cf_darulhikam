@@ -9,7 +9,7 @@ export async function getWebHeroConfig() {
   if (!data) {
     const rows = await query(`SELECT ngo_name, video_url, primary_color FROM ngo_configs LIMIT 1`);
     data = rows[0] || null;
-    await redis.set(cacheKey, JSON.stringify(data), { ex: 3600 });
+    await redis.set(cacheKey, JSON.stringify(data), { ex: 60 });
   } else if (typeof data === 'string') {
     data = JSON.parse(data);
   }
