@@ -14,19 +14,16 @@ import LayoutWrapper from "@/components/LayoutWrapper";
 const sourceSansPro = Source_Sans_3({
   variable: "--font-source-sans-pro",
   subsets: ["latin"],
-  weight: ['300', '400', '600', '700'],
 });
 
 const fontCabin = Cabin({
   variable: "--font-cabin",
   subsets: ["latin"],
-  weight: ['400', '500', '600', '700'],
 });
 
 const fontAlbert = Albert_Sans({
   variable: "--font-albert",
   subsets: ["latin"],
-  weight: ['400', '500', '600', '700'],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
