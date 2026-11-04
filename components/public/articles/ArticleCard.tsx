@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function ArticleCard({ a }: { a: any }) {
   const dateStr = (a.published_at || a.created_at) ? new Date(a.published_at || a.created_at).toLocaleDateString('id-ID', {
@@ -15,12 +14,10 @@ export default function ArticleCard({ a }: { a: any }) {
   return (
     <Link href={`/kabar-kebaikan/${a.slug}`} className="group bg-[#ffffff] rounded-xl overflow-hidden border border-[#e2e8f0] hover-lift flex flex-col h-full block">
       <div className="h-[180px] overflow-hidden relative shrink-0 bg-slate-100">
-        <Image
+        <img
           src={a.featured_image_url || '/placeholder.jpg'}
           alt={a.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 360px"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
       <div className="p-4 flex flex-col flex-1">
