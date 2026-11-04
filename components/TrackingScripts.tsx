@@ -46,13 +46,21 @@ export default function TrackingScripts({
   metaPixelId,
   tiktokPixelId,
   googleAdsId,
-  googleAnalyticId
+  googleAnalyticId,
+  pixelEvents
 }: {
   metaPixelId?: string | null;
   tiktokPixelId?: string | null;
   googleAdsId?: string | null;
   googleAnalyticId?: string | null;
+  pixelEvents?: any[] | null;
 }) {
+  useEffect(() => {
+    if (pixelEvents && typeof window !== 'undefined') {
+      (window as any).pixelEventsConfig = pixelEvents;
+    }
+  }, [pixelEvents]);
+
   return (
     <>
       <Suspense fallback={null}>

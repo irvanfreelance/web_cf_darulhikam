@@ -8,7 +8,6 @@ import { getFooterPrograms } from "@/lib/campaigns";
 import TrackingScripts from "@/components/TrackingScripts";
 import { Providers } from "@/components/Providers";
 
-import Script from "next/script";
 import LayoutWrapper from "@/components/LayoutWrapper";
 
 const sourceSansPro = Source_Sans_3({
@@ -162,21 +161,13 @@ export default async function RootLayout({
         )}
       </head>
       <body className="h-full flex flex-col bg-slate-50 font-sans">
-        {pixelEvents && (
-          <Script
-            id="pixel-events-config"
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `window.pixelEventsConfig = ${JSON.stringify(pixelEvents)};`
-            }}
-          />
-        )}
         {configs && (
           <TrackingScripts 
             metaPixelId={configs.meta_pixel_id} 
             tiktokPixelId={configs.tiktok_pixel_id} 
             googleAdsId={configs.google_ads_id}
             googleAnalyticId={configs.google_analytic_id}
+            pixelEvents={pixelEvents}
           />
         )}
         <Providers>
