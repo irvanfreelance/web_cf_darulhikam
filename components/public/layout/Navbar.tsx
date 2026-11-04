@@ -62,6 +62,7 @@ export default function Navbar({ config }: { config?: any }) {
             className={`h-[42px] w-auto object-contain transition-all duration-300 ${
               transparent ? 'brightness-0 invert' : ''
             }`}
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
         ) : (
           <>

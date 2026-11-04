@@ -22,10 +22,11 @@ interface CareCategory {
 }
 
 function CategoryIcon({ category, size }: { category: CareCategory; size: number }) {
-  if (category.icon_url) {
-    return <img src={category.icon_url} alt="" className="w-full h-full object-contain" />;
-  }
+  const [imgFailed, setImgFailed] = useState(false);
   const Icon = FALLBACK_ICONS[category.icon_name] || Heart;
+  if (category.icon_url && !imgFailed) {
+    return <img src={category.icon_url} alt="" className="w-full h-full object-contain" onError={() => setImgFailed(true)} />;
+  }
   return <Icon size={size} className="text-white" />;
 }
 
@@ -90,7 +91,7 @@ export default function CareCategories({ categories }: { categories: CareCategor
 
             {selected.photo_url && (
               <div className="w-full overflow-hidden rounded-t-3xl sm:rounded-t-3xl">
-                <img src={selected.photo_url} alt={selected.label} className="w-full h-auto" />
+                <img src={selected.photo_url} alt={selected.label} className="w-full h-auto" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               </div>
             )}
 

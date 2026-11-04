@@ -23,11 +23,19 @@ interface ImpactCategory {
 }
 
 function CategoryIcon({ category }: { category: ImpactCategory }) {
-  if (category.icon_url) {
-    return <img src={category.icon_url} alt="" className="w-9 h-9 mb-3 object-contain" />;
+  const [imgFailed, setImgFailed] = React.useState(false);
+  const FallbackIcon = FALLBACK_ICONS[category.label] || Heart;
+  if (category.icon_url && !imgFailed) {
+    return (
+      <img
+        src={category.icon_url}
+        alt=""
+        className="w-9 h-9 mb-3 object-contain"
+        onError={() => setImgFailed(true)}
+      />
+    );
   }
-  const Icon = FALLBACK_ICONS[category.label] || Heart;
-  return <Icon size={36} strokeWidth={1.75} className="text-white mb-3" />;
+  return <FallbackIcon size={36} strokeWidth={1.75} className="text-white mb-3" />;
 }
 
 export default function JejakKebaikanGrid({ categories }: { categories: ImpactCategory[] }) {
