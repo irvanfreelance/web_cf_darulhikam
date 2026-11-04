@@ -144,15 +144,6 @@ export default async function RootLayout({
         {/* Preconnect to Vercel Blob & Neon for faster cold starts */}
         <link rel="preconnect" href="https://public.blob.vercel-storage.com" />
         <link rel="dns-prefetch" href="https://public.blob.vercel-storage.com" />
-        {pixelEvents && (
-          <Script
-            id="pixel-events-config"
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `window.pixelEventsConfig = ${JSON.stringify(pixelEvents)};`
-            }}
-          />
-        )}
         {configs?.primary_color && (
           <style dangerouslySetInnerHTML={{ __html: `
             :root {
@@ -171,6 +162,15 @@ export default async function RootLayout({
         )}
       </head>
       <body className="h-full flex flex-col bg-slate-50 font-sans">
+        {pixelEvents && (
+          <Script
+            id="pixel-events-config"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `window.pixelEventsConfig = ${JSON.stringify(pixelEvents)};`
+            }}
+          />
+        )}
         {configs && (
           <TrackingScripts 
             metaPixelId={configs.meta_pixel_id} 
